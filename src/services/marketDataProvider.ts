@@ -35,6 +35,9 @@ export const ASSET_PRICE_BASELINES: Record<string, { price: number; dailyChange:
   'NASDAQ:GOOGL': { price: 166.8, dailyChange: 1.2, high: 168.2, low: 165.4, vol: 21000000 },
   'NASDAQ:AMZN': { price: 186.2, dailyChange: 2.1, high: 188.0, low: 184.5, vol: 28000000 },
   'NASDAQ:TSLA': { price: 242.0, dailyChange: -3.5, high: 248.0, low: 239.5, vol: 54000000 },
+  'NASDAQ:META': { price: 585.0, dailyChange: 8.5, high: 590.2, low: 579.5, vol: 14200000 },
+  'NASDAQ:SPCX': { price: 29.85, dailyChange: 0.12, high: 30.05, low: 29.70, vol: 145000 },
+  'NASDAQ:PYPL': { price: 78.4, dailyChange: 1.25, high: 79.5, low: 77.2, vol: 11200000 },
 
   // Crypto (USDT)
   'CRYPTO:BTCUSDT': { price: 65450.0, dailyChange: 1620.0, high: 66100.0, low: 63800.0, vol: 32000 },
@@ -42,7 +45,9 @@ export const ASSET_PRICE_BASELINES: Record<string, { price: number; dailyChange:
   'CRYPTO:SOLUSDT': { price: 154.2, dailyChange: 5.4, high: 158.0, low: 148.5, vol: 3200000 },
   'CRYPTO:BNBUSDT': { price: 582.0, dailyChange: 8.5, high: 590.0, low: 572.0, vol: 420000 },
   'CRYPTO:XRPUSDT': { price: 0.584, dailyChange: 0.018, high: 0.598, low: 0.565, vol: 84000000 },
-  'CRYPTO:ADAUSDT': { price: 0.382, dailyChange: 0.012, high: 0.395, low: 0.370, vol: 52000000 }
+  'CRYPTO:ADAUSDT': { price: 0.382, dailyChange: 0.012, high: 0.395, low: 0.370, vol: 52000000 },
+  'CRYPTO:NEARUSDT': { price: 4.85, dailyChange: 0.22, high: 5.10, low: 4.60, vol: 42000000 },
+  'CRYPTO:ANKRUSDT': { price: 0.0284, dailyChange: 0.0012, high: 0.0302, low: 0.0265, vol: 68000000 }
 };
 
 /**

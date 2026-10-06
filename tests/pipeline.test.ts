@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { ALL_ASSETS } from '../src/data/universe';
+import { ALL_ASSETS, getAssetById, filterAssets } from '../src/data/universe';
 import { executeAnalysisPipeline } from '../src/engines/pipeline';
 import { Candle } from '../src/types/marketData';
 
@@ -56,5 +56,60 @@ describe('Unified Analytical Pipeline Multi-Market Verification', () => {
     expect(bundle.fundamental.crypto?.onchain.metrics[0].observation).toBeDefined();
     expect(bundle.fundamental.crypto?.onchain.metrics[0].interpretation).toBeDefined();
     expect(report.predictionSummary.probabilityText).toContain('UP:');
+  });
+
+  it('correctly resolves and executes newly requested assets (NEAR, ANKR, META, PYPL, SPCX)', () => {
+    // 1. NEAR
+    const near = ALL_ASSETS.find((a) => a.id === 'CRYPTO:NEARUSDT')!;
+    expect(near).toBeDefined();
+    expect(near.symbol).toBe('NEAR/USDT');
+    const nearCandles = generateMockCandles(4.85);
+    const nearRun = executeAnalysisPipeline(near, nearCandles, '1D');
+    expect(nearRun.bundle.fundamental.crypto?.tokenomics.circulatingPercent).toBeGreaterThan(95);
+
+    // 2. ANKR
+    const ankr = ALL_ASSETS.find((a) => a.id === 'CRYPTO:ANKRUSDT')!;
+    expect(ankr).toBeDefined();
+    expect(ankr.symbol).toBe('ANKR/USDT');
+
+    // 3. META
+    const meta = ALL_ASSETS.find((a) => a.id === 'NASDAQ:META')!;
+    expect(meta).toBeDefined();
+    const metaCandles = generateMockCandles(585);
+    const metaRun = executeAnalysisPipeline(meta, metaCandles, '1D');
+    expect(metaRun.bundle.fundamental.stock?.peRatio).toBe(28.5);
+
+    // 4. PYPL
+    const pypl = ALL_ASSETS.find((a) => a.id === 'NASDAQ:PYPL')!;
+    expect(pypl).toBeDefined();
+    const pyplCandles = generateMockCandles(78.4);
+    const pyplRun = executeAnalysisPipeline(pypl, pyplCandles, '1D');
+    expect(pyplRun.bundle.fundamental.stock?.valuationStatus).toBe('UNDERVALUED');
+
+    // 5. SPCX
+    const spcx = ALL_ASSETS.find((a) => a.id === 'NASDAQ:SPCX')!;
+    expect(spcx).toBeDefined();
+    expect(spcx.assetType).toBe('ETF');
+  });
+
+  it('supports flexible user search queries across symbol formats', () => {
+    // Normalized lookup
+    expect(getAssetById('near/usdt')?.id).toBe('CRYPTO:NEARUSDT');
+    expect(getAssetById('nearusdt')?.id).toBe('CRYPTO:NEARUSDT');
+    expect(getAssetById('ankr/usdt')?.id).toBe('CRYPTO:ANKRUSDT');
+    expect(getAssetById('ankrusdt')?.id).toBe('CRYPTO:ANKRUSDT');
+    expect(getAssetById('nvda')?.id).toBe('NASDAQ:NVDA');
+    expect(getAssetById('aapl')?.id).toBe('NASDAQ:AAPL');
+    expect(getAssetById('msft')?.id).toBe('NASDAQ:MSFT');
+    expect(getAssetById('meta')?.id).toBe('NASDAQ:META');
+    expect(getAssetById('amzn')?.id).toBe('NASDAQ:AMZN');
+    expect(getAssetById('spcx')?.id).toBe('NASDAQ:SPCX');
+    expect(getAssetById('pypl')?.id).toBe('NASDAQ:PYPL');
+
+    // Filter search query
+    expect(filterAssets({ searchQuery: 'near/usdt' }).some((a: any) => a.id === 'CRYPTO:NEARUSDT')).toBe(true);
+    expect(filterAssets({ searchQuery: 'ankr/usdt' }).some((a: any) => a.id === 'CRYPTO:ANKRUSDT')).toBe(true);
+    expect(filterAssets({ searchQuery: 'spcx' }).some((a: any) => a.id === 'NASDAQ:SPCX')).toBe(true);
+    expect(filterAssets({ searchQuery: 'pypl' }).some((a: any) => a.id === 'NASDAQ:PYPL')).toBe(true);
   });
 });

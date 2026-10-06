@@ -170,14 +170,14 @@ export const Header: React.FC<HeaderProps> = ({
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search symbol, company name, crypto, or exchange..."
                 autoFocus
-                className="w-full bg-transparent text-xs text-white focus:outline-none placeholder:text-slate-500 font-mono"
+                className="w-full bg-transparent text-xs text-slate-900 dark:text-white focus:outline-none placeholder:text-slate-500 font-mono"
               />
               <button
                 onClick={() => {
                   setSearchOpen(false);
                   setSearchQuery('');
                 }}
-                className="p-1 rounded text-slate-400 hover:text-white hover:bg-surface-elevated"
+                className="p-1 rounded text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-surface-elevated"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -187,10 +187,10 @@ export const Header: React.FC<HeaderProps> = ({
             {!searchQuery.trim() && (
               <div className="p-3 border-b border-border bg-surface">
                 <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 font-bold block mb-2 px-1">
-                  Core Benchmarks
+                  Core Benchmarks & Popular Assets
                 </span>
                 <div className="flex flex-wrap gap-1.5">
-                  {['NEPSE:NEPSE', 'NSE:RELIANCE', 'NASDAQ:AAPL', 'CRYPTO:BTCUSDT', 'CRYPTO:ETHUSDT'].map((id) => {
+                  {['NEPSE:NEPSE', 'NSE:RELIANCE', 'NASDAQ:AAPL', 'NASDAQ:NVDA', 'NASDAQ:META', 'CRYPTO:BTCUSDT', 'CRYPTO:NEARUSDT'].map((id) => {
                     const asset = ALL_ASSETS.find((a) => a.id === id);
                     if (!asset) return null;
                     return (
@@ -200,7 +200,7 @@ export const Header: React.FC<HeaderProps> = ({
                           onSelectAsset(asset);
                           setSearchOpen(false);
                         }}
-                        className="px-2 py-1 rounded bg-surface-secondary border border-border hover:border-accent-cyan/50 hover:bg-accent-cyan/10 text-xs font-mono text-slate-300 hover:text-accent-cyan transition-colors flex items-center gap-1.5"
+                        className="px-2 py-1 rounded bg-surface-secondary border border-border hover:border-accent-cyan/50 hover:bg-accent-cyan/10 text-xs font-mono text-slate-700 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-accent-cyan transition-colors flex items-center gap-1.5"
                       >
                         <span className="font-bold">{asset.symbol}</span>
                         <span className="text-[10px] text-slate-500">{asset.market}</span>
@@ -225,19 +225,19 @@ export const Header: React.FC<HeaderProps> = ({
                     className="w-full flex items-center justify-between p-2 rounded hover:bg-surface-secondary text-left transition-colors group"
                   >
                     <div className="flex items-center gap-2.5">
-                      <span className="font-mono font-bold text-xs text-white group-hover:text-accent-cyan transition-colors">
+                      <span className="font-mono font-bold text-xs text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-accent-cyan transition-colors">
                         {asset.symbol}
                       </span>
-                      <span className="text-xs text-slate-400 truncate max-w-[240px]">
+                      <span className="text-xs text-slate-600 dark:text-slate-400 truncate max-w-[240px]">
                         {asset.name}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-surface-elevated text-slate-400 border border-border">
+                      <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-surface-elevated text-slate-700 dark:text-slate-300 border border-border">
                         {asset.market}
                       </span>
-                      <span className="text-xs font-mono text-slate-400">{asset.currency}</span>
-                      <ArrowRight className="w-3 h-3 text-slate-600 group-hover:text-accent-cyan transition-colors" />
+                      <span className="text-xs font-mono text-slate-600 dark:text-slate-400">{asset.currency}</span>
+                      <ArrowRight className="w-3 h-3 text-slate-500 group-hover:text-cyan-600 dark:group-hover:text-accent-cyan transition-colors" />
                     </div>
                   </button>
                 ))

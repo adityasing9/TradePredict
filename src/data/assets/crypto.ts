@@ -96,5 +96,37 @@ export const CRYPTO_ASSETS: Asset[] = [
     dataProviders: ['BinancePublic', 'CoinGecko', 'CoinCap'],
     supportedModules: ['TECHNICAL', 'CRYPTO_FUNDAMENTALS', 'ONCHAIN', 'QUANT', 'PREDICTION', 'AI_REPORT'],
     description: 'Proof-of-stake blockchain platform designed for security, scalability, and sustainability through peer-reviewed research.'
+  },
+  {
+    id: 'CRYPTO:NEARUSDT',
+    symbol: 'NEAR/USDT',
+    name: 'NEAR Protocol',
+    assetType: 'CRYPTO',
+    market: 'CRYPTO',
+    exchange: 'Binance / Global',
+    country: 'GLOBAL',
+    currency: 'USDT',
+    sector: 'Layer 1 & AI Ecosystem',
+    industry: 'Dynamic Sharding Blockchain',
+    tradingHours: { open: '00:00', close: '23:59', timezone: 'UTC' },
+    dataProviders: ['BinancePublic', 'CoinGecko', 'CoinCap'],
+    supportedModules: ['TECHNICAL', 'CRYPTO_FUNDAMENTALS', 'ONCHAIN', 'QUANT', 'PREDICTION', 'AI_REPORT'],
+    description: 'High-throughput Layer-1 smart contract platform utilizing Nightshade dynamic sharding and user-friendly chain abstraction.'
+  },
+  {
+    id: 'CRYPTO:ANKRUSDT',
+    symbol: 'ANKR/USDT',
+    name: 'Ankr Network',
+    assetType: 'CRYPTO',
+    market: 'CRYPTO',
+    exchange: 'Binance / Global',
+    country: 'GLOBAL',
+    currency: 'USDT',
+    sector: 'DePIN & Web3 Infrastructure',
+    industry: 'Decentralized Node Infrastructure',
+    tradingHours: { open: '00:00', close: '23:59', timezone: 'UTC' },
+    dataProviders: ['BinancePublic', 'CoinGecko', 'CoinCap'],
+    supportedModules: ['TECHNICAL', 'CRYPTO_FUNDAMENTALS', 'ONCHAIN', 'QUANT', 'PREDICTION', 'AI_REPORT'],
+    description: 'Decentralized Web3 infrastructure provider delivering high-performance multi-chain RPC endpoints, liquid staking, and distributed computing.'
   }
 ];

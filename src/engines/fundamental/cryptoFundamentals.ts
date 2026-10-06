@@ -183,6 +183,104 @@ export const CRYPTO_FUNDAMENTALS_DATABASE: Record<
         }
       ]
     }
+  },
+  'CRYPTO:NEARUSDT': {
+    tokenomics: {
+      circulatingSupply: 1210000000,
+      totalSupply: 1220000000,
+      maxSupply: null,
+      circulatingPercent: 99.18,
+      fdv: 5900000000,
+      fdvToMarketCapRatio: 1.01,
+      annualInflationRate: 5.0,
+      emissionSchedule: '5% annual network emission with 70% of transactional gas fees programmatically burned'
+    },
+    protocol: {
+      fees24h: 380000,
+      revenue30d: 9500000,
+      tvl: 250000000,
+      marketCapToTvl: 23.6,
+      treasuryBalance: 320000000
+    },
+    network: {
+      activeAddresses24h: 2150000,
+      dailyTransactions: 6200000,
+      developerCommits30d: 310,
+      consensusMechanism: 'Proof of Stake + Nightshade Sharding'
+    },
+    onchain: {
+      exchangeNetFlow24hUsd: -3200000, // -$3.2M Net Outflow
+      whaleTransactions24h: 420,
+      top10HoldersPercent: 8.4,
+      top100HoldersPercent: 24.5,
+      mvrvZScore: 1.45,
+      nvtRatio: 28.4,
+      metrics: [
+        {
+          metric: 'Daily Active Accounts',
+          value: '2.15M / day',
+          observation: 'NEAR maintains industry-leading daily active user onboarding via Chain Signatures and key abstraction.',
+          interpretation: 'High consumer transactional velocity reduces circulating liquid float.',
+          signal: 'BULLISH'
+        },
+        {
+          metric: 'Exchange Net Flow',
+          value: '-$3.2M Outflow',
+          observation: 'Net withdrawal of NEAR tokens from centralized exchanges into native non-custodial staking.',
+          interpretation: 'Accumulation into staking validators absorbs sell-side pressure.',
+          signal: 'BULLISH'
+        }
+      ]
+    }
+  },
+  'CRYPTO:ANKRUSDT': {
+    tokenomics: {
+      circulatingSupply: 10000000000,
+      totalSupply: 10000000000,
+      maxSupply: 10000000000,
+      circulatingPercent: 100.0,
+      fdv: 284000000,
+      fdvToMarketCapRatio: 1.0,
+      annualInflationRate: 0.0,
+      emissionSchedule: '100% fully unlocked max supply with zero future token unlock dilution'
+    },
+    protocol: {
+      fees24h: 95000,
+      revenue30d: 2850000,
+      tvl: 92000000,
+      marketCapToTvl: 3.08,
+      treasuryBalance: 45000000
+    },
+    network: {
+      activeAddresses24h: 38000,
+      dailyTransactions: 145000,
+      developerCommits30d: 185,
+      consensusMechanism: 'Proof of Stake & Distributed RPC Nodes'
+    },
+    onchain: {
+      exchangeNetFlow24hUsd: -450000,
+      whaleTransactions24h: 85,
+      top10HoldersPercent: 14.2,
+      top100HoldersPercent: 41.5,
+      mvrvZScore: 0.95,
+      nvtRatio: 18.2,
+      metrics: [
+        {
+          metric: 'RPC Request Volume',
+          value: '8.4B requests / mo',
+          observation: 'DePIN node providers handle multi-chain developer throughput across 40+ networks.',
+          interpretation: 'Steady enterprise utility revenue reinforces token staking utility.',
+          signal: 'BULLISH'
+        },
+        {
+          metric: 'Token Float Status',
+          value: '100% Circulating',
+          observation: 'Zero overhang from VC or team token vesting unlocks.',
+          interpretation: 'Eliminates structural dilution risk common to newer infrastructure tokens.',
+          signal: 'BULLISH'
+        }
+      ]
+    }
   }
 };
 

@@ -128,5 +128,53 @@ export const US_ASSETS: Asset[] = [
     dataProviders: ['Finnhub', 'YahooFinance', 'AlphaVantage'],
     supportedModules: ['TECHNICAL', 'FUNDAMENTAL', 'QUANT', 'PREDICTION', 'AI_REPORT'],
     description: 'Pioneer of mass-market electric vehicles, clean energy generation/storage, and autonomous driving robotics.'
+  },
+  {
+    id: 'NASDAQ:META',
+    symbol: 'META',
+    name: 'Meta Platforms, Inc.',
+    assetType: 'STOCK',
+    market: 'NASDAQ',
+    exchange: 'NASDAQ',
+    country: 'US',
+    currency: 'USD',
+    sector: 'Social Media & AI',
+    industry: 'Interactive Media & Services',
+    tradingHours: { open: '09:30', close: '16:00', timezone: 'America/New_York' },
+    dataProviders: ['Finnhub', 'YahooFinance', 'AlphaVantage'],
+    supportedModules: ['TECHNICAL', 'FUNDAMENTAL', 'QUANT', 'PREDICTION', 'AI_REPORT'],
+    description: 'Global titan in social networking and virtual reality, operating Facebook, Instagram, WhatsApp, and leading open AI research (Llama).'
+  },
+  {
+    id: 'NASDAQ:SPCX',
+    symbol: 'SPCX',
+    name: 'AXS Acquisition & SPAC ETF',
+    assetType: 'ETF',
+    market: 'NASDAQ',
+    exchange: 'Cboe BZX / NYSE',
+    country: 'US',
+    currency: 'USD',
+    sector: 'Alternative Investments',
+    industry: 'SPAC & Special Situations ETF',
+    tradingHours: { open: '09:30', close: '16:00', timezone: 'America/New_York' },
+    dataProviders: ['Finnhub', 'YahooFinance', 'AlphaVantage'],
+    supportedModules: ['TECHNICAL', 'QUANT', 'PREDICTION', 'SCENARIO', 'AI_REPORT'],
+    description: 'Actively managed ETF navigating pre-merger special purpose acquisition companies (SPACs) and new market public listings.'
+  },
+  {
+    id: 'NASDAQ:PYPL',
+    symbol: 'PYPL',
+    name: 'PayPal Holdings, Inc.',
+    assetType: 'STOCK',
+    market: 'NASDAQ',
+    exchange: 'NASDAQ',
+    country: 'US',
+    currency: 'USD',
+    sector: 'Fintech & Digital Payments',
+    industry: 'Transaction Processing & Digital Wallets',
+    tradingHours: { open: '09:30', close: '16:00', timezone: 'America/New_York' },
+    dataProviders: ['Finnhub', 'YahooFinance', 'AlphaVantage'],
+    supportedModules: ['TECHNICAL', 'FUNDAMENTAL', 'QUANT', 'PREDICTION', 'AI_REPORT'],
+    description: 'Premier digital payments platform operating global consumer wallets (PayPal, Venmo, Braintree) and merchant transaction settlement.'
   }
 ];

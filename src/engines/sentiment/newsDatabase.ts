@@ -73,6 +73,46 @@ const RAW_NEWS_FEED = [
     source: 'Decrypt',
     symbols: ['SOL/USDT'],
     publishedAt: Date.now() - 3600 * 1000 * 10
+  },
+  {
+    id: 'news-crypto-04',
+    title: 'NEAR Protocol hits milestone with millions of active accounts and AI chain abstraction',
+    summary: 'NEAR user onboarding accelerates as multi-chain account abstraction and decentralized AI compute integrations gain developer traction.',
+    source: 'CoinDesk',
+    symbols: ['NEAR/USDT'],
+    publishedAt: Date.now() - 3600 * 1000 * 5
+  },
+  {
+    id: 'news-crypto-05',
+    title: 'Ankr Network expands DePIN decentralized RPC infrastructure across 40 blockchain networks',
+    summary: 'Ankr reports record monthly API request volume alongside institutional enterprise node partnerships.',
+    source: 'The Block',
+    symbols: ['ANKR/USDT'],
+    publishedAt: Date.now() - 3600 * 1000 * 11
+  },
+  {
+    id: 'news-us-03',
+    title: 'Meta advertising efficiency surges with open-source Llama generative AI deployments',
+    summary: 'Meta Platforms showcases double-digit click-through improvement and reduced cost per acquisition for brand advertisers.',
+    source: 'Wall Street Journal',
+    symbols: ['META', 'QQQ', 'SPY'],
+    publishedAt: Date.now() - 3600 * 1000 * 7
+  },
+  {
+    id: 'news-us-04',
+    title: 'PayPal accelerates Fastlane merchant guest checkout adoption across e-commerce giants',
+    summary: 'Transaction conversion rates climb 32% above traditional guest checkout in nationwide retailer deployments.',
+    source: 'Bloomberg Markets',
+    symbols: ['PYPL'],
+    publishedAt: Date.now() - 3600 * 1000 * 9
+  },
+  {
+    id: 'news-us-05',
+    title: 'SPAC market activity stabilizes with disciplined acquisition valuations',
+    summary: 'AXS Acquisition and SPAC Focus ETF registers steady yield profile as pre-merger trust protections hold firm.',
+    source: 'MarketWatch',
+    symbols: ['SPCX'],
+    publishedAt: Date.now() - 3600 * 1000 * 16
   }
 ];
 

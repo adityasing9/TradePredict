@@ -19,14 +19,25 @@ export function getAssetById(id: string): Asset | undefined {
   if (ASSET_MAP.has(id)) {
     return ASSET_MAP.get(id);
   }
-  // Try finding by symbol
+  // Try finding by symbol / id case-insensitively and normalized
   const cleanId = id.toUpperCase().trim();
-  return ALL_ASSETS.find(
-    (a) =>
-      a.id.toUpperCase() === cleanId ||
-      a.symbol.toUpperCase() === cleanId ||
-      a.symbol.replace('/', '').toUpperCase() === cleanId
-  );
+  const strippedId = cleanId.replace(/[\/\-_: ]/g, '');
+
+  return ALL_ASSETS.find((a) => {
+    const aId = a.id.toUpperCase();
+    const aSym = a.symbol.toUpperCase();
+    const aSymStripped = aSym.replace(/[\/\-_ ]/g, '');
+    const aIdStripped = aId.replace(/[\/\-_: ]/g, '');
+
+    return (
+      aId === cleanId ||
+      aSym === cleanId ||
+      aSymStripped === strippedId ||
+      aIdStripped === strippedId ||
+      aSymStripped === cleanId ||
+      aIdStripped.endsWith(strippedId)
+    );
+  });
 }
 
 export function filterAssets(filter: MarketFilter): Asset[] {
@@ -45,9 +56,21 @@ export function filterAssets(filter: MarketFilter): Asset[] {
     }
     if (filter.searchQuery && filter.searchQuery.trim() !== '') {
       const q = filter.searchQuery.toLowerCase().trim();
-      const matchSymbol = asset.symbol.toLowerCase().includes(q);
-      const matchName = asset.name.toLowerCase().includes(q);
-      const matchSector = asset.sector.toLowerCase().includes(q);
+      const strippedQ = q.replace(/[\/\-_: ]/g, '');
+      const sym = asset.symbol.toLowerCase();
+      const symStripped = sym.replace(/[\/\-_ ]/g, '');
+      const id = asset.id.toLowerCase();
+      const idStripped = id.replace(/[\/\-_: ]/g, '');
+      const name = asset.name.toLowerCase();
+      const sector = asset.sector.toLowerCase();
+
+      const matchSymbol =
+        sym.includes(q) ||
+        symStripped.includes(strippedQ) ||
+        id.includes(q) ||
+        idStripped.includes(strippedQ);
+      const matchName = name.includes(q);
+      const matchSector = sector.includes(q);
       if (!matchSymbol && !matchName && !matchSector) {
         return false;
       }
