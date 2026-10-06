@@ -42,6 +42,46 @@ export interface EnsembleComponentWeight {
   note: string;
 }
 
+export type TradeAction = 'STRONG BUY' | 'BUY' | 'WAIT' | 'SELL' | 'STRONG SELL';
+
+export type ExecutionTiming =
+  | 'BUY NOW'
+  | 'BUY ON PULLBACK'
+  | 'BUY ON BREAKOUT'
+  | 'SELL NOW'
+  | 'SELL ON RALLY'
+  | 'WAIT FOR CONFIRMATION';
+
+export interface TradeRecommendation {
+  action: TradeAction;
+  timing: ExecutionTiming;
+  isNow: boolean; // True if immediately actionable at current market price
+  entryZone: {
+    min: number;
+    max: number;
+    targetEntry: number;
+    label: string;
+  };
+  stopLoss: {
+    price: number;
+    percent: number;
+    label: string;
+  };
+  takeProfit1: {
+    price: number;
+    percent: number;
+    label: string;
+  };
+  takeProfit2: {
+    price: number;
+    percent: number;
+    label: string;
+  };
+  riskRewardRatio: number;
+  rationale: string[];
+  invalidationTrigger: string;
+}
+
 export interface MLPredictionResult {
   id: string;
   assetId: string;
@@ -55,6 +95,7 @@ export interface MLPredictionResult {
   expectedPriceRange: [number, number]; // [$182.50, $193.10]
   volatilityForecast: 'LOW' | 'NORMAL' | 'ELEVATED' | 'EXTREME';
   confidenceScore: number; // 0 - 100
+  tradeRecommendation: TradeRecommendation;
   ensembleWeights: EnsembleComponentWeight[];
   scenarios: {
     bull: Scenario;

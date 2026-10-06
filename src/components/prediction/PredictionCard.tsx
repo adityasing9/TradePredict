@@ -134,6 +134,118 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
         )}
       </div>
 
+      {/* ACTIONABLE TRADE SIGNAL & POINT EXECUTION BANNER */}
+      {prediction.tradeRecommendation && (
+        <div
+          className={`p-3.5 rounded-lg border shadow-xs space-y-3 ${
+            prediction.tradeRecommendation.action === 'STRONG BUY' || prediction.tradeRecommendation.action === 'BUY'
+              ? 'bg-emerald-500/10 border-emerald-500/30'
+              : prediction.tradeRecommendation.action === 'STRONG SELL' || prediction.tradeRecommendation.action === 'SELL'
+              ? 'bg-rose-500/10 border-rose-500/30'
+              : 'bg-amber-500/10 border-amber-500/30'
+          }`}
+        >
+          {/* Header with Call & Timing */}
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/60 pb-2">
+            <div className="flex items-center gap-2">
+              <span
+                className={`px-2.5 py-1 rounded text-xs font-mono font-black tracking-wider flex items-center gap-1.5 shadow-xs ${
+                  prediction.tradeRecommendation.action === 'STRONG BUY' || prediction.tradeRecommendation.action === 'BUY'
+                    ? 'bg-emerald-600 text-white force-white'
+                    : prediction.tradeRecommendation.action === 'STRONG SELL' || prediction.tradeRecommendation.action === 'SELL'
+                    ? 'bg-rose-600 text-white force-white'
+                    : 'bg-amber-500 text-slate-950 font-black'
+                }`}
+              >
+                {prediction.tradeRecommendation.action}
+              </span>
+              <span
+                className={`text-xs font-mono font-extrabold uppercase px-2 py-0.5 rounded border ${
+                  prediction.tradeRecommendation.isNow
+                    ? 'bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 border-cyan-500/40'
+                    : 'bg-surface text-slate-700 dark:text-slate-300 border-border'
+                }`}
+              >
+                {prediction.tradeRecommendation.timing}
+              </span>
+            </div>
+
+            <div className="text-[11px] font-mono font-bold text-slate-600 dark:text-slate-300">
+              Risk/Reward{' '}
+              <span className="text-slate-900 dark:text-white font-black">
+                1 : {prediction.tradeRecommendation.riskRewardRatio}
+              </span>
+            </div>
+          </div>
+
+          {/* Execution Entry Point Description */}
+          <div className="text-xs font-mono font-bold text-slate-900 dark:text-slate-100 flex items-baseline gap-1.5">
+            <span className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">
+              Execution Point:
+            </span>
+            <span className="text-cyan-700 dark:text-accent-cyan font-black">
+              {prediction.tradeRecommendation.entryZone.label}
+            </span>
+          </div>
+
+          {/* 4-Grid Execution Points Matrix */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
+            <div className="p-2 rounded bg-surface border border-border shadow-2xs">
+              <span className="text-[10px] text-slate-500 uppercase font-bold block">Entry Point</span>
+              <span className="font-mono font-black text-slate-900 dark:text-white text-xs block mt-0.5">
+                {currency} {prediction.tradeRecommendation.entryZone.targetEntry.toLocaleString()}
+              </span>
+            </div>
+
+            <div className="p-2 rounded bg-surface border border-rose-500/30 shadow-2xs">
+              <span className="text-[10px] text-rose-600 dark:text-rose-400 uppercase font-bold block">
+                Stop Loss Point
+              </span>
+              <span className="font-mono font-black text-rose-600 dark:text-rose-400 text-xs block mt-0.5">
+                {currency} {prediction.tradeRecommendation.stopLoss.price.toLocaleString()} (
+                {prediction.tradeRecommendation.stopLoss.percent}%)
+              </span>
+            </div>
+
+            <div className="p-2 rounded bg-surface border border-emerald-500/30 shadow-2xs">
+              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 uppercase font-bold block">
+                Target 1 (TP1)
+              </span>
+              <span className="font-mono font-black text-emerald-600 dark:text-emerald-400 text-xs block mt-0.5">
+                {currency} {prediction.tradeRecommendation.takeProfit1.price.toLocaleString()} (+
+                {prediction.tradeRecommendation.takeProfit1.percent}%)
+              </span>
+            </div>
+
+            <div className="p-2 rounded bg-surface border border-emerald-500/30 shadow-2xs">
+              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 uppercase font-bold block">
+                Target 2 (TP2)
+              </span>
+              <span className="font-mono font-black text-emerald-600 dark:text-emerald-400 text-xs block mt-0.5">
+                {currency} {prediction.tradeRecommendation.takeProfit2.price.toLocaleString()} (+
+                {prediction.tradeRecommendation.takeProfit2.percent}%)
+              </span>
+            </div>
+          </div>
+
+          {/* Rationale & Invalidation */}
+          <div className="text-[11px] font-mono text-slate-700 dark:text-slate-300 space-y-1 pt-1.5 border-t border-border/50">
+            {prediction.tradeRecommendation.rationale.map((r, i) => (
+              <div key={i} className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 shrink-0" />
+                <span>{r}</span>
+              </div>
+            ))}
+            <div className="text-[10px] text-slate-500 dark:text-slate-400 pt-1 flex items-center gap-1">
+              <AlertTriangle className="w-3 h-3 text-amber-500 shrink-0" />
+              <span>
+                Invalidation Trigger: {prediction.tradeRecommendation.invalidationTrigger}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 2. DIRECTIONAL PROBABILITIES */}
       <div className="space-y-1">
         <div className="flex items-center justify-between text-[11px] font-mono">

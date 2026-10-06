@@ -209,56 +209,69 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
         </div>
       </div>
 
-      {/* 2. ANALYSIS SUMMARY DATA STRIP */}
+      {/* 2. REAL-TIME ACTIONABLE SIGNAL & SUMMARY DATA STRIP */}
       <div className="terminal-panel p-2.5 bg-surface-secondary border border-border shadow-xs">
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-xs font-mono">
           <div className="p-2 rounded-md bg-surface border border-border shadow-2xs">
-            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black block">Assessment</span>
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black block">Action Signal</span>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <span
+                className={`font-black text-xs px-1.5 py-0.2 rounded ${
+                  bundle?.prediction.tradeRecommendation?.action.includes('BUY')
+                    ? 'bg-emerald-600 text-white force-white'
+                    : bundle?.prediction.tradeRecommendation?.action.includes('SELL')
+                    ? 'bg-rose-600 text-white force-white'
+                    : 'bg-amber-500 text-slate-950 font-black'
+                }`}
+              >
+                {bundle?.prediction.tradeRecommendation?.action || overallBias}
+              </span>
+            </div>
+          </div>
+
+          <div className="p-2 rounded-md bg-surface border border-border shadow-2xs">
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black block">Execution Point</span>
             <span
-              className={`font-black block mt-0.5 text-xs ${
-                overallBias === 'BULLISH'
-                  ? 'text-emerald-700 dark:text-emerald-400'
-                  : overallBias === 'BEARISH'
-                  ? 'text-rose-700 dark:text-rose-400'
-                  : 'text-amber-700 dark:text-amber-400'
-              }`}
+              className="font-mono font-black text-cyan-700 dark:text-accent-cyan block mt-0.5 text-xs truncate"
+              title={bundle?.prediction.tradeRecommendation?.entryZone.label}
             >
-              {overallBias}
+              {bundle?.prediction.tradeRecommendation?.timing || 'CALCULATING'}
             </span>
           </div>
 
           <div className="p-2 rounded-md bg-surface border border-border shadow-2xs">
-            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black block">Model Confidence</span>
-            <span className="font-black text-slate-900 dark:text-white block mt-0.5 text-xs">{confidence}%</span>
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black block">Target Entry</span>
+            <span className="font-black text-slate-900 dark:text-white block mt-0.5 text-xs">
+              {asset.currency}{' '}
+              {bundle?.prediction.tradeRecommendation?.entryZone.targetEntry.toLocaleString() ||
+                currentPrice.toLocaleString()}
+            </span>
           </div>
 
           <div className="p-2 rounded-md bg-surface border border-border shadow-2xs">
-            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black block">Technical Score</span>
-            <span className="font-black text-slate-900 dark:text-white block mt-0.5 text-xs">{techScore} / 100</span>
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black block">Stop Loss Level</span>
+            <span className="font-black text-rose-600 dark:text-rose-400 block mt-0.5 text-xs">
+              {bundle?.prediction.tradeRecommendation?.stopLoss
+                ? `${asset.currency} ${bundle.prediction.tradeRecommendation.stopLoss.price} (${bundle.prediction.tradeRecommendation.stopLoss.percent}%)`
+                : 'Calculating'}
+            </span>
           </div>
 
           <div className="p-2 rounded-md bg-surface border border-border shadow-2xs">
-            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black block">Fundamental Score</span>
-            <span className="font-black text-slate-900 dark:text-white block mt-0.5 text-xs">{fundScore} / 100</span>
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black block">Target 1 (TP1)</span>
+            <span className="font-black text-emerald-600 dark:text-emerald-400 block mt-0.5 text-xs">
+              {bundle?.prediction.tradeRecommendation?.takeProfit1
+                ? `${asset.currency} ${bundle.prediction.tradeRecommendation.takeProfit1.price} (+${bundle.prediction.tradeRecommendation.takeProfit1.percent}%)`
+                : 'Calculating'}
+            </span>
           </div>
 
           <div className="p-2 rounded-md bg-surface border border-border shadow-2xs">
-            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black block">Sentiment Score</span>
-            <span className="font-black text-slate-900 dark:text-white block mt-0.5 text-xs">{sentScore} / 100</span>
-          </div>
-
-          <div className="p-2 rounded-md bg-surface border border-border shadow-2xs">
-            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black block">Risk Level</span>
-            <span
-              className={`font-black block mt-0.5 text-xs ${
-                riskLevel === 'LOW'
-                  ? 'text-emerald-700 dark:text-emerald-400'
-                  : riskLevel === 'HIGH' || riskLevel === 'CRITICAL'
-                  ? 'text-rose-700 dark:text-rose-400'
-                  : 'text-amber-700 dark:text-amber-400'
-              }`}
-            >
-              {riskLevel}
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black block">Risk / Reward</span>
+            <span className="font-black text-slate-900 dark:text-white block mt-0.5 text-xs">
+              {bundle?.prediction.tradeRecommendation?.riskRewardRatio
+                ? `1 : ${bundle.prediction.tradeRecommendation.riskRewardRatio}`
+                : '1 : 2.0'}
             </span>
           </div>
         </div>

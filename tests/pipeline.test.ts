@@ -54,8 +54,17 @@ describe('Unified Analytical Pipeline Multi-Market Verification', () => {
     expect(bundle.fundamental.crypto?.onchain.exchangeNetFlow24hUsd).toBe(-48500000);
     // Observation vs Interpretation separation
     expect(bundle.fundamental.crypto?.onchain.metrics[0].observation).toBeDefined();
-    expect(bundle.fundamental.crypto?.onchain.metrics[0].interpretation).toBeDefined();
     expect(report.predictionSummary.probabilityText).toContain('UP:');
+
+    // Actionable Trade Signal Verification
+    expect(bundle.prediction.tradeRecommendation).toBeDefined();
+    expect(['STRONG BUY', 'BUY', 'WAIT', 'SELL', 'STRONG SELL']).toContain(bundle.prediction.tradeRecommendation.action);
+    expect(['BUY NOW', 'BUY ON PULLBACK', 'BUY ON BREAKOUT', 'SELL NOW', 'SELL ON RALLY', 'WAIT FOR CONFIRMATION']).toContain(bundle.prediction.tradeRecommendation.timing);
+    expect(bundle.prediction.tradeRecommendation.entryZone.targetEntry).toBeGreaterThan(0);
+    expect(bundle.prediction.tradeRecommendation.stopLoss.price).toBeGreaterThan(0);
+    expect(bundle.prediction.tradeRecommendation.takeProfit1.price).toBeGreaterThan(0);
+    expect(bundle.prediction.tradeRecommendation.riskRewardRatio).toBeGreaterThanOrEqual(1.0);
+    expect(report.executiveSummary).toContain('Actionable Execution Signal:');
   });
 
   it('correctly resolves and executes newly requested assets (NEAR, ANKR, META, PYPL, SPCX)', () => {

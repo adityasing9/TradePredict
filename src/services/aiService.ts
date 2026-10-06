@@ -33,7 +33,12 @@ export function generateDeterministicReport(bundle: AnalysisBundle): AIAnalystRe
   const p = prediction.directionProbabilities;
   const curr = asset.currency;
 
-  const executiveSummary = `${asset.name} (${asset.symbol}) currently trades at ${curr} ${currentPrice.toLocaleString()}. Our multi-factor analysis identifies a ${prediction.direction.toLowerCase()} bias with an estimated directional probability of ${p.up}% Up, ${p.neutral}% Neutral, and ${p.down}% Down over the ${bundle.timeframe} horizon. The overall risk profile is classified as ${risk.level} (${risk.overallScore}/100) within a ${macro.regime.toLowerCase()} macroeconomic regime.`;
+  const rec = prediction.tradeRecommendation;
+  const executionText = rec
+    ? ` Actionable Execution Signal: [${rec.action} — ${rec.timing}]. Entry Point: ${curr} ${rec.entryZone.targetEntry.toLocaleString()} | Stop Loss: ${curr} ${rec.stopLoss.price.toLocaleString()} (${rec.stopLoss.percent}%) | Target 1: ${curr} ${rec.takeProfit1.price.toLocaleString()} (+${rec.takeProfit1.percent}%, R:R 1:${rec.riskRewardRatio}).`
+    : '';
+
+  const executiveSummary = `${asset.name} (${asset.symbol}) currently trades at ${curr} ${currentPrice.toLocaleString()}. Our multi-factor analysis identifies a ${prediction.direction.toLowerCase()} bias with an estimated directional probability of ${p.up}% Up, ${p.neutral}% Neutral, and ${p.down}% Down over the ${bundle.timeframe} horizon.${executionText} The overall risk profile is classified as ${risk.level} (${risk.overallScore}/100) within a ${macro.regime.toLowerCase()} macroeconomic regime.`;
 
   const currentMarketState = `The market is currently in a ${quant.regime.replace('_', ' ').toLowerCase()} state with 20-day annualized volatility of ${quant.rollingVolatility20d}%. Benchmark beta stands at ${quant.beta} against ${quant.benchmarkName}. Price is located ${risk.factors.find(f => f.category === 'STRUCTURE')?.metricValue || 'near range median'}.`;
 

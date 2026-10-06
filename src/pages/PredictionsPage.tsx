@@ -98,7 +98,7 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({ onSelectAsset 
       {/* Grid of Predictions */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         {filtered.map((item) => {
-          const { asset, direction, up, neutral, down, rangeLow, rangeHigh, confidence } = item;
+          const { asset, price, direction, up, neutral, down, rangeLow, rangeHigh, confidence } = item;
 
           const flag =
             asset.market === 'NEPSE' ? '🇳🇵' :
@@ -157,6 +157,49 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({ onSelectAsset 
                     <div style={{ width: `${down}%` }} className="bg-market-bearish" />
                   </div>
                 </div>
+
+                {/* Actionable Signal & Execution Point Tag */}
+                {(() => {
+                  const isBuy = direction === 'BULLISH';
+                  const isSell = direction === 'BEARISH';
+                  const actionTag = isBuy
+                    ? up >= 65
+                      ? 'BUY NOW'
+                      : 'BUY ON PULLBACK'
+                    : isSell
+                    ? down >= 65
+                      ? 'SELL NOW'
+                      : 'SELL ON RALLY'
+                    : 'WAIT';
+                  const entryPoint = isBuy
+                    ? up >= 65
+                      ? price
+                      : rangeLow
+                    : isSell
+                    ? down >= 65
+                      ? price
+                      : rangeHigh
+                    : price;
+
+                  return (
+                    <div className="flex items-center justify-between text-[11px] font-mono bg-surface-secondary/70 px-2 py-1.5 rounded border border-border mt-2.5">
+                      <span
+                        className={`px-1.5 py-0.5 rounded text-[10px] font-mono font-black ${
+                          isBuy
+                            ? 'bg-emerald-600 text-white force-white'
+                            : isSell
+                            ? 'bg-rose-600 text-white force-white'
+                            : 'bg-amber-500 text-slate-900 font-bold'
+                        }`}
+                      >
+                        {actionTag}
+                      </span>
+                      <span className="font-semibold text-slate-700 dark:text-slate-300 text-[10px]">
+                        Point: <span className="font-black text-slate-950 dark:text-white">{asset.currency} {entryPoint.toLocaleString()}</span>
+                      </span>
+                    </div>
+                  );
+                })()}
               </div>
 
               {/* Footer info */}

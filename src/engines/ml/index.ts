@@ -9,6 +9,7 @@ import { extractPredictionFeatures } from './featureEngineering';
 import { predictDirectionBoostedEnsemble } from './models/gradientBoost';
 import { calculateProjectionCones } from './models/volatilityCone';
 import { generateScenarios } from '../scenario/scenarioEngine';
+import { generateTradeRecommendation } from './tradeSignalEngine';
 
 export function runMLPrediction(
   candles: Candle[],
@@ -96,6 +97,16 @@ export function runMLPrediction(
   );
   const confidenceScore = Math.min(88, Math.max(52, Math.round(directionMaxProb * 1.05)));
 
+  // 6. Actionable Trade Recommendation (BUY NOW vs BUY AT POINT)
+  const tradeRecommendation = generateTradeRecommendation(
+    currentPrice,
+    mlOutput.direction,
+    mlOutput.probabilities,
+    technical,
+    quant,
+    scenarios
+  );
+
   return {
     id: `pred-${asset.symbol.toLowerCase()}-${Date.now()}`,
     assetId: asset.id,
@@ -109,6 +120,7 @@ export function runMLPrediction(
     expectedPriceRange,
     volatilityForecast,
     confidenceScore,
+    tradeRecommendation,
     ensembleWeights,
     scenarios,
     projectionCones: cones,

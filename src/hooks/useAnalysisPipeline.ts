@@ -9,6 +9,8 @@ export function useAnalysisPipeline(asset: Asset, candles: Candle[], timeframe =
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const lastClose = candles && candles.length > 0 ? candles[candles.length - 1].close : 0;
+
   const runPipeline = () => {
     if (!candles || candles.length === 0) {
       setLoading(false);
@@ -31,7 +33,7 @@ export function useAnalysisPipeline(asset: Asset, candles: Candle[], timeframe =
 
   useEffect(() => {
     runPipeline();
-  }, [asset.id, candles.length, timeframe]);
+  }, [asset.id, candles.length, lastClose, timeframe]);
 
   return {
     result,
