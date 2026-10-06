@@ -38,6 +38,17 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
   const [showVWAP, setShowVWAP] = useState(false);
   const [showLevels, setShowLevels] = useState(true);
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
+  const [isLightMode, setIsLightMode] = useState(() =>
+    typeof document !== 'undefined' && document.documentElement.classList.contains('light')
+  );
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsLightMode(document.documentElement.classList.contains('light'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
 
   const timeframes: Timeframe[] = ['15m', '1H', '4H', '1D', '1W'];
 
@@ -125,8 +136,20 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
     const priceHeight = height * 0.74;
     const volumeHeight = height * 0.22;
 
-    // Background fill (deep obsidian)
-    ctx.fillStyle = '#080b10';
+    const isLight = isLightMode;
+    const chartBg = isLight ? '#ffffff' : '#080b10';
+    const gridColor = isLight ? '#e2e8f0' : '#15202b';
+    const axisTextColor = isLight ? '#475569' : '#64748b';
+    const candleUp = isLight ? '#16a34a' : '#22c55e';
+    const candleDown = isLight ? '#dc2626' : '#ef4444';
+    const volUp = isLight ? 'rgba(22, 163, 74, 0.28)' : 'rgba(34, 197, 94, 0.25)';
+    const volDown = isLight ? 'rgba(220, 38, 38, 0.28)' : 'rgba(239, 68, 68, 0.25)';
+    const bbColor = isLight ? 'rgba(8, 145, 178, 0.45)' : 'rgba(34, 211, 238, 0.4)';
+    const lineChartColor = isLight ? '#0891b2' : '#22d3ee';
+    const crosshairColor = isLight ? 'rgba(71, 85, 105, 0.4)' : 'rgba(148, 163, 184, 0.4)';
+
+    // Background fill
+    ctx.fillStyle = chartBg;
     ctx.fillRect(0, 0, width, height);
 
     // Visible slice of bars (last 70 bars)
@@ -157,7 +180,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
     const getY = (price: number) => priceHeight - ((price - minPrice) / priceRange) * (priceHeight - 24) - 12;
 
     // 1. Grid Lines & Axis Labels
-    ctx.strokeStyle = '#15202b';
+    ctx.strokeStyle = gridColor;
     ctx.lineWidth = 1;
     ctx.setLineDash([3, 3]);
 
@@ -171,7 +194,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
       ctx.lineTo(width - paddingRight, y);
       ctx.stroke();
 
-      ctx.fillStyle = '#64748b';
+      ctx.fillStyle = axisTextColor;
       ctx.font = '10px JetBrains Mono, monospace';
       ctx.textAlign = 'left';
       ctx.fillText(p.toFixed(p < 10 ? 3 : 1), width - paddingRight + 8, y + 3.5);
@@ -183,7 +206,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
       for (const s of supports.slice(0, 2)) {
         if (s.price >= minPrice && s.price <= maxPrice) {
           const y = getY(s.price);
-          ctx.strokeStyle = 'rgba(34, 197, 94, 0.4)';
+          ctx.strokeStyle = isLight ? 'rgba(22, 163, 74, 0.45)' : 'rgba(34, 197, 94, 0.4)';
           ctx.lineWidth = 1;
           ctx.setLineDash([5, 4]);
           ctx.beginPath();
@@ -191,7 +214,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
           ctx.lineTo(width - paddingRight, y);
           ctx.stroke();
 
-          ctx.fillStyle = '#22c55e';
+          ctx.fillStyle = candleUp;
           ctx.font = '9px JetBrains Mono, monospace';
           ctx.fillText(`SUP ${s.price}`, width - paddingRight + 6, y - 3);
         }
@@ -200,7 +223,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
       for (const r of resistances.slice(0, 2)) {
         if (r.price >= minPrice && r.price <= maxPrice) {
           const y = getY(r.price);
-          ctx.strokeStyle = 'rgba(239, 68, 68, 0.4)';
+          ctx.strokeStyle = isLight ? 'rgba(220, 38, 38, 0.45)' : 'rgba(239, 68, 68, 0.4)';
           ctx.lineWidth = 1;
           ctx.setLineDash([5, 4]);
           ctx.beginPath();
@@ -208,7 +231,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
           ctx.lineTo(width - paddingRight, y);
           ctx.stroke();
 
-          ctx.fillStyle = '#ef4444';
+          ctx.fillStyle = candleDown;
           ctx.font = '9px JetBrains Mono, monospace';
           ctx.fillText(`RES ${r.price}`, width - paddingRight + 6, y - 3);
         }
@@ -219,7 +242,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
     // 3. Bollinger Bands Overlay
     if (showBollinger) {
       const bb = calculateBollingerBands(visibleBars, 20, 2);
-      ctx.strokeStyle = 'rgba(34, 211, 238, 0.4)';
+      ctx.strokeStyle = bbColor;
       ctx.lineWidth = 1;
       ctx.beginPath();
       let started = false;
@@ -261,7 +284,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
       const vy = height - vHeight;
       const isUp = bar.close >= bar.open;
 
-      ctx.fillStyle = isUp ? 'rgba(34, 197, 94, 0.25)' : 'rgba(239, 68, 68, 0.25)';
+      ctx.fillStyle = isUp ? volUp : volDown;
       ctx.fillRect(x - candleWidth / 2, vy, candleWidth, vHeight);
     });
 
@@ -275,7 +298,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
         const lowY = getY(bar.low);
 
         const isUp = bar.close >= bar.open;
-        const color = isUp ? '#22c55e' : '#ef4444';
+        const color = isUp ? candleUp : candleDown;
 
         // High-Low Wick
         ctx.strokeStyle = color;
@@ -299,7 +322,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
         if (i === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       });
-      ctx.strokeStyle = '#22d3ee';
+      ctx.strokeStyle = lineChartColor;
       ctx.lineWidth = 1.75;
       ctx.stroke();
     }
@@ -327,29 +350,29 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
 
     if (showEMA20) {
       const ema20 = calculateEMA(visibleBars, 20);
-      renderIndicatorLine(ema20, '#f59e0b');
+      renderIndicatorLine(ema20, isLight ? '#d97706' : '#f59e0b');
     }
 
     if (showEMA50) {
       const ema50 = calculateEMA(visibleBars, 50);
-      renderIndicatorLine(ema50, '#38bdf8');
+      renderIndicatorLine(ema50, isLight ? '#0284c7' : '#38bdf8');
     }
 
     if (showEMA200) {
       const ema200 = calculateEMA(visibleBars, Math.min(200, Math.floor(visibleBars.length * 0.9)));
-      renderIndicatorLine(ema200, '#818cf8');
+      renderIndicatorLine(ema200, isLight ? '#7c3aed' : '#818cf8');
     }
 
     if (showVWAP) {
       const vwap = calculateVWAP(visibleBars);
-      renderIndicatorLine(vwap, '#ec4899');
+      renderIndicatorLine(vwap, isLight ? '#db2777' : '#ec4899');
     }
 
     // 7. Latest Price Reference Line
     const latestBar = visibleBars[visibleBars.length - 1];
     const latestY = getY(latestBar.close);
     const isLatestUp = latestBar.close >= latestBar.open;
-    const latestColor = isLatestUp ? '#22c55e' : '#ef4444';
+    const latestColor = isLatestUp ? candleUp : candleDown;
 
     ctx.strokeStyle = latestColor;
     ctx.lineWidth = 1;
@@ -374,7 +397,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
       const hx = paddingLeft + hoverIndex * barWidth + barWidth / 2;
       const hy = getY(hoverBar.close);
 
-      ctx.strokeStyle = 'rgba(148, 163, 184, 0.4)';
+      ctx.strokeStyle = crosshairColor;
       ctx.lineWidth = 1;
       ctx.setLineDash([3, 3]);
 
@@ -389,15 +412,15 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
       ctx.stroke();
       ctx.setLineDash([]);
 
-      ctx.fillStyle = '#22d3ee';
+      ctx.fillStyle = isLight ? '#0891b2' : '#22d3ee';
       ctx.beginPath();
       ctx.arc(hx, hy, 3.5, 0, Math.PI * 2);
       ctx.fill();
       ctx.lineWidth = 1.5;
-      ctx.strokeStyle = '#ffffff';
+      ctx.strokeStyle = isLight ? '#0f172a' : '#ffffff';
       ctx.stroke();
     }
-  }, [candles, chartType, showEMA20, showEMA50, showEMA200, showBollinger, showVWAP, showLevels, hoverIndex]);
+  }, [candles, chartType, showEMA20, showEMA50, showEMA200, showBollinger, showVWAP, showLevels, hoverIndex, isLightMode]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;

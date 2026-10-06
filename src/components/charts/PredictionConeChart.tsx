@@ -156,7 +156,7 @@ export const PredictionConeChart: React.FC<PredictionConeChartProps> = ({
                   y1={getY(c.ci95High)}
                   x2={x}
                   y2={getY(c.ci95Low)}
-                  stroke="rgba(255, 255, 255, 0.1)"
+                  stroke="rgba(148, 163, 184, 0.25)"
                   strokeWidth="1"
                   strokeDasharray="2 2"
                 />

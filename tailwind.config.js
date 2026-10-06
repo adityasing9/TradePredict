@@ -9,29 +9,29 @@ export default {
     extend: {
       colors: {
         background: {
-          DEFAULT: '#05070A',
-          deep: '#080B10',
-          surface: '#0C1118',
-          secondary: '#101720',
-          card: '#0C1118',
-          elevated: '#141C25',
-          border: '#1B2632',
-          subtle: '#15202B'
+          DEFAULT: 'rgb(var(--bg-primary-rgb) / <alpha-value>)',
+          deep: 'rgb(var(--bg-deep-rgb) / <alpha-value>)',
+          surface: 'rgb(var(--bg-card-rgb) / <alpha-value>)',
+          secondary: 'rgb(var(--bg-secondary-rgb) / <alpha-value>)',
+          card: 'rgb(var(--bg-card-rgb) / <alpha-value>)',
+          elevated: 'rgb(var(--bg-elevated-rgb) / <alpha-value>)',
+          border: 'rgb(var(--border-color-rgb) / <alpha-value>)',
+          subtle: 'rgb(var(--border-subtle-rgb) / <alpha-value>)'
         },
         surface: {
-          DEFAULT: '#0C1118',
-          secondary: '#101720',
-          elevated: '#141C25'
+          DEFAULT: 'rgb(var(--bg-card-rgb) / <alpha-value>)',
+          secondary: 'rgb(var(--bg-secondary-rgb) / <alpha-value>)',
+          elevated: 'rgb(var(--bg-elevated-rgb) / <alpha-value>)'
         },
         border: {
-          DEFAULT: '#1B2632',
-          subtle: '#15202B'
+          DEFAULT: 'rgb(var(--border-color-rgb) / <alpha-value>)',
+          subtle: 'rgb(var(--border-subtle-rgb) / <alpha-value>)'
         },
         accent: {
-          cyan: '#22D3EE',
-          'cyan-hover': '#06B6D4',
-          'cyan-subtle': 'rgba(34, 211, 238, 0.08)',
-          'cyan-border': 'rgba(34, 211, 238, 0.25)'
+          cyan: 'rgb(var(--accent-cyan-rgb) / <alpha-value>)',
+          'cyan-hover': 'var(--accent-cyan-hover)',
+          'cyan-subtle': 'var(--accent-cyan-subtle)',
+          'cyan-border': 'var(--accent-cyan-border)'
         },
         brand: {
           50: '#ECFEFF',
@@ -44,17 +44,17 @@ export default {
           700: '#0E7490'
         },
         market: {
-          bullish: '#22C55E',
-          bearish: '#EF4444',
-          warning: '#F59E0B',
-          neutral: '#94A3B8'
+          bullish: 'rgb(var(--market-bullish-rgb) / <alpha-value>)',
+          bearish: 'rgb(var(--market-bearish-rgb) / <alpha-value>)',
+          warning: 'rgb(var(--market-warning-rgb) / <alpha-value>)',
+          neutral: 'rgb(var(--market-neutral-rgb) / <alpha-value>)'
         },
         terminal: {
-          green: '#22C55E',
-          red: '#EF4444',
-          amber: '#F59E0B',
-          cyan: '#22D3EE',
-          slate: '#94A3B8'
+          green: 'rgb(var(--market-bullish-rgb) / <alpha-value>)',
+          red: 'rgb(var(--market-bearish-rgb) / <alpha-value>)',
+          amber: 'rgb(var(--market-warning-rgb) / <alpha-value>)',
+          cyan: 'rgb(var(--accent-cyan-rgb) / <alpha-value>)',
+          slate: 'rgb(var(--market-neutral-rgb) / <alpha-value>)'
         }
       },
       borderRadius: {
@@ -66,9 +66,9 @@ export default {
         '2xl': '8px',
       },
       boxShadow: {
-        'panel': '0 1px 2px 0 rgba(0, 0, 0, 0.4)',
-        'elevated': '0 2px 4px -1px rgba(0, 0, 0, 0.5)',
-        'modal': '0 12px 24px -4px rgba(0, 0, 0, 0.8)',
+        'panel': 'var(--shadow-panel)',
+        'elevated': 'var(--shadow-elevated)',
+        'modal': 'var(--shadow-modal)',
       },
       fontFamily: {
         mono: ['JetBrains Mono', 'IBM Plex Mono', 'Fira Code', 'Menlo', 'Consolas', 'monospace'],

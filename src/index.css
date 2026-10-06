@@ -4,6 +4,19 @@
 
 @layer base {
   :root {
+    --bg-primary-rgb: 5 7 10;
+    --bg-deep-rgb: 8 11 16;
+    --bg-card-rgb: 12 17 24;
+    --bg-secondary-rgb: 16 23 32;
+    --bg-elevated-rgb: 20 28 37;
+    --border-color-rgb: 27 38 50;
+    --border-subtle-rgb: 21 32 43;
+    --accent-cyan-rgb: 34 211 238;
+    --market-bullish-rgb: 34 197 94;
+    --market-bearish-rgb: 239 68 68;
+    --market-warning-rgb: 245 158 11;
+    --market-neutral-rgb: 148 163 184;
+
     --bg-primary: #05070a;
     --bg-deep: #080b10;
     --bg-card: #0c1118;
@@ -15,28 +28,57 @@
     --text-secondary: #94a3b8;
     --text-muted: #64748b;
     --accent-cyan: #22d3ee;
+    --accent-cyan-hover: #06b6d4;
+    --accent-cyan-subtle: rgba(34, 211, 238, 0.08);
+    --accent-cyan-border: rgba(34, 211, 238, 0.25);
     --market-bullish: #22c55e;
     --market-bearish: #ef4444;
     --market-warning: #f59e0b;
     --market-neutral: #94a3b8;
+
+    --shadow-panel: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+    --shadow-elevated: 0 2px 4px -1px rgba(0, 0, 0, 0.5);
+    --shadow-modal: 0 12px 24px -4px rgba(0, 0, 0, 0.8);
   }
 
   .light {
+    color-scheme: light;
+
+    --bg-primary-rgb: 248 250 252;
+    --bg-deep-rgb: 255 255 255;
+    --bg-card-rgb: 255 255 255;
+    --bg-secondary-rgb: 241 245 249;
+    --bg-elevated-rgb: 248 250 252;
+    --border-color-rgb: 226 232 240;
+    --border-subtle-rgb: 237 242 247;
+    --accent-cyan-rgb: 8 145 178;
+    --market-bullish-rgb: 22 163 74;
+    --market-bearish-rgb: 220 38 38;
+    --market-warning-rgb: 217 119 6;
+    --market-neutral-rgb: 100 116 139;
+
     --bg-primary: #f8fafc;
-    --bg-deep: #f1f5f9;
+    --bg-deep: #ffffff;
     --bg-card: #ffffff;
-    --bg-secondary: #f8fafc;
-    --bg-elevated: #ffffff;
+    --bg-secondary: #f1f5f9;
+    --bg-elevated: #f8fafc;
     --border-color: #e2e8f0;
     --border-subtle: #edf2f7;
     --text-primary: #0f172a;
-    --text-secondary: #475569;
+    --text-secondary: #334155;
     --text-muted: #64748b;
     --accent-cyan: #0891b2;
+    --accent-cyan-hover: #0e7490;
+    --accent-cyan-subtle: rgba(8, 145, 178, 0.08);
+    --accent-cyan-border: rgba(8, 145, 178, 0.25);
     --market-bullish: #16a34a;
     --market-bearish: #dc2626;
     --market-warning: #d97706;
     --market-neutral: #64748b;
+
+    --shadow-panel: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+    --shadow-elevated: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    --shadow-modal: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
   }
 
   body {
@@ -72,23 +114,30 @@
   background: #cbd5e1;
 }
 
+.light ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
 /* Institutional Terminal UI Classes */
 .terminal-panel {
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 6px;
+  box-shadow: var(--shadow-panel);
 }
 
 .terminal-panel-elevated {
   background-color: var(--bg-elevated);
   border: 1px solid var(--border-color);
   border-radius: 6px;
+  box-shadow: var(--shadow-elevated);
 }
 
 .terminal-card {
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 6px;
+  box-shadow: var(--shadow-panel);
   transition: border-color 0.12s ease, background-color 0.12s ease;
 }
 
@@ -108,12 +157,14 @@
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 6px;
+  box-shadow: var(--shadow-panel);
 }
 
 .glass-card-hover {
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 6px;
+  box-shadow: var(--shadow-panel);
   transition: border-color 0.12s ease, background-color 0.12s ease;
 }
 
@@ -122,7 +173,12 @@
   background-color: var(--bg-secondary);
 }
 
-/* Strict restrained market badges */
+.light .glass-card-hover:hover {
+  border-color: #cbd5e1;
+  background-color: #f1f5f9;
+}
+
+/* Restrained market badges */
 .badge-bullish {
   color: var(--market-bullish);
   background-color: rgba(34, 197, 94, 0.08);
@@ -143,8 +199,110 @@
 
 .badge-ai {
   color: var(--accent-cyan);
-  background-color: rgba(34, 211, 238, 0.08);
-  border: 1px solid rgba(34, 211, 238, 0.25);
+  background-color: var(--accent-cyan-subtle);
+  border: 1px solid var(--accent-cyan-border);
+}
+
+/* Light mode specific element adaptations */
+.light .text-white {
+  color: #0f172a;
+}
+
+.light .text-slate-100 {
+  color: #0f172a;
+}
+
+.light .text-slate-200 {
+  color: #1e293b;
+}
+
+.light .text-slate-300 {
+  color: #334155;
+}
+
+.light .text-slate-400 {
+  color: #475569;
+}
+
+.light .text-slate-500 {
+  color: #64748b;
+}
+
+.light .text-slate-600 {
+  color: #94a3b8;
+}
+
+.light .hover\:text-white:hover {
+  color: #0f172a;
+}
+
+.light .hover\:text-slate-200:hover {
+  color: #1e293b;
+}
+
+.light .hover\:text-slate-300:hover {
+  color: #334155;
+}
+
+.light .group:hover .group-hover\:text-white {
+  color: #0f172a;
+}
+
+.light .group:hover .group-hover\:text-slate-200 {
+  color: #1e293b;
+}
+
+/* Form controls in light mode */
+.light input,
+.light select,
+.light textarea {
+  color: #0f172a;
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.light input::placeholder,
+.light textarea::placeholder {
+  color: #94a3b8;
+}
+
+.light input:focus,
+.light select:focus,
+.light textarea:focus {
+  background-color: #ffffff;
+  border-color: #0891b2;
+}
+
+/* Light mode badge color balance */
+.light .badge-bullish {
+  color: #15803d;
+  background-color: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.light .badge-bearish {
+  color: #b91c1c;
+  background-color: #fef2f2;
+  border-color: #fecaca;
+}
+
+.light .badge-neutral {
+  color: #475569;
+  background-color: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+.light .badge-ai {
+  color: #0e7490;
+  background-color: #ecfeff;
+  border-color: #a5f3fc;
+}
+
+/* Ensure solid action buttons preserve crisp text */
+.light [class*="bg-market-bullish"] .text-white,
+.light [class*="bg-market-bearish"] .text-white,
+.light [class*="bg-accent-cyan"] .text-white {
+  color: #ffffff;
 }
 
 /* Ticker marquee animation */

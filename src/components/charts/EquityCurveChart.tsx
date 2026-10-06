@@ -78,7 +78,7 @@ export const EquityCurveChart: React.FC<EquityCurveChartProps> = ({
             y1={getY(initialCapital)}
             x2={paddingLeft + chartW}
             y2={getY(initialCapital)}
-            stroke="rgba(255, 255, 255, 0.15)"
+            stroke="rgba(148, 163, 184, 0.3)"
             strokeWidth="1"
             strokeDasharray="3 3"
           />

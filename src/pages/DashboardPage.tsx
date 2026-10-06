@@ -92,7 +92,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           </div>
           <button
             onClick={() => onNavigate('markets')}
-            className="text-[11px] font-mono text-accent-cyan hover:text-cyan-300 flex items-center gap-1 transition-colors"
+            className="text-[11px] font-mono text-accent-cyan hover:underline flex items-center gap-1 transition-colors"
           >
             <span>All Markets</span>
             <ArrowRight className="w-3 h-3" />
@@ -193,7 +193,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             </div>
             <button
               onClick={() => onNavigate('watchlist')}
-              className="text-[11px] font-mono text-accent-cyan hover:text-cyan-300 flex items-center gap-1"
+              className="text-[11px] font-mono text-accent-cyan hover:underline flex items-center gap-1"
             >
               <span>Manage</span>
               <ArrowRight className="w-3 h-3" />
@@ -254,8 +254,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               </span>
             </div>
             <button
-              onClick={() => onNavigate('predictions')}
-              className="text-[11px] font-mono text-accent-cyan hover:text-cyan-300 flex items-center gap-1"
+              onClick={() => onNavigate('prediction')}
+              className="text-[11px] font-mono text-accent-cyan hover:underline flex items-center gap-1"
             >
               <span>View All</span>
               <ArrowRight className="w-3 h-3" />
@@ -321,7 +321,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           </div>
           <button
             onClick={() => onNavigate('news')}
-            className="text-[11px] font-mono text-accent-cyan hover:text-cyan-300 flex items-center gap-1"
+            className="text-[11px] font-mono text-accent-cyan hover:underline flex items-center gap-1"
           >
             <span>News Stream</span>
             <ArrowRight className="w-3 h-3" />

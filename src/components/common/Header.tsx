@@ -75,7 +75,7 @@ export const Header: React.FC<HeaderProps> = ({
             TP
           </div>
           <div className="flex items-baseline gap-1.5">
-            <span className="font-extrabold text-xs tracking-tight text-white font-mono group-hover:text-cyan-300 transition-colors">
+            <span className="font-extrabold text-xs tracking-tight text-white font-mono group-hover:text-accent-cyan transition-colors">
               TradePredict
             </span>
             <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-cyan-500/10 text-accent-cyan font-bold border border-cyan-500/25">
@@ -200,7 +200,7 @@ export const Header: React.FC<HeaderProps> = ({
                           onSelectAsset(asset);
                           setSearchOpen(false);
                         }}
-                        className="px-2 py-1 rounded bg-surface-secondary border border-border hover:border-accent-cyan/50 hover:bg-accent-cyan/10 text-xs font-mono text-slate-300 hover:text-cyan-300 transition-colors flex items-center gap-1.5"
+                        className="px-2 py-1 rounded bg-surface-secondary border border-border hover:border-accent-cyan/50 hover:bg-accent-cyan/10 text-xs font-mono text-slate-300 hover:text-accent-cyan transition-colors flex items-center gap-1.5"
                       >
                         <span className="font-bold">{asset.symbol}</span>
                         <span className="text-[10px] text-slate-500">{asset.market}</span>
@@ -225,7 +225,7 @@ export const Header: React.FC<HeaderProps> = ({
                     className="w-full flex items-center justify-between p-2 rounded hover:bg-surface-secondary text-left transition-colors group"
                   >
                     <div className="flex items-center gap-2.5">
-                      <span className="font-mono font-bold text-xs text-white group-hover:text-cyan-300 transition-colors">
+                      <span className="font-mono font-bold text-xs text-white group-hover:text-accent-cyan transition-colors">
                         {asset.symbol}
                       </span>
                       <span className="text-xs text-slate-400 truncate max-w-[240px]">

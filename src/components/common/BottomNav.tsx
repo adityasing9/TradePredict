@@ -83,7 +83,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
       {/* 5. AI */}
       <button
         onClick={onOpenAI}
-        className="flex flex-col items-center justify-center py-1 px-2.5 rounded text-accent-cyan hover:text-cyan-300 transition-colors"
+        className="flex flex-col items-center justify-center py-1 px-2.5 rounded text-accent-cyan hover:opacity-80 transition-opacity"
       >
         <Sparkles className="w-4 h-4 mb-0.5 text-accent-cyan" />
         <span className="text-[10px] font-mono tracking-tight font-bold">AI</span>
