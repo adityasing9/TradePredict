@@ -1,0 +1,157 @@
+import { StockFundamentals } from '../../types/fundamental';
+
+export const STOCK_FUNDAMENTALS_DATABASE: Record<string, Partial<StockFundamentals>> = {
+  'NSE:RELIANCE': {
+    peRatio: 26.4,
+    forwardPE: 23.1,
+    pbRatio: 2.2,
+    psRatio: 1.8,
+    evToEbitda: 13.5,
+    eps: 111.4,
+    dividendYield: 0.35,
+    marketCap: 19800000000000, // ~19.8 Lakh Crore INR
+    debtToEquity: 0.42,
+    roe: 9.8,
+    roa: 5.4,
+    currentRatio: 1.15,
+    operatingMargin: 16.2,
+    netMargin: 8.5,
+    revenueYoY: 10.4,
+    earningsYoY: 12.8,
+    freeCashFlow: 380000000000,
+    valuationStatus: 'FAIR',
+    valuationBasis: 'EV/EBITDA multiple of 13.5x trades near historical 5-year median (14.1x).'
+  },
+  'NSE:TCS': {
+    peRatio: 29.8,
+    forwardPE: 27.2,
+    pbRatio: 13.4,
+    psRatio: 6.2,
+    evToEbitda: 21.0,
+    eps: 132.5,
+    dividendYield: 1.45,
+    marketCap: 14200000000000,
+    debtToEquity: 0.08,
+    roe: 48.2,
+    roa: 28.5,
+    currentRatio: 2.45,
+    operatingMargin: 25.8,
+    netMargin: 19.4,
+    revenueYoY: 6.2,
+    earningsYoY: 8.7,
+    freeCashFlow: 410000000000,
+    valuationStatus: 'FAIR',
+    valuationBasis: 'High ROE of 48% commands premium multiple; trades within reasonable historical band.'
+  },
+  'NSE:HDFCBANK': {
+    peRatio: 18.2,
+    forwardPE: 16.5,
+    pbRatio: 2.6,
+    eps: 91.2,
+    dividendYield: 1.18,
+    marketCap: 12800000000000,
+    roe: 16.8,
+    roa: 1.95,
+    operatingMargin: 38.5,
+    netMargin: 24.2,
+    revenueYoY: 18.5,
+    earningsYoY: 19.2,
+    valuationStatus: 'UNDERVALUED',
+    valuationBasis: 'Post-merger PB multiple of 2.6x is below 10-year historical average (3.8x).'
+  },
+  'NASDAQ:AAPL': {
+    peRatio: 33.4,
+    forwardPE: 29.8,
+    pbRatio: 48.2,
+    psRatio: 8.7,
+    evToEbitda: 24.5,
+    eps: 6.75,
+    dividendYield: 0.44,
+    marketCap: 3450000000000,
+    debtToEquity: 1.45,
+    roe: 147.2,
+    roa: 28.4,
+    currentRatio: 0.98,
+    operatingMargin: 30.7,
+    netMargin: 26.3,
+    revenueYoY: 5.1,
+    earningsYoY: 10.2,
+    freeCashFlow: 108000000000,
+    valuationStatus: 'FAIR',
+    valuationBasis: 'Strong services mix shift supports high multiple, offset by modest hardware growth.'
+  },
+  'NASDAQ:MSFT': {
+    peRatio: 34.2,
+    forwardPE: 30.5,
+    pbRatio: 11.8,
+    psRatio: 12.4,
+    evToEbitda: 22.8,
+    eps: 12.8,
+    dividendYield: 0.72,
+    marketCap: 3180000000000,
+    debtToEquity: 0.38,
+    roe: 38.4,
+    roa: 19.2,
+    currentRatio: 1.25,
+    operatingMargin: 44.2,
+    netMargin: 36.1,
+    revenueYoY: 15.2,
+    earningsYoY: 18.4,
+    freeCashFlow: 74000000000,
+    valuationStatus: 'FAIR',
+    valuationBasis: 'Azure cloud expansion and enterprise AI monetization justify current multiples.'
+  },
+  'NASDAQ:NVDA': {
+    peRatio: 52.8,
+    forwardPE: 36.5,
+    pbRatio: 42.1,
+    psRatio: 26.5,
+    evToEbitda: 44.2,
+    eps: 2.38,
+    dividendYield: 0.03,
+    marketCap: 3100000000000,
+    debtToEquity: 0.18,
+    roe: 112.5,
+    roa: 55.4,
+    currentRatio: 4.12,
+    operatingMargin: 62.1,
+    netMargin: 55.3,
+    revenueYoY: 122.4,
+    earningsYoY: 168.0,
+    freeCashFlow: 52000000000,
+    valuationStatus: 'FAIR',
+    valuationBasis: 'Forward PEG ratio (~1.1) reflects extraordinary data-center revenue expansion.'
+  }
+};
+
+export function evaluateStockFundamentals(assetId: string): StockFundamentals {
+  const data = STOCK_FUNDAMENTALS_DATABASE[assetId];
+  if (!data) {
+    return {
+      valuationStatus: 'DATA_UNAVAILABLE',
+      valuationBasis: 'Fundamental financial statements currently unavailable for this specific symbol.'
+    };
+  }
+
+  return {
+    peRatio: data.peRatio,
+    forwardPE: data.forwardPE,
+    pbRatio: data.pbRatio,
+    psRatio: data.psRatio,
+    evToEbitda: data.evToEbitda,
+    eps: data.eps,
+    dividendYield: data.dividendYield,
+    marketCap: data.marketCap,
+    debtToEquity: data.debtToEquity,
+    roe: data.roe,
+    roa: data.roa,
+    currentRatio: data.currentRatio,
+    operatingMargin: data.operatingMargin,
+    netMargin: data.netMargin,
+    revenueYoY: data.revenueYoY,
+    earningsYoY: data.earningsYoY,
+    freeCashFlow: data.freeCashFlow,
+    valuationStatus: data.valuationStatus || 'FAIR',
+    valuationBasis: data.valuationBasis
+  };
+}
