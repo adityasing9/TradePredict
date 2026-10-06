@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { AnalysisBundle, queryAIAnalyst } from '../../services/aiService';
 import { AISettings } from '../../types/settings';
 import { ChatMessage } from '../../types/ai';
-import { Sparkles, Send, X, Bot, User, ShieldAlert, Cpu } from 'lucide-react';
+import { Sparkles, Send, X, Bot, User } from 'lucide-react';
 
 interface AIChatDrawerProps {
   isOpen: boolean;
@@ -22,12 +22,11 @@ export const AIChatDrawer: React.FC<AIChatDrawerProps> = ({
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Exact prompt chips requested in section 13
   const suggestedPrompts = [
-    'Explain current prediction',
-    'What invalidates this thesis?',
-    'Identify key support and resistance',
-    'Compare with sector benchmark'
+    'Explain current prediction setup',
+    'What specific boundary invalidates this thesis?',
+    'Identify key institutional support and resistance',
+    'Generate quantitative risk summary'
   ];
 
   // Initialize greeting on open
@@ -37,7 +36,7 @@ export const AIChatDrawer: React.FC<AIChatDrawerProps> = ({
         {
           id: 'welcome-1',
           role: 'assistant',
-          content: `AI Co-Pilot initialized for **${bundle.asset.symbol}** (${bundle.asset.market}).\n\nI have loaded live analytical layers: Technical Trend (${bundle.technical.trend}), Fundamental Health (${bundle.fundamental.status}), and Ensemble Prediction (${bundle.prediction.direction} with ${bundle.prediction.confidenceScore}% confidence).\n\nSelect a prompt chip below or ask any analytical question.`,
+          content: `AI Co-Pilot initialized for **${bundle.asset.symbol}** (${bundle.asset.market}).\n\nI have loaded live analytical layers: Technical Trend (${bundle.technical.trend.direction.replace('_', ' ')}), Fundamental Health (${bundle.fundamental.status}), and Ensemble Prediction (${bundle.prediction.direction} with ${bundle.prediction.confidenceScore}% confidence).\n\nSelect a prompt chip below or ask any analytical question.`,
           timestamp: Date.now()
         }
       ]);
@@ -90,43 +89,43 @@ export const AIChatDrawer: React.FC<AIChatDrawerProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-background-secondary border-l border-background-border shadow-modal flex flex-col animate-in slide-in-from-right duration-150">
+    <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-background-deep border-l border-border shadow-modal flex flex-col animate-in slide-in-from-right duration-150">
       {/* Header */}
-      <div className="p-3 border-b border-background-border flex items-center justify-between">
+      <div className="p-3 border-b border-border flex items-center justify-between bg-surface-secondary">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded bg-brand-500/15 flex items-center justify-center text-brand-300">
-            <Sparkles className="w-3.5 h-3.5" />
+          <div className="w-5 h-5 rounded bg-surface-elevated border border-border flex items-center justify-center text-accent-cyan">
+            <Sparkles className="w-3 h-3" />
           </div>
           <div>
             <h3 className="text-xs font-mono font-bold text-white uppercase tracking-wider">
               AI Market Analyst
             </h3>
             <span className="text-[10px] text-slate-500 font-mono">
-              Provider: {settings.provider}
+              Engine: {settings.provider}
             </span>
           </div>
         </div>
 
         <button
           onClick={onClose}
-          className="p-1 rounded text-slate-400 hover:text-white hover:bg-white/[0.05] transition-colors"
+          className="p-1 rounded text-slate-400 hover:text-white hover:bg-surface-elevated transition-colors"
         >
           <X className="w-4 h-4" />
         </button>
       </div>
 
-      {/* TOP ASSET CONTEXT PANEL (Required by section 13) */}
+      {/* TOP ASSET CONTEXT PANEL */}
       {bundle && (
-        <div className="px-3.5 py-2 bg-background-elevated border-b border-background-border text-xs font-mono flex items-center justify-between">
+        <div className="px-3 py-2 bg-surface border-b border-border text-xs font-mono flex items-center justify-between">
           <div className="flex items-center gap-1.5 truncate">
-            <span className="text-slate-500 text-[10px] uppercase">Analyzing:</span>
+            <span className="text-slate-500 text-[10px] uppercase">Active:</span>
             <span className="font-bold text-white truncate">{bundle.asset.symbol} {bundle.timeframe}</span>
           </div>
           <div className="flex items-center gap-2 text-[11px] shrink-0">
-            <span className="text-slate-400">Score: <span className="text-brand-300 font-bold">{bundle.prediction.confidenceScore}/100</span></span>
-            <span className="text-slate-500">•</span>
+            <span className="text-slate-400">Score: <span className="text-accent-cyan font-bold">{bundle.prediction.confidenceScore}%</span></span>
+            <span className="text-slate-600">•</span>
             <span className={`font-bold ${
-              bundle.prediction.direction === 'BULLISH' ? 'text-emerald-400' : bundle.prediction.direction === 'BEARISH' ? 'text-rose-400' : 'text-amber-400'
+              bundle.prediction.direction === 'BULLISH' ? 'text-market-bullish' : bundle.prediction.direction === 'BEARISH' ? 'text-market-bearish' : 'text-market-warning'
             }`}>
               {bundle.prediction.direction}
             </span>
@@ -135,36 +134,36 @@ export const AIChatDrawer: React.FC<AIChatDrawerProps> = ({
       )}
 
       {/* Message Stream */}
-      <div className="flex-1 p-3.5 overflow-y-auto space-y-3.5">
+      <div className="flex-1 p-3 overflow-y-auto space-y-3 bg-background-deep">
         {messages.map((m) => (
           <div
             key={m.id}
             className={`flex items-start gap-2 ${m.role === 'user' ? 'flex-row-reverse' : ''}`}
           >
             <div
-              className={`w-6 h-6 rounded flex items-center justify-center text-xs flex-shrink-0 mt-0.5 ${
+              className={`w-5 h-5 rounded flex items-center justify-center text-xs flex-shrink-0 mt-0.5 ${
                 m.role === 'user'
-                  ? 'bg-brand-600 text-white'
-                  : 'bg-white/[0.05] text-brand-300 border border-background-border'
+                  ? 'bg-surface-elevated border border-border text-slate-200'
+                  : 'bg-surface border border-border text-accent-cyan'
               }`}
             >
-              {m.role === 'user' ? <User className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5" />}
+              {m.role === 'user' ? <User className="w-3 h-3" /> : <Bot className="w-3 h-3" />}
             </div>
 
-            <div className={`space-y-1 max-w-[85%]`}>
+            <div className="space-y-1 max-w-[85%]">
               {m.role === 'assistant' && (
-                <div className="flex items-center gap-1 text-[10px] font-mono text-brand-300">
-                  <span className="px-1.5 py-0.2 rounded bg-brand-500/10 border border-brand-500/20 font-bold">
-                    AI INTERPRETATION
+                <div className="flex items-center gap-1 text-[9px] font-mono text-accent-cyan">
+                  <span className="px-1 py-0.2 rounded bg-surface border border-border font-bold">
+                    MODEL SYNTHESIS
                   </span>
                 </div>
               )}
 
               <div
-                className={`p-3 rounded-lg text-xs leading-relaxed ${
+                className={`p-2.5 rounded text-xs leading-relaxed ${
                   m.role === 'user'
-                    ? 'bg-brand-600 text-white rounded-tr-none'
-                    : 'bg-background-card border border-background-border text-slate-200 rounded-tl-none whitespace-pre-wrap'
+                    ? 'bg-surface-elevated border border-border text-white'
+                    : 'bg-surface border border-border text-slate-200 whitespace-pre-wrap'
                 }`}
               >
                 {m.content}
@@ -174,22 +173,22 @@ export const AIChatDrawer: React.FC<AIChatDrawerProps> = ({
         ))}
 
         {loading && (
-          <div className="flex items-center gap-2 text-xs text-brand-300 font-mono pl-8">
-            <span className="w-2 h-2 rounded-full bg-brand-400 animate-pulse" />
-            Analyzing market layers...
+          <div className="flex items-center gap-2 text-xs text-accent-cyan font-mono pl-7">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent-cyan animate-pulse" />
+            Synthesizing market telemetry...
           </div>
         )}
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Quick Prompt Chips (Required by section 13) */}
+      {/* Quick Prompt Chips */}
       {bundle && (
-        <div className="px-3 py-2 border-t border-background-border bg-background-card flex flex-wrap gap-1.5">
+        <div className="px-3 py-2 border-t border-border bg-surface flex flex-wrap gap-1">
           {suggestedPrompts.map((prompt, i) => (
             <button
               key={i}
               onClick={() => handleSend(prompt)}
-              className="text-[10px] font-mono px-2 py-1 rounded bg-white/[0.03] hover:bg-brand-500/15 hover:text-brand-300 border border-background-border text-slate-400 transition-colors"
+              className="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-secondary hover:bg-surface-elevated hover:text-accent-cyan border border-border text-slate-400 transition-colors"
             >
               {prompt}
             </button>
@@ -203,7 +202,7 @@ export const AIChatDrawer: React.FC<AIChatDrawerProps> = ({
           e.preventDefault();
           handleSend();
         }}
-        className="p-3 border-t border-background-border bg-background-card flex items-center gap-2"
+        className="p-2.5 border-t border-border bg-surface-secondary flex items-center gap-2"
       >
         <input
           type="text"
@@ -211,14 +210,14 @@ export const AIChatDrawer: React.FC<AIChatDrawerProps> = ({
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask analytical question..."
           disabled={!bundle || loading}
-          className="flex-1 py-1.5 px-3 rounded-lg bg-background-secondary border border-background-border text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-brand-500 font-sans"
+          className="flex-1 py-1.5 px-2.5 rounded bg-surface border border-border text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-accent-cyan/50 font-mono"
         />
         <button
           type="submit"
           disabled={!input.trim() || !bundle || loading}
-          className="p-1.5 rounded-lg bg-brand-600 text-white hover:bg-brand-500 disabled:opacity-40 transition-colors"
+          className="p-1.5 rounded bg-surface-elevated text-accent-cyan border border-border hover:bg-surface hover:text-cyan-300 disabled:opacity-40 transition-colors"
         >
-          <Send className="w-4 h-4" />
+          <Send className="w-3.5 h-3.5" />
         </button>
       </form>
     </div>

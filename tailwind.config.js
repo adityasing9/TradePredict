@@ -9,41 +9,70 @@ export default {
     extend: {
       colors: {
         background: {
-          DEFAULT: '#090d14',
-          secondary: '#0e1422',
-          card: '#121929',
-          elevated: '#172033',
-          border: 'rgba(255, 255, 255, 0.08)',
-          subtle: 'rgba(255, 255, 255, 0.04)'
+          DEFAULT: '#05070A',
+          deep: '#080B10',
+          surface: '#0C1118',
+          secondary: '#101720',
+          card: '#0C1118',
+          elevated: '#141C25',
+          border: '#1B2632',
+          subtle: '#15202B'
+        },
+        surface: {
+          DEFAULT: '#0C1118',
+          secondary: '#101720',
+          elevated: '#141C25'
+        },
+        border: {
+          DEFAULT: '#1B2632',
+          subtle: '#15202B'
+        },
+        accent: {
+          cyan: '#22D3EE',
+          'cyan-hover': '#06B6D4',
+          'cyan-subtle': 'rgba(34, 211, 238, 0.08)',
+          'cyan-border': 'rgba(34, 211, 238, 0.25)'
         },
         brand: {
-          50: '#eef2ff',
-          100: '#e0e7ff',
-          400: '#818cf8',
-          500: '#6366f1',
-          600: '#4f46e5',
-          700: '#4338ca'
+          50: '#ECFEFF',
+          100: '#CFFAFE',
+          200: '#A5F3FC',
+          300: '#67E8F9',
+          400: '#22D3EE',
+          500: '#06B6D4',
+          600: '#0891B2',
+          700: '#0E7490'
+        },
+        market: {
+          bullish: '#22C55E',
+          bearish: '#EF4444',
+          warning: '#F59E0B',
+          neutral: '#94A3B8'
         },
         terminal: {
-          green: '#10b981',
-          emerald: '#059669',
-          red: '#ef4444',
-          rose: '#f43f5e',
-          amber: '#f59e0b',
-          blue: '#3b82f6',
-          cyan: '#06b6d4',
-          indigo: '#6366f1',
-          purple: '#8b5cf6'
+          green: '#22C55E',
+          red: '#EF4444',
+          amber: '#F59E0B',
+          cyan: '#22D3EE',
+          slate: '#94A3B8'
         }
       },
+      borderRadius: {
+        DEFAULT: '4px',
+        sm: '4px',
+        md: '6px',
+        lg: '8px',
+        xl: '8px',
+        '2xl': '8px',
+      },
       boxShadow: {
-        'panel': '0 1px 3px 0 rgba(0, 0, 0, 0.25), 0 1px 2px -1px rgba(0, 0, 0, 0.25)',
-        'elevated': '0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3)',
-        'modal': '0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5)',
+        'panel': '0 1px 2px 0 rgba(0, 0, 0, 0.4)',
+        'elevated': '0 2px 4px -1px rgba(0, 0, 0, 0.5)',
+        'modal': '0 12px 24px -4px rgba(0, 0, 0, 0.8)',
       },
       fontFamily: {
-        mono: ['JetBrains Mono', 'Fira Code', 'Menlo', 'Consolas', 'monospace'],
-        sans: ['Plus Jakarta Sans', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif']
+        mono: ['JetBrains Mono', 'IBM Plex Mono', 'Fira Code', 'Menlo', 'Consolas', 'monospace'],
+        sans: ['Inter', 'Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif']
       }
     },
   },

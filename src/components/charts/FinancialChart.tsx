@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Candle, Timeframe } from '../../types/marketData';
 import { SupportResistanceLevel } from '../../types/technical';
-import { BarChart3, LineChart as LineChartIcon, RefreshCw, SlidersHorizontal, Layers } from 'lucide-react';
+import { BarChart3, LineChart as LineChartIcon, RefreshCw } from 'lucide-react';
 
 interface FinancialChartProps {
   candles: Candle[];
@@ -47,7 +47,6 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
     const k = 2 / (period + 1);
     const result: (number | null)[] = [];
 
-    // Simple SMA for initial seed
     let sum = 0;
     for (let i = 0; i < period; i++) sum += bars[i].close;
     let prevEMA = sum / period;
@@ -126,8 +125,8 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
     const priceHeight = height * 0.74;
     const volumeHeight = height * 0.22;
 
-    // Background fill
-    ctx.fillStyle = '#090d14';
+    // Background fill (deep obsidian)
+    ctx.fillStyle = '#080b10';
     ctx.fillRect(0, 0, width, height);
 
     // Visible slice of bars (last 70 bars)
@@ -158,7 +157,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
     const getY = (price: number) => priceHeight - ((price - minPrice) / priceRange) * (priceHeight - 24) - 12;
 
     // 1. Grid Lines & Axis Labels
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.strokeStyle = '#15202b';
     ctx.lineWidth = 1;
     ctx.setLineDash([3, 3]);
 
@@ -184,7 +183,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
       for (const s of supports.slice(0, 2)) {
         if (s.price >= minPrice && s.price <= maxPrice) {
           const y = getY(s.price);
-          ctx.strokeStyle = 'rgba(16, 185, 129, 0.4)';
+          ctx.strokeStyle = 'rgba(34, 197, 94, 0.4)';
           ctx.lineWidth = 1;
           ctx.setLineDash([5, 4]);
           ctx.beginPath();
@@ -192,7 +191,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
           ctx.lineTo(width - paddingRight, y);
           ctx.stroke();
 
-          ctx.fillStyle = '#10b981';
+          ctx.fillStyle = '#22c55e';
           ctx.font = '9px JetBrains Mono, monospace';
           ctx.fillText(`SUP ${s.price}`, width - paddingRight + 6, y - 3);
         }
@@ -220,8 +219,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
     // 3. Bollinger Bands Overlay
     if (showBollinger) {
       const bb = calculateBollingerBands(visibleBars, 20, 2);
-      // Upper Band
-      ctx.strokeStyle = 'rgba(168, 85, 247, 0.5)';
+      ctx.strokeStyle = 'rgba(34, 211, 238, 0.4)';
       ctx.lineWidth = 1;
       ctx.beginPath();
       let started = false;
@@ -239,7 +237,6 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
       }
       ctx.stroke();
 
-      // Lower Band
       ctx.beginPath();
       started = false;
       for (let i = 0; i < n; i++) {
@@ -257,14 +254,14 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
       ctx.stroke();
     }
 
-    // 4. Volume Bars (Subplot)
+    // 4. Volume Bars
     visibleBars.forEach((bar, i) => {
       const x = paddingLeft + i * barWidth + barWidth / 2;
       const vHeight = (bar.volume / maxVolume) * volumeHeight;
       const vy = height - vHeight;
       const isUp = bar.close >= bar.open;
 
-      ctx.fillStyle = isUp ? 'rgba(16, 185, 129, 0.25)' : 'rgba(239, 68, 68, 0.25)';
+      ctx.fillStyle = isUp ? 'rgba(34, 197, 94, 0.25)' : 'rgba(239, 68, 68, 0.25)';
       ctx.fillRect(x - candleWidth / 2, vy, candleWidth, vHeight);
     });
 
@@ -278,7 +275,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
         const lowY = getY(bar.low);
 
         const isUp = bar.close >= bar.open;
-        const color = isUp ? '#10b981' : '#ef4444';
+        const color = isUp ? '#22c55e' : '#ef4444';
 
         // High-Low Wick
         ctx.strokeStyle = color;
@@ -302,8 +299,8 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
         if (i === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       });
-      ctx.strokeStyle = '#6366f1';
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#22d3ee';
+      ctx.lineWidth = 1.75;
       ctx.stroke();
     }
 
@@ -330,29 +327,29 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
 
     if (showEMA20) {
       const ema20 = calculateEMA(visibleBars, 20);
-      renderIndicatorLine(ema20, '#f59e0b'); // Amber
+      renderIndicatorLine(ema20, '#f59e0b');
     }
 
     if (showEMA50) {
       const ema50 = calculateEMA(visibleBars, 50);
-      renderIndicatorLine(ema50, '#38bdf8'); // Sky blue
+      renderIndicatorLine(ema50, '#38bdf8');
     }
 
     if (showEMA200) {
       const ema200 = calculateEMA(visibleBars, Math.min(200, Math.floor(visibleBars.length * 0.9)));
-      renderIndicatorLine(ema200, '#a855f7'); // Purple
+      renderIndicatorLine(ema200, '#818cf8');
     }
 
     if (showVWAP) {
       const vwap = calculateVWAP(visibleBars);
-      renderIndicatorLine(vwap, '#ec4899'); // Pink
+      renderIndicatorLine(vwap, '#ec4899');
     }
 
-    // 7. Latest Price Horizontal Reference Line
+    // 7. Latest Price Reference Line
     const latestBar = visibleBars[visibleBars.length - 1];
     const latestY = getY(latestBar.close);
     const isLatestUp = latestBar.close >= latestBar.open;
-    const latestColor = isLatestUp ? '#10b981' : '#ef4444';
+    const latestColor = isLatestUp ? '#22c55e' : '#ef4444';
 
     ctx.strokeStyle = latestColor;
     ctx.lineWidth = 1;
@@ -371,13 +368,13 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
     ctx.textAlign = 'left';
     ctx.fillText(latestBar.close.toFixed(latestBar.close < 10 ? 3 : 1), width - paddingRight + 8, latestY + 3.5);
 
-    // 8. Interactive Crosshair Hover
+    // 8. Crosshair Hover
     if (hoverIndex !== null && hoverIndex >= 0 && hoverIndex < n) {
       const hoverBar = visibleBars[hoverIndex];
       const hx = paddingLeft + hoverIndex * barWidth + barWidth / 2;
       const hy = getY(hoverBar.close);
 
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.4)';
       ctx.lineWidth = 1;
       ctx.setLineDash([3, 3]);
 
@@ -392,11 +389,11 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
       ctx.stroke();
       ctx.setLineDash([]);
 
-      ctx.fillStyle = '#6366f1';
+      ctx.fillStyle = '#22d3ee';
       ctx.beginPath();
-      ctx.arc(hx, hy, 4, 0, Math.PI * 2);
+      ctx.arc(hx, hy, 3.5, 0, Math.PI * 2);
       ctx.fill();
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 1.5;
       ctx.strokeStyle = '#ffffff';
       ctx.stroke();
     }
@@ -430,24 +427,24 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
       : candles[candles.length - 1];
 
   return (
-    <div className="terminal-panel p-4 space-y-3">
-      {/* Chart Top Bar: Symbol, Timeframes, Indicators */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-2.5 border-b border-background-border">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 font-mono text-xs">
-            <span className="font-extrabold text-white text-base tracking-tight">{symbol}</span>
-            <span className="text-slate-400 text-xs">({currency})</span>
+    <div className="terminal-panel p-3 sm:p-4 space-y-2.5">
+      {/* Chart Top Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-2.5 pb-2 border-b border-border">
+        <div className="flex items-center gap-2.5">
+          <div className="flex items-baseline gap-1 font-mono text-xs">
+            <span className="font-extrabold text-white text-sm tracking-tight">{symbol}</span>
+            <span className="text-slate-500 text-[11px]">({currency})</span>
           </div>
 
           {/* Timeframe Chips */}
-          <div className="flex items-center gap-1 bg-background-secondary p-1 rounded-lg border border-background-border text-[11px] font-mono">
+          <div className="flex items-center gap-0.5 bg-surface-secondary p-0.5 rounded border border-border text-[11px] font-mono">
             {timeframes.map((tf) => (
               <button
                 key={tf}
                 onClick={() => onSelectTimeframe(tf)}
-                className={`px-2 py-0.5 rounded transition-colors ${
+                className={`px-2 py-0.5 rounded text-[10px] transition-colors ${
                   currentTimeframe === tf
-                    ? 'bg-brand-500 text-white font-bold'
+                    ? 'bg-surface-elevated text-accent-cyan border border-border font-bold'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
@@ -458,28 +455,28 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
         </div>
 
         {/* View toggles & Indicators Toolbar */}
-        <div className="flex flex-wrap items-center gap-1.5 text-xs font-mono">
+        <div className="flex flex-wrap items-center gap-1 text-xs font-mono">
           {/* Chart Type Toggle */}
           <button
             onClick={() => setChartType(chartType === 'CANDLE' ? 'LINE' : 'CANDLE')}
-            className="flex items-center gap-1 px-2 py-1 rounded bg-background-secondary border border-background-border text-slate-300 hover:text-white"
+            className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-surface-secondary border border-border text-slate-300 hover:text-white"
             title="Toggle Candlestick / Line"
           >
             {chartType === 'CANDLE' ? (
-              <BarChart3 className="w-3.5 h-3.5 text-brand-400" />
+              <BarChart3 className="w-3 h-3 text-accent-cyan" />
             ) : (
-              <LineChartIcon className="w-3.5 h-3.5 text-brand-400" />
+              <LineChartIcon className="w-3 h-3 text-accent-cyan" />
             )}
-            <span className="text-[11px]">{chartType}</span>
+            <span className="text-[10px]">{chartType}</span>
           </button>
 
           {/* EMA 20 */}
           <button
             onClick={() => setShowEMA20(!showEMA20)}
-            className={`px-2 py-1 rounded border text-[11px] transition-colors ${
+            className={`px-1.5 py-0.5 rounded border text-[10px] transition-colors ${
               showEMA20
-                ? 'bg-amber-500/15 border-amber-500/30 text-amber-400 font-bold'
-                : 'bg-background-secondary border-background-border text-slate-400'
+                ? 'bg-amber-500/10 border-amber-500/30 text-amber-400 font-bold'
+                : 'bg-surface-secondary border-border text-slate-400'
             }`}
           >
             EMA 20
@@ -488,10 +485,10 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
           {/* EMA 50 */}
           <button
             onClick={() => setShowEMA50(!showEMA50)}
-            className={`px-2 py-1 rounded border text-[11px] transition-colors ${
+            className={`px-1.5 py-0.5 rounded border text-[10px] transition-colors ${
               showEMA50
-                ? 'bg-sky-500/15 border-sky-500/30 text-sky-400 font-bold'
-                : 'bg-background-secondary border-background-border text-slate-400'
+                ? 'bg-sky-500/10 border-sky-500/30 text-sky-400 font-bold'
+                : 'bg-surface-secondary border-border text-slate-400'
             }`}
           >
             EMA 50
@@ -500,10 +497,10 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
           {/* EMA 200 */}
           <button
             onClick={() => setShowEMA200(!showEMA200)}
-            className={`px-2 py-1 rounded border text-[11px] transition-colors ${
+            className={`px-1.5 py-0.5 rounded border text-[10px] transition-colors ${
               showEMA200
-                ? 'bg-purple-500/15 border-purple-500/30 text-purple-400 font-bold'
-                : 'bg-background-secondary border-background-border text-slate-400'
+                ? 'bg-indigo-500/10 border-indigo-500/30 text-indigo-400 font-bold'
+                : 'bg-surface-secondary border-border text-slate-400'
             }`}
           >
             EMA 200
@@ -512,10 +509,10 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
           {/* Bollinger Bands */}
           <button
             onClick={() => setShowBollinger(!showBollinger)}
-            className={`px-2 py-1 rounded border text-[11px] transition-colors ${
+            className={`px-1.5 py-0.5 rounded border text-[10px] transition-colors ${
               showBollinger
-                ? 'bg-purple-500/15 border-purple-500/30 text-purple-400 font-bold'
-                : 'bg-background-secondary border-background-border text-slate-400'
+                ? 'bg-cyan-500/10 border-cyan-500/30 text-accent-cyan font-bold'
+                : 'bg-surface-secondary border-border text-slate-400'
             }`}
           >
             BB (20,2)
@@ -524,10 +521,10 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
           {/* VWAP */}
           <button
             onClick={() => setShowVWAP(!showVWAP)}
-            className={`px-2 py-1 rounded border text-[11px] transition-colors ${
+            className={`px-1.5 py-0.5 rounded border text-[10px] transition-colors ${
               showVWAP
-                ? 'bg-pink-500/15 border-pink-500/30 text-pink-400 font-bold'
-                : 'bg-background-secondary border-background-border text-slate-400'
+                ? 'bg-pink-500/10 border-pink-500/30 text-pink-400 font-bold'
+                : 'bg-surface-secondary border-border text-slate-400'
             }`}
           >
             VWAP
@@ -536,10 +533,10 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
           {/* S/R Levels */}
           <button
             onClick={() => setShowLevels(!showLevels)}
-            className={`px-2 py-1 rounded border text-[11px] transition-colors ${
+            className={`px-1.5 py-0.5 rounded border text-[10px] transition-colors ${
               showLevels
-                ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400 font-bold'
-                : 'bg-background-secondary border-background-border text-slate-400'
+                ? 'bg-market-bullish/10 border-market-bullish/30 text-market-bullish font-bold'
+                : 'bg-surface-secondary border-border text-slate-400'
             }`}
           >
             S/R
@@ -549,10 +546,10 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
             <button
               onClick={onRefresh}
               disabled={loading}
-              className="p-1 rounded bg-background-secondary border border-background-border text-slate-400 hover:text-white disabled:opacity-50"
+              className="p-1 rounded bg-surface-secondary border border-border text-slate-400 hover:text-white disabled:opacity-50"
               title="Refresh Candles"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
             </button>
           )}
         </div>
@@ -560,7 +557,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
 
       {/* Interactive OHLC Bar */}
       {activeBar && (
-        <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono text-slate-400 bg-background-secondary px-3 py-1 rounded border border-background-border">
+        <div className="flex flex-wrap items-center gap-3 text-[10px] font-mono text-slate-400 bg-surface-secondary px-2.5 py-1 rounded border border-border">
           <div>
             Time:{' '}
             <span className="text-slate-200">
@@ -569,11 +566,11 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
             </span>
           </div>
           <div>O: <span className="text-slate-200">{activeBar.open}</span></div>
-          <div>H: <span className="text-emerald-400">{activeBar.high}</span></div>
-          <div>L: <span className="text-rose-400">{activeBar.low}</span></div>
+          <div>H: <span className="text-market-bullish">{activeBar.high}</span></div>
+          <div>L: <span className="text-market-bearish">{activeBar.low}</span></div>
           <div>
             C:{' '}
-            <span className={activeBar.close >= activeBar.open ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}>
+            <span className={activeBar.close >= activeBar.open ? 'text-market-bullish font-bold' : 'text-market-bearish font-bold'}>
               {activeBar.close}
             </span>
           </div>
@@ -582,7 +579,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
       )}
 
       {/* Canvas Area */}
-      <div ref={containerRef} className="relative w-full h-80 sm:h-96 rounded-lg overflow-hidden border border-background-border">
+      <div ref={containerRef} className="relative w-full h-80 sm:h-96 rounded overflow-hidden border border-border bg-background-deep">
         <canvas
           ref={canvasRef}
           onMouseMove={handleMouseMove}

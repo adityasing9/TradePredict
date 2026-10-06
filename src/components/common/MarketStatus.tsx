@@ -11,7 +11,6 @@ export const MarketStatus: React.FC<MarketStatusProps> = ({ compact = false }) =
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    // Refresh every 30 seconds
     const interval = setInterval(() => {
       setStatuses(getAllMarketStatuses());
     }, 30000);
@@ -23,24 +22,24 @@ export const MarketStatus: React.FC<MarketStatusProps> = ({ compact = false }) =
       <div className="relative">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-2 px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/[0.08] hover:border-white/20 text-xs font-mono text-slate-300 transition-colors"
+          className="flex items-center gap-2 px-2 py-1 rounded bg-surface border border-border hover:border-slate-600 text-xs font-mono text-slate-300 transition-colors"
           title="Exchange Operating Status & Timezones"
         >
           <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-[11px] text-slate-400 hidden sm:inline">Exchanges:</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-market-bullish animate-pulse" />
+            <span className="text-[10px] text-slate-400 hidden sm:inline uppercase">Exchanges:</span>
           </div>
 
-          <div className="flex items-center gap-2 text-[11px]">
+          <div className="flex items-center gap-2 text-[10px]">
             {statuses.map((s) => (
               <span key={s.market} className="flex items-center gap-1">
                 <span className="text-slate-400">{s.market}</span>
                 <span
                   className={`font-semibold ${
                     s.statusText === 'Live' || s.statusText === 'Open'
-                      ? 'text-emerald-400'
+                      ? 'text-market-bullish'
                       : s.statusText === 'Pre-Market'
-                      ? 'text-amber-400'
+                      ? 'text-market-warning'
                       : 'text-slate-500'
                   }`}
                 >
@@ -57,20 +56,20 @@ export const MarketStatus: React.FC<MarketStatusProps> = ({ compact = false }) =
         {isOpen && (
           <>
             <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-            <div className="absolute right-0 mt-2 w-80 bg-background-card border border-white/[0.1] rounded-xl shadow-modal p-3 z-50 animate-in fade-in zoom-in-95 duration-100">
-              <div className="flex items-center justify-between pb-2 mb-2 border-b border-white/[0.06]">
+            <div className="absolute right-0 mt-1.5 w-80 bg-surface border border-border rounded-lg shadow-modal p-3 z-50 animate-in fade-in zoom-in-95 duration-100">
+              <div className="flex items-center justify-between pb-2 mb-2 border-b border-border">
                 <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-white">
-                  <Clock className="w-3.5 h-3.5 text-brand-400" />
+                  <Clock className="w-3.5 h-3.5 text-accent-cyan" />
                   <span>Exchange Trading Sessions</span>
                 </div>
                 <span className="text-[10px] font-mono text-slate-500">Live Timezones</span>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 {statuses.map((s) => (
                   <div
                     key={s.market}
-                    className="p-2 rounded-lg bg-white/[0.02] border border-white/[0.05] flex items-center justify-between text-xs font-mono"
+                    className="p-2 rounded bg-surface-secondary border border-border flex items-center justify-between text-xs font-mono"
                   >
                     <div>
                       <div className="flex items-center gap-1.5">
@@ -84,10 +83,10 @@ export const MarketStatus: React.FC<MarketStatusProps> = ({ compact = false }) =
                       <span
                         className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold ${
                           s.statusText === 'Live' || s.statusText === 'Open'
-                            ? 'text-emerald-400 bg-emerald-500/10'
+                            ? 'text-market-bullish bg-market-bullish/10'
                             : s.statusText === 'Pre-Market'
-                            ? 'text-amber-400 bg-amber-500/10'
-                            : 'text-slate-400 bg-white/[0.05]'
+                            ? 'text-market-warning bg-market-warning/10'
+                            : 'text-slate-400 bg-surface-elevated'
                         }`}
                       >
                         {s.statusText === 'Live' ? (
@@ -105,7 +104,7 @@ export const MarketStatus: React.FC<MarketStatusProps> = ({ compact = false }) =
                 ))}
               </div>
 
-              <div className="mt-2 pt-2 border-t border-white/[0.05] text-[10px] text-slate-500 font-mono text-center">
+              <div className="mt-2 pt-2 border-t border-border text-[10px] text-slate-500 font-mono text-center">
                 Refreshed according to official market local timezones
               </div>
             </div>
@@ -115,13 +114,12 @@ export const MarketStatus: React.FC<MarketStatusProps> = ({ compact = false }) =
     );
   }
 
-  // Full/Card view for dashboard or explorer
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
       {statuses.map((s) => (
         <div
           key={s.market}
-          className="p-2.5 rounded-xl bg-background-card border border-white/[0.07] flex flex-col justify-between"
+          className="p-2.5 rounded bg-surface border border-border flex flex-col justify-between"
         >
           <div className="flex items-center justify-between text-xs font-mono">
             <span className="text-slate-400 flex items-center gap-1">
@@ -131,10 +129,10 @@ export const MarketStatus: React.FC<MarketStatusProps> = ({ compact = false }) =
             <span
               className={`text-[10px] font-bold px-1.5 py-0.2 rounded ${
                 s.statusText === 'Live' || s.statusText === 'Open'
-                  ? 'text-emerald-400 bg-emerald-500/10'
+                  ? 'text-market-bullish bg-market-bullish/10'
                   : s.statusText === 'Pre-Market'
-                  ? 'text-amber-400 bg-amber-500/10'
-                  : 'text-slate-400 bg-white/[0.04]'
+                  ? 'text-market-warning bg-market-warning/10'
+                  : 'text-slate-400 bg-surface-elevated'
               }`}
             >
               {s.statusText}

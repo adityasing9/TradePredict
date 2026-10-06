@@ -4,41 +4,55 @@
 
 @layer base {
   :root {
-    --bg-primary: #090d14;
-    --bg-secondary: #0e1422;
-    --bg-card: #121929;
-    --bg-elevated: #172033;
-    --border-color: rgba(255, 255, 255, 0.08);
-    --border-light: rgba(255, 255, 255, 0.04);
-    --text-primary: #f8fafc;
+    --bg-primary: #05070a;
+    --bg-deep: #080b10;
+    --bg-card: #0c1118;
+    --bg-secondary: #101720;
+    --bg-elevated: #141c25;
+    --border-color: #1b2632;
+    --border-subtle: #15202b;
+    --text-primary: #f1f5f9;
     --text-secondary: #94a3b8;
     --text-muted: #64748b;
+    --accent-cyan: #22d3ee;
+    --market-bullish: #22c55e;
+    --market-bearish: #ef4444;
+    --market-warning: #f59e0b;
+    --market-neutral: #94a3b8;
   }
 
   .light {
     --bg-primary: #f8fafc;
-    --bg-secondary: #f1f5f9;
+    --bg-deep: #f1f5f9;
     --bg-card: #ffffff;
+    --bg-secondary: #f8fafc;
     --bg-elevated: #ffffff;
     --border-color: #e2e8f0;
-    --border-light: #f1f5f9;
+    --border-subtle: #edf2f7;
     --text-primary: #0f172a;
     --text-secondary: #475569;
     --text-muted: #64748b;
+    --accent-cyan: #0891b2;
+    --market-bullish: #16a34a;
+    --market-bearish: #dc2626;
+    --market-warning: #d97706;
+    --market-neutral: #64748b;
   }
 
   body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
-    font-family: 'Plus Jakarta Sans', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Inter', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
 /* Custom terminal scrollbars */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -46,93 +60,91 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 4px;
-}
-
-.light ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.15);
+  background: #1b2632;
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: #2a3a4d;
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
 }
 
 /* Institutional Terminal UI Classes */
 .terminal-panel {
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: 0.75rem;
+  border-radius: 6px;
 }
 
 .terminal-panel-elevated {
   background-color: var(--bg-elevated);
   border: 1px solid var(--border-color);
-  border-radius: 0.75rem;
+  border-radius: 6px;
 }
 
 .terminal-card {
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: 0.75rem;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  border-radius: 6px;
+  transition: border-color 0.12s ease, background-color 0.12s ease;
 }
 
 .terminal-card:hover {
-  border-color: rgba(99, 102, 241, 0.35);
-  background-color: var(--bg-elevated);
+  border-color: #2a3a4d;
+  background-color: var(--bg-secondary);
 }
 
 .light .terminal-card:hover {
   border-color: #cbd5e1;
-  background-color: #f8fafc;
+  background-color: #f1f5f9;
 }
 
-/* Backward compatibility for existing components */
-.glass-panel {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-}
-
+/* Glass panel / card backwards-compatibility remapped to crisp terminal panels */
+.glass-panel,
 .glass-card {
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
+  border-radius: 6px;
 }
 
 .glass-card-hover {
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  border-radius: 6px;
+  transition: border-color 0.12s ease, background-color 0.12s ease;
 }
 
 .glass-card-hover:hover {
-  border-color: rgba(99, 102, 241, 0.35);
-  background-color: var(--bg-elevated);
+  border-color: #2a3a4d;
+  background-color: var(--bg-secondary);
 }
 
-/* Subtle restrained indicators */
+/* Strict restrained market badges */
 .badge-bullish {
-  color: #10b981;
-  background-color: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  color: var(--market-bullish);
+  background-color: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.2);
 }
 
 .badge-bearish {
-  color: #ef4444;
-  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--market-bearish);
+  background-color: rgba(239, 68, 68, 0.08);
   border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
 .badge-neutral {
-  color: #94a3b8;
-  background-color: rgba(148, 163, 184, 0.1);
+  color: var(--market-neutral);
+  background-color: rgba(148, 163, 184, 0.08);
   border: 1px solid rgba(148, 163, 184, 0.2);
 }
 
 .badge-ai {
-  color: #818cf8;
-  background-color: rgba(99, 102, 241, 0.1);
-  border: 1px solid rgba(99, 102, 241, 0.25);
+  color: var(--accent-cyan);
+  background-color: rgba(34, 211, 238, 0.08);
+  border: 1px solid rgba(34, 211, 238, 0.25);
 }
 
 /* Ticker marquee animation */

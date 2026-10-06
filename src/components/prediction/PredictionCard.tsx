@@ -9,7 +9,6 @@ import {
   AlertTriangle,
   Info,
   HelpCircle,
-  Sliders,
   ChevronDown,
   ChevronUp
 } from 'lucide-react';
@@ -45,7 +44,6 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
 
   const currentPrice = prediction.currentPrice;
   const [targetLow, targetHigh] = prediction.expectedPriceRange;
-  const medianTarget = (targetLow + targetHigh) / 2;
 
   // Visual Slider Support / Resistance anchors
   const supportAnchor = Math.min(targetLow * 0.96, currentPrice * 0.95);
@@ -69,52 +67,52 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
       : prediction.scenarios.base.invalidationCondition;
 
   return (
-    <div className="terminal-panel p-4 sm:p-5 space-y-4">
+    <div className="terminal-panel p-3.5 sm:p-4 space-y-3.5">
       {/* 1. TOP HEADER: Outlook, Confidence & Track Button */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-background-border">
+      <div className="flex flex-wrap items-center justify-between gap-2.5 pb-2.5 border-b border-border">
         <div>
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
               Probabilistic ML Forecast
             </span>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-brand-500/15 text-brand-300 font-semibold border border-brand-500/30">
+            <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-surface-secondary text-accent-cyan font-semibold border border-accent-cyan-border">
               {prediction.timeframe} • {prediction.predictionHorizon}
             </span>
           </div>
 
-          <div className="flex items-center gap-3 mt-1.5">
+          <div className="flex items-center gap-2.5 mt-1">
             <div
-              className={`p-1.5 rounded-lg border font-mono ${
+              className={`p-1 rounded border font-mono ${
                 dir === 'BULLISH'
-                  ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
+                  ? 'bg-market-bullish/10 text-market-bullish border-market-bullish/30'
                   : dir === 'BEARISH'
-                  ? 'bg-rose-500/15 text-rose-400 border-rose-500/30'
-                  : 'bg-amber-500/15 text-amber-400 border-amber-500/30'
+                  ? 'bg-market-bearish/10 text-market-bearish border-market-bearish/30'
+                  : 'bg-market-warning/10 text-market-warning border-market-warning/30'
               }`}
             >
               {dir === 'BULLISH' ? (
-                <ArrowUpRight className="w-5 h-5 stroke-[2.5]" />
+                <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
               ) : dir === 'BEARISH' ? (
-                <ArrowDownRight className="w-5 h-5 stroke-[2.5]" />
+                <ArrowDownRight className="w-4 h-4 stroke-[2.5]" />
               ) : (
-                <Minus className="w-5 h-5 stroke-[2.5]" />
+                <Minus className="w-4 h-4 stroke-[2.5]" />
               )}
             </div>
 
             <div>
               <h3
-                className={`text-lg sm:text-xl font-bold font-mono tracking-tight ${
+                className={`text-base sm:text-lg font-bold font-mono tracking-tight ${
                   dir === 'BULLISH'
-                    ? 'text-emerald-400'
+                    ? 'text-market-bullish'
                     : dir === 'BEARISH'
-                    ? 'text-rose-400'
-                    : 'text-amber-400'
+                    ? 'text-market-bearish'
+                    : 'text-market-warning'
                 }`}
               >
                 {dir} BIAS
               </h3>
-              <span className="text-[11px] font-mono text-slate-400 block -mt-0.5">
-                Model Confidence: <span className="text-white font-bold">{prediction.confidenceScore}%</span> • Volatility: {prediction.volatilityForecast}
+              <span className="text-[10px] font-mono text-slate-400 block -mt-0.5">
+                Confidence: <span className="text-white font-bold">{prediction.confidenceScore}%</span> • Volatility: {prediction.volatilityForecast}
               </span>
             </div>
           </div>
@@ -124,49 +122,49 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
           <button
             onClick={onTrackPrediction}
             disabled={isTracked}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-colors ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-mono font-bold transition-colors ${
               isTracked
-                ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 cursor-default'
-                : 'bg-brand-600 hover:bg-brand-500 text-white'
+                ? 'bg-market-bullish/10 text-market-bullish border border-market-bullish/30 cursor-default'
+                : 'bg-surface-elevated hover:bg-surface-secondary text-accent-cyan border border-accent-cyan-border'
             }`}
           >
-            {isTracked ? <CheckCircle className="w-3.5 h-3.5" /> : <PlusCircle className="w-3.5 h-3.5" />}
+            {isTracked ? <CheckCircle className="w-3 h-3" /> : <PlusCircle className="w-3 h-3" />}
             <span>{isTracked ? 'Tracked in DB' : 'Track Outcome'}</span>
           </button>
         )}
       </div>
 
       {/* 2. DIRECTIONAL PROBABILITIES */}
-      <div className="space-y-1.5">
-        <div className="flex items-center justify-between text-xs font-mono">
-          <span className="text-emerald-400 font-bold flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            Up: {p.up}%
+      <div className="space-y-1">
+        <div className="flex items-center justify-between text-[11px] font-mono">
+          <span className="text-market-bullish font-bold flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-market-bullish" />
+            Bull: {p.up}%
           </span>
           <span className="text-slate-400 font-bold flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-slate-400" />
+            <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
             Neutral: {p.neutral}%
           </span>
-          <span className="text-rose-400 font-bold flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-rose-500" />
-            Down: {p.down}%
+          <span className="text-market-bearish font-bold flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-market-bearish" />
+            Bear: {p.down}%
           </span>
         </div>
 
-        <div className="w-full h-2.5 rounded-full bg-white/[0.04] overflow-hidden flex border border-background-border">
-          <div style={{ width: `${p.up}%` }} className="h-full bg-emerald-500 transition-all" />
+        <div className="w-full h-2 rounded bg-surface-secondary overflow-hidden flex border border-border">
+          <div style={{ width: `${p.up}%` }} className="h-full bg-market-bullish transition-all" />
           <div style={{ width: `${p.neutral}%` }} className="h-full bg-slate-500 transition-all" />
-          <div style={{ width: `${p.down}%` }} className="h-full bg-rose-500 transition-all" />
+          <div style={{ width: `${p.down}%` }} className="h-full bg-market-bearish transition-all" />
         </div>
       </div>
 
       {/* 3. EXPECTED PRICE RANGE SLIDER BAND */}
-      <div className="p-3.5 rounded-lg bg-background-secondary border border-background-border space-y-3">
+      <div className="p-3 rounded bg-surface-secondary border border-border space-y-2.5">
         <div className="flex items-center justify-between text-xs font-mono">
           <span className="text-slate-400 uppercase text-[10px] tracking-wider font-semibold">
             Expected Range Horizon
           </span>
-          <span className="text-brand-300 font-bold">
+          <span className="text-accent-cyan font-bold text-xs">
             {currency} {targetLow.toFixed(1)} – {targetHigh.toFixed(1)} (
             {prediction.expectedReturnRange[0] > 0 ? '+' : ''}{prediction.expectedReturnRange[0]}% to{' '}
             {prediction.expectedReturnRange[1] > 0 ? '+' : ''}{prediction.expectedReturnRange[1]}%)
@@ -174,27 +172,22 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
         </div>
 
         {/* Visual Slider Bar */}
-        <div className="relative pt-4 pb-2">
-          {/* Main Track */}
-          <div className="w-full h-2 rounded-full bg-white/[0.06] relative">
-            {/* Target expected range highlight */}
+        <div className="relative pt-3 pb-1">
+          <div className="w-full h-1.5 rounded bg-surface-elevated relative">
             <div
-              className="absolute top-0 bottom-0 bg-brand-500/40 border-y border-brand-500/60 rounded"
+              className="absolute top-0 bottom-0 bg-accent-cyan/30 border-y border-accent-cyan/50 rounded"
               style={{
                 left: `${targetLowPos}%`,
                 width: `${Math.max(2, targetHighPos - targetLowPos)}%`
               }}
             />
-
-            {/* Current Price Marker */}
             <div
-              className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-white border-2 border-brand-500 shadow"
-              style={{ left: `calc(${currentPos}% - 7px)` }}
+              className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white border border-accent-cyan shadow"
+              style={{ left: `calc(${currentPos}% - 6px)` }}
               title={`Current Price: ${currency} ${currentPrice}`}
             />
           </div>
 
-          {/* Scale Labels */}
           <div className="flex justify-between items-center text-[10px] font-mono text-slate-500 mt-2">
             <div>
               <span className="block text-slate-400">Support</span>
@@ -214,10 +207,10 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
 
       {/* 4. INVALIDATION CONDITION BANNER */}
       {invalidationText && (
-        <div className="p-2.5 rounded-lg bg-rose-500/10 border border-rose-500/20 text-xs font-mono flex items-start gap-2 text-rose-300">
-          <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+        <div className="p-2.5 rounded bg-market-bearish/5 border border-market-bearish/20 text-xs font-mono flex items-start gap-2 text-rose-300">
+          <AlertTriangle className="w-3.5 h-3.5 text-market-bearish shrink-0 mt-0.5" />
           <div>
-            <span className="font-bold uppercase text-[10px] tracking-wider block text-rose-400">
+            <span className="font-bold uppercase text-[9px] tracking-wider block text-market-bearish">
               Invalidation Trigger
             </span>
             <span className="text-[11px] leading-relaxed block mt-0.5">{invalidationText}</span>
@@ -226,61 +219,61 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
       )}
 
       {/* 5. "WHY?" SECTION: Clickable Factor Popovers */}
-      <div className="border-t border-background-border pt-3 space-y-2">
+      <div className="border-t border-border pt-2.5 space-y-1.5">
         <button
           onClick={() => setShowWhyFactors(!showWhyFactors)}
           className="w-full flex items-center justify-between text-xs font-mono text-slate-300 hover:text-white transition-colors"
         >
-          <div className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-[11px]">
-            <HelpCircle className="w-3.5 h-3.5 text-brand-400" />
-            <span>Why This Prediction? (Primary Influencing Drivers)</span>
+          <div className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-[10px] text-slate-400">
+            <HelpCircle className="w-3 h-3 text-accent-cyan" />
+            <span>Why This Prediction? (Primary Drivers)</span>
           </div>
-          {showWhyFactors ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+          {showWhyFactors ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
         </button>
 
         {showWhyFactors && (
-          <div className="space-y-1.5 pt-1">
+          <div className="space-y-1 pt-0.5">
             {prediction.featuresUsed && prediction.featuresUsed.length > 0 ? (
-              prediction.featuresUsed.slice(0, 5).map((f, idx) => {
+              prediction.featuresUsed.slice(0, 4).map((f, idx) => {
                 const isSelected = activeFactorInfo === f.name;
                 const explanation =
                   FACTOR_EXPLANATIONS[f.name.toUpperCase()] ||
                   FACTOR_EXPLANATIONS[f.category] ||
-                  `${f.name} weighted at ${(f.weight * 100).toFixed(0)}% in the ensemble gradient tree model.`;
+                  `${f.name} weighted at ${(f.weight * 100).toFixed(0)}% in ensemble tree gradient model.`;
 
                 return (
-                  <div key={idx} className="rounded-lg bg-background-secondary border border-background-border overflow-hidden">
+                  <div key={idx} className="rounded bg-surface-secondary border border-border overflow-hidden">
                     <button
                       onClick={() => setActiveFactorInfo(isSelected ? null : f.name)}
-                      className="w-full p-2.5 flex items-center justify-between text-left text-xs font-mono hover:bg-white/[0.02] transition-colors"
+                      className="w-full p-2 flex items-center justify-between text-left text-xs font-mono hover:bg-surface-elevated transition-colors"
                     >
                       <div className="flex items-center gap-2">
                         <span
                           className={`w-1.5 h-1.5 rounded-full ${
                             f.impact === 'POSITIVE'
-                              ? 'bg-emerald-400'
+                              ? 'bg-market-bullish'
                               : f.impact === 'NEGATIVE'
-                              ? 'bg-rose-400'
+                              ? 'bg-market-bearish'
                               : 'bg-slate-400'
                           }`}
                         />
-                        <span className="font-bold text-white">{f.name}</span>
+                        <span className="font-bold text-white text-[11px]">{f.name}</span>
                         <span className="text-[10px] text-slate-500">({f.category})</span>
                       </div>
 
                       <div className="flex items-center gap-2">
-                        <span className="text-slate-300 font-semibold">{f.rawValue}</span>
-                        <span className="text-[10px] text-brand-300 px-1 rounded bg-brand-500/10">
+                        <span className="text-slate-300 font-semibold text-[11px]">{f.rawValue}</span>
+                        <span className="text-[9px] text-accent-cyan px-1 rounded bg-accent-cyan-subtle">
                           {(f.weight * 100).toFixed(0)}% wt
                         </span>
-                        <Info className="w-3 h-3 text-slate-500 hover:text-brand-400" />
+                        <Info className="w-3 h-3 text-slate-500 hover:text-accent-cyan" />
                       </div>
                     </button>
 
                     {isSelected && (
-                      <div className="p-2.5 bg-black/40 border-t border-background-border text-[11px] font-sans text-slate-300 space-y-1 animate-in fade-in duration-100">
-                        <div className="font-mono text-[10px] text-brand-400 font-semibold uppercase">
-                          Indicator Educational Guide:
+                      <div className="p-2 bg-surface-elevated border-t border-border text-[10px] font-sans text-slate-300 space-y-1 animate-in fade-in duration-100">
+                        <div className="font-mono text-[9px] text-accent-cyan font-semibold uppercase">
+                          Driver Interpretation:
                         </div>
                         <p>{explanation}</p>
                       </div>

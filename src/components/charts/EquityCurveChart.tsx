@@ -32,7 +32,6 @@ export const EquityCurveChart: React.FC<EquityCurveChartProps> = ({
 
   const polylinePts = points.map((p, i) => `${getX(i)},${getY(p.equity)}`).join(' ');
 
-  // Gradient area
   const areaPts = [
     `${paddingLeft},${paddingTop + chartH}`,
     ...points.map((p, i) => `${getX(i)},${getY(p.equity)}`),
@@ -43,34 +42,37 @@ export const EquityCurveChart: React.FC<EquityCurveChartProps> = ({
   const isProfit = lastEquity >= initialCapital;
 
   return (
-    <div className="w-full glass-card rounded-2xl border border-white/[0.08] p-5 shadow-xl flex flex-col gap-3">
-      <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+    <div className="w-full terminal-panel p-3.5 sm:p-4 flex flex-col gap-3">
+      <div className="flex items-center justify-between border-b border-border pb-2.5">
         <h4 className="text-xs font-mono font-bold text-white uppercase tracking-wider flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-400" />
+          <span className="w-1.5 h-1.5 rounded-full bg-market-bullish" />
           Portfolio Cumulative Equity Curve
         </h4>
-        <div className="flex items-center gap-3 text-[11px] font-mono">
+        <div className="flex items-center gap-3 text-[10px] font-mono">
           <span className="text-slate-400">
             Initial: <span className="text-slate-200">${initialCapital.toLocaleString()}</span>
           </span>
-          <span className={`px-2.5 py-0.5 rounded-full font-bold border ${
-            isProfit ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-rose-500/20 text-rose-300 border-rose-500/40'
+          <span className={`px-2 py-0.5 rounded font-bold border ${
+            isProfit ? 'bg-market-bullish/10 text-market-bullish border-market-bullish/30' : 'bg-market-bearish/10 text-market-bearish border-market-bearish/30'
           }`}>
             Final: ${lastEquity.toLocaleString()}
           </span>
         </div>
       </div>
 
-      <div className="relative w-full">
-        <svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} className="w-full h-44 select-none overflow-visible">
+      <div className="relative w-full overflow-x-auto py-1">
+        <svg
+          viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+          className="w-full h-44 select-none overflow-visible"
+        >
           <defs>
             <linearGradient id="equityGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor={isProfit ? '#10b981' : '#f43f5e'} stopOpacity="0.25" />
-              <stop offset="100%" stopColor={isProfit ? '#10b981' : '#f43f5e'} stopOpacity="0.0" />
+              <stop offset="0%" stopColor={isProfit ? '#22c55e' : '#ef4444'} stopOpacity="0.2" />
+              <stop offset="100%" stopColor={isProfit ? '#22c55e' : '#ef4444'} stopOpacity="0.0" />
             </linearGradient>
           </defs>
 
-          {/* Baseline Initial Capital Line */}
+          {/* Initial Capital Reference Line */}
           <line
             x1={paddingLeft}
             y1={getY(initialCapital)}
@@ -78,26 +80,23 @@ export const EquityCurveChart: React.FC<EquityCurveChartProps> = ({
             y2={getY(initialCapital)}
             stroke="rgba(255, 255, 255, 0.15)"
             strokeWidth="1"
-            strokeDasharray="4 4"
+            strokeDasharray="3 3"
           />
 
           {/* Area Fill */}
-          <polygon
-            points={areaPts}
-            fill="url(#equityGrad)"
-          />
+          <polygon points={areaPts} fill="url(#equityGrad)" />
 
-          {/* Line Stroke */}
+          {/* Polyline Curve */}
           <polyline
             points={polylinePts}
             fill="none"
-            stroke={isProfit ? '#10b981' : '#f43f5e'}
-            strokeWidth="2.2"
+            stroke={isProfit ? '#22c55e' : '#ef4444'}
+            strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
 
-          {/* Y Axis Labels */}
+          {/* Axis Labels */}
           <text
             x={paddingLeft - 8}
             y={getY(maxEquity) + 4}
@@ -106,27 +105,27 @@ export const EquityCurveChart: React.FC<EquityCurveChartProps> = ({
             fontFamily="monospace"
             textAnchor="end"
           >
-            ${Math.round(maxEquity)}
+            ${maxEquity.toFixed(0)}
           </text>
           <text
             x={paddingLeft - 8}
-            y={getY(initialCapital) + 3}
+            y={getY(initialCapital) + 4}
             fill="#94a3b8"
             fontSize="9"
             fontFamily="monospace"
             textAnchor="end"
           >
-            ${Math.round(initialCapital)}
+            ${initialCapital.toFixed(0)}
           </text>
           <text
             x={paddingLeft - 8}
-            y={getY(minEquity) + 2}
+            y={getY(minEquity) + 4}
             fill="#64748b"
             fontSize="9"
             fontFamily="monospace"
             textAnchor="end"
           >
-            ${Math.round(minEquity)}
+            ${minEquity.toFixed(0)}
           </text>
         </svg>
       </div>

@@ -142,7 +142,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-slate-100 flex flex-col font-sans relative selection:bg-brand-500/30 selection:text-brand-100">
+    <div className="min-h-screen bg-background text-slate-100 flex flex-col font-sans relative selection:bg-accent-cyan/20 selection:text-cyan-200">
       {/* Top compact header */}
       <Header
         isOnline={isOnline}
@@ -171,7 +171,7 @@ export function App() {
         />
 
         {/* Main Viewport */}
-        <main className="flex-1 overflow-y-auto p-3.5 sm:p-5 lg:p-6 max-w-7xl mx-auto w-full pb-20 md:pb-6">
+        <main className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-5 max-w-[1600px] mx-auto w-full pb-20 md:pb-6">
           {currentNav === 'dashboard' && (
             <DashboardPage
               onSelectAsset={handleSelectAsset}
@@ -190,7 +190,7 @@ export function App() {
 
           {currentNav === 'watchlist' && (
             <div className="space-y-4">
-              <div className="border-b border-background-border pb-2.5">
+              <div className="border-b border-border pb-2.5">
                 <h1 className="text-xl font-bold text-white font-mono">Monitored Watchlist</h1>
                 <p className="text-xs text-slate-400">Locally saved assets on this device.</p>
               </div>
@@ -212,6 +212,7 @@ export function App() {
               onToggleWatchlist={() => toggleWatchlist(activeAsset.id)}
               initialTab={analysisTab}
               onTabChange={handleAnalysisTabChange}
+              onSelectAsset={handleSelectAsset}
             />
           )}
 
