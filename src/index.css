@@ -4,11 +4,12 @@
 
 @layer base {
   :root {
-    --bg-primary: #070a14;
-    --bg-secondary: #0c1222;
-    --bg-card: #10172b;
-    --bg-elevated: #162038;
+    --bg-primary: #090d14;
+    --bg-secondary: #0e1422;
+    --bg-card: #121929;
+    --bg-elevated: #172033;
     --border-color: rgba(255, 255, 255, 0.08);
+    --border-light: rgba(255, 255, 255, 0.04);
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
     --text-muted: #64748b;
@@ -18,16 +19,18 @@
     --bg-primary: #f8fafc;
     --bg-secondary: #f1f5f9;
     --bg-card: #ffffff;
-    --bg-elevated: #f8fafc;
+    --bg-elevated: #ffffff;
     --border-color: #e2e8f0;
+    --border-light: #f1f5f9;
     --text-primary: #0f172a;
     --text-secondary: #475569;
-    --text-muted: #94a3b8;
+    --text-muted: #64748b;
   }
 
   body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
+    font-family: 'Plus Jakarta Sans', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     overflow-x: hidden;
   }
 }
@@ -47,84 +50,92 @@
   border-radius: 4px;
 }
 
+.light ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+}
+
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.25);
 }
 
-/* Aesthetic Glassmorphic Classes */
+/* Institutional Terminal UI Classes */
+.terminal-panel {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+}
+
+.terminal-panel-elevated {
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+}
+
+.terminal-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.terminal-card:hover {
+  border-color: rgba(99, 102, 241, 0.35);
+  background-color: var(--bg-elevated);
+}
+
+.light .terminal-card:hover {
+  border-color: #cbd5e1;
+  background-color: #f8fafc;
+}
+
+/* Backward compatibility for existing components */
 .glass-panel {
-  background: rgba(16, 23, 43, 0.72);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
 }
 
 .glass-card {
-  background: rgba(16, 23, 43, 0.65);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.35);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
 }
 
 .glass-card-hover {
-  background: rgba(16, 23, 43, 0.65);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.35);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .glass-card-hover:hover {
-  background: rgba(22, 32, 56, 0.8);
-  border-color: rgba(99, 102, 241, 0.4);
-  transform: translateY(-2px);
-  box-shadow: 0 12px 32px -4px rgba(99, 102, 241, 0.15), 0 4px 12px rgba(0, 0, 0, 0.4);
+  border-color: rgba(99, 102, 241, 0.35);
+  background-color: var(--bg-elevated);
 }
 
-/* Terminal Glow Effects */
-.glow-emerald {
-  box-shadow: 0 0 20px -3px rgba(16, 185, 129, 0.3);
+/* Subtle restrained indicators */
+.badge-bullish {
+  color: #10b981;
+  background-color: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
-.glow-rose {
-  box-shadow: 0 0 20px -3px rgba(244, 63, 94, 0.3);
+.badge-bearish {
+  color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
-.glow-cyan {
-  box-shadow: 0 0 20px -3px rgba(6, 182, 212, 0.3);
+.badge-neutral {
+  color: #94a3b8;
+  background-color: rgba(148, 163, 184, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.2);
 }
 
-.glow-indigo {
-  box-shadow: 0 0 20px -3px rgba(99, 102, 241, 0.3);
+.badge-ai {
+  color: #818cf8;
+  background-color: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.25);
 }
 
-.glow-border-indigo {
-  border-color: rgba(99, 102, 241, 0.5);
-  box-shadow: 0 0 15px rgba(99, 102, 241, 0.25);
-}
-
-/* Gradient Text */
-.text-gradient-brand {
-  background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #818cf8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.text-gradient-cyan {
-  background: linear-gradient(135deg, #38bdf8 0%, #06b6d4 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.text-gradient-emerald {
-  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* Ticker Marquee Animation */
+/* Ticker marquee animation */
 @keyframes ticker {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
@@ -133,19 +144,9 @@
 .animate-ticker {
   display: flex;
   width: max-content;
-  animation: ticker 32s linear infinite;
+  animation: ticker 35s linear infinite;
 }
 
 .animate-ticker:hover {
   animation-play-state: paused;
-}
-
-/* Pulse subtle */
-@keyframes pulse-dot {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.25); opacity: 0.6; }
-}
-
-.animate-pulse-dot {
-  animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

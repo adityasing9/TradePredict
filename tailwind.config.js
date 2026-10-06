@@ -9,10 +9,10 @@ export default {
     extend: {
       colors: {
         background: {
-          DEFAULT: '#070a14',
-          secondary: '#0c1222',
-          card: '#10172b',
-          elevated: '#162038',
+          DEFAULT: '#090d14',
+          secondary: '#0e1422',
+          card: '#121929',
+          elevated: '#172033',
           border: 'rgba(255, 255, 255, 0.08)',
           subtle: 'rgba(255, 255, 255, 0.04)'
         },
@@ -27,22 +27,19 @@ export default {
         terminal: {
           green: '#10b981',
           emerald: '#059669',
-          red: '#f43f5e',
-          rose: '#e11d48',
+          red: '#ef4444',
+          rose: '#f43f5e',
           amber: '#f59e0b',
           blue: '#3b82f6',
           cyan: '#06b6d4',
           indigo: '#6366f1',
-          purple: '#a855f7'
+          purple: '#8b5cf6'
         }
       },
       boxShadow: {
-        'glow-indigo': '0 0 25px -4px rgba(99, 102, 241, 0.35)',
-        'glow-cyan': '0 0 25px -4px rgba(6, 182, 212, 0.35)',
-        'glow-emerald': '0 0 25px -4px rgba(16, 185, 129, 0.35)',
-        'glow-rose': '0 0 25px -4px rgba(244, 63, 94, 0.35)',
-        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.45)',
-        'glass-hover': '0 12px 40px 0 rgba(99, 102, 241, 0.2)'
+        'panel': '0 1px 3px 0 rgba(0, 0, 0, 0.25), 0 1px 2px -1px rgba(0, 0, 0, 0.25)',
+        'elevated': '0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3)',
+        'modal': '0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5)',
       },
       fontFamily: {
         mono: ['JetBrains Mono', 'Fira Code', 'Menlo', 'Consolas', 'monospace'],

@@ -62,7 +62,7 @@ export const BacktestingPage: React.FC = () => {
       </div>
 
       {/* Configuration Controls Bar */}
-      <div className="glass-card rounded-2xl border border-white/[0.08] p-5 sm:p-6 shadow-xl space-y-4">
+      <div className="terminal-panel p-4 space-y-3">
         <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
           <Layers className="w-4 h-4 text-brand-400" />
           Strategy Parameters & Capital Configuration
@@ -75,7 +75,7 @@ export const BacktestingPage: React.FC = () => {
             <select
               value={selectedAssetId}
               onChange={(e) => setSelectedAssetId(e.target.value)}
-              className="w-full p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:outline-none focus:border-brand-500/60 font-mono"
+              className="w-full p-2 rounded-lg bg-background-secondary border border-background-border text-white focus:outline-none focus:border-brand-500 font-mono"
             >
               {ALL_ASSETS.map((a) => (
                 <option key={a.id} value={a.id}>
@@ -164,7 +164,7 @@ export const BacktestingPage: React.FC = () => {
         <div className="space-y-6">
           {/* Summary KPI Strip */}
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 font-mono">
-            <div className="p-4 rounded-xl glass-card">
+            <div className="p-3 rounded-lg terminal-panel">
               <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-semibold">Total Return</span>
               <span
                 className={`text-xl font-black block mt-1 ${
@@ -175,7 +175,7 @@ export const BacktestingPage: React.FC = () => {
               </span>
             </div>
 
-            <div className="p-4 rounded-xl glass-card">
+            <div className="p-3 rounded-lg terminal-panel">
               <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-semibold">Win Rate</span>
               <span className="text-xl font-black text-cyan-300 block mt-1">
                 {result.winRatePercent}%
@@ -185,26 +185,26 @@ export const BacktestingPage: React.FC = () => {
               </span>
             </div>
 
-            <div className="p-4 rounded-xl glass-card">
+            <div className="p-3 rounded-lg terminal-panel">
               <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-semibold">Sharpe Ratio</span>
               <span className="text-xl font-black text-white block mt-1">{result.sharpeRatio}</span>
             </div>
 
-            <div className="p-4 rounded-xl glass-card">
+            <div className="p-3 rounded-lg terminal-panel">
               <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-semibold">Max Drawdown</span>
               <span className="text-xl font-black text-rose-400 block mt-1">
                 -{result.maxDrawdownPercent}%
               </span>
             </div>
 
-            <div className="p-4 rounded-xl glass-card">
+            <div className="p-3 rounded-lg terminal-panel">
               <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-semibold">Profit Factor</span>
               <span className="text-xl font-black text-emerald-400 block mt-1">
                 {result.profitFactor}
               </span>
             </div>
 
-            <div className="p-4 rounded-xl glass-card">
+            <div className="p-3 rounded-lg terminal-panel">
               <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-semibold">Total Trades</span>
               <span className="text-xl font-black text-slate-200 block mt-1">{result.totalTrades}</span>
             </div>
@@ -214,7 +214,7 @@ export const BacktestingPage: React.FC = () => {
           <EquityCurveChart points={result.equityCurve} initialCapital={initialCapital} />
 
           {/* Closed Trades List */}
-          <div className="glass-card rounded-2xl border border-white/[0.08] overflow-hidden shadow-xl">
+          <div className="terminal-panel overflow-hidden">
             <div className="p-4 border-b border-white/[0.06] flex items-center justify-between">
               <h4 className="text-xs font-mono font-bold text-white uppercase tracking-wider">
                 Simulated Execution Log ({result.trades.length} Trades)

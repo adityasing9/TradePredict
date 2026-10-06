@@ -12,7 +12,7 @@ export interface AISettings {
 }
 
 export interface UserSettings {
-  theme: 'dark' | 'light';
+  theme: 'dark' | 'light' | 'system';
   defaultMarket: Market;
   defaultCurrency: Currency;
   defaultTimeframe: string;

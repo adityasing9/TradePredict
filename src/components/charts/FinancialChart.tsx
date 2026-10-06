@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Candle, Timeframe } from '../../types/marketData';
 import { SupportResistanceLevel } from '../../types/technical';
-import { BarChart3, LineChart as LineChartIcon, Eye, RefreshCw, Layers } from 'lucide-react';
+import { BarChart3, LineChart as LineChartIcon, RefreshCw, SlidersHorizontal, Layers } from 'lucide-react';
 
 interface FinancialChartProps {
   candles: Candle[];
@@ -29,11 +29,81 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [chartType, setChartType] = useState<'CANDLE' | 'LINE'>('CANDLE');
-  const [showSMA, setShowSMA] = useState(true);
+
+  // Overlays state
+  const [showEMA20, setShowEMA20] = useState(true);
+  const [showEMA50, setShowEMA50] = useState(false);
+  const [showEMA200, setShowEMA200] = useState(false);
+  const [showBollinger, setShowBollinger] = useState(false);
+  const [showVWAP, setShowVWAP] = useState(false);
   const [showLevels, setShowLevels] = useState(true);
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
   const timeframes: Timeframe[] = ['15m', '1H', '4H', '1D', '1W'];
+
+  // Helper to calculate EMA
+  const calculateEMA = (bars: Candle[], period: number): (number | null)[] => {
+    if (bars.length < period) return bars.map(() => null);
+    const k = 2 / (period + 1);
+    const result: (number | null)[] = [];
+
+    // Simple SMA for initial seed
+    let sum = 0;
+    for (let i = 0; i < period; i++) sum += bars[i].close;
+    let prevEMA = sum / period;
+
+    for (let i = 0; i < bars.length; i++) {
+      if (i < period - 1) {
+        result.push(null);
+      } else if (i === period - 1) {
+        result.push(prevEMA);
+      } else {
+        prevEMA = bars[i].close * k + prevEMA * (1 - k);
+        result.push(prevEMA);
+      }
+    }
+    return result;
+  };
+
+  // Helper to calculate Bollinger Bands (period 20, multiplier 2)
+  const calculateBollingerBands = (bars: Candle[], period = 20, multiplier = 2) => {
+    const upper: (number | null)[] = [];
+    const middle: (number | null)[] = [];
+    const lower: (number | null)[] = [];
+
+    for (let i = 0; i < bars.length; i++) {
+      if (i < period - 1) {
+        upper.push(null);
+        middle.push(null);
+        lower.push(null);
+        continue;
+      }
+      const slice = bars.slice(i - period + 1, i + 1);
+      const mean = slice.reduce((s, b) => s + b.close, 0) / period;
+      const variance = slice.reduce((s, b) => s + Math.pow(b.close - mean, 2), 0) / period;
+      const stdDev = Math.sqrt(variance);
+
+      middle.push(mean);
+      upper.push(mean + multiplier * stdDev);
+      lower.push(mean - multiplier * stdDev);
+    }
+    return { upper, middle, lower };
+  };
+
+  // Helper to calculate VWAP
+  const calculateVWAP = (bars: Candle[]): (number | null)[] => {
+    let cumVolume = 0;
+    let cumTypicalVolume = 0;
+    const vwap: (number | null)[] = [];
+
+    for (let i = 0; i < bars.length; i++) {
+      const typicalPrice = (bars[i].high + bars[i].low + bars[i].close) / 3;
+      cumTypicalVolume += typicalPrice * bars[i].volume;
+      cumVolume += bars[i].volume;
+      vwap.push(cumVolume > 0 ? cumTypicalVolume / cumVolume : null);
+    }
+    return vwap;
+  };
 
   // Render chart on canvas
   useEffect(() => {
@@ -56,11 +126,8 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
     const priceHeight = height * 0.74;
     const volumeHeight = height * 0.22;
 
-    // 1. Fill aesthetic gradient background
-    const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
-    bgGrad.addColorStop(0, '#090e1c');
-    bgGrad.addColorStop(1, '#060a14');
-    ctx.fillStyle = bgGrad;
+    // Background fill
+    ctx.fillStyle = '#090d14';
     ctx.fillRect(0, 0, width, height);
 
     // Visible slice of bars (last 70 bars)
@@ -72,7 +139,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
     let minPrice = Math.min(...visibleBars.map((c) => c.low));
     let maxPrice = Math.max(...visibleBars.map((c) => c.high));
 
-    // Pad price range by 4%
+    // Pad price range by 5%
     const pricePadding = (maxPrice - minPrice) * 0.05 || 1;
     minPrice -= pricePadding;
     maxPrice += pricePadding;
@@ -83,17 +150,17 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
 
     // Geometry
     const paddingLeft = 12;
-    const paddingRight = 70; // space for y-axis price labels
+    const paddingRight = 72;
     const chartWidth = width - paddingLeft - paddingRight;
     const barWidth = chartWidth / n;
     const candleWidth = Math.max(3, barWidth * 0.72);
 
     const getY = (price: number) => priceHeight - ((price - minPrice) / priceRange) * (priceHeight - 24) - 12;
 
-    // 2. Subtle Grid Lines & Y-Axis Labels
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+    // 1. Grid Lines & Axis Labels
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
     ctx.lineWidth = 1;
-    ctx.setLineDash([4, 4]);
+    ctx.setLineDash([3, 3]);
 
     const numGridLines = 5;
     for (let i = 0; i <= numGridLines; i++) {
@@ -105,23 +172,21 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
       ctx.lineTo(width - paddingRight, y);
       ctx.stroke();
 
-      // Right axis price text
       ctx.fillStyle = '#64748b';
       ctx.font = '10px JetBrains Mono, monospace';
       ctx.textAlign = 'left';
       ctx.fillText(p.toFixed(p < 10 ? 3 : 1), width - paddingRight + 8, y + 3.5);
     }
-    ctx.setLineDash([]); // reset
+    ctx.setLineDash([]);
 
-    // 3. Support & Resistance Overlays
+    // 2. S/R Levels
     if (showLevels) {
-      // Support (Green dashed)
       for (const s of supports.slice(0, 2)) {
         if (s.price >= minPrice && s.price <= maxPrice) {
           const y = getY(s.price);
-          ctx.strokeStyle = 'rgba(16, 185, 129, 0.45)';
+          ctx.strokeStyle = 'rgba(16, 185, 129, 0.4)';
           ctx.lineWidth = 1;
-          ctx.setLineDash([6, 4]);
+          ctx.setLineDash([5, 4]);
           ctx.beginPath();
           ctx.moveTo(paddingLeft, y);
           ctx.lineTo(width - paddingRight, y);
@@ -133,19 +198,18 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
         }
       }
 
-      // Resistance (Rose dashed)
       for (const r of resistances.slice(0, 2)) {
         if (r.price >= minPrice && r.price <= maxPrice) {
           const y = getY(r.price);
-          ctx.strokeStyle = 'rgba(244, 63, 94, 0.45)';
+          ctx.strokeStyle = 'rgba(239, 68, 68, 0.4)';
           ctx.lineWidth = 1;
-          ctx.setLineDash([6, 4]);
+          ctx.setLineDash([5, 4]);
           ctx.beginPath();
           ctx.moveTo(paddingLeft, y);
           ctx.lineTo(width - paddingRight, y);
           ctx.stroke();
 
-          ctx.fillStyle = '#f43f5e';
+          ctx.fillStyle = '#ef4444';
           ctx.font = '9px JetBrains Mono, monospace';
           ctx.fillText(`RES ${r.price}`, width - paddingRight + 6, y - 3);
         }
@@ -153,14 +217,54 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
       ctx.setLineDash([]);
     }
 
-    // 4. Volume Bars (Bottom Subplot)
+    // 3. Bollinger Bands Overlay
+    if (showBollinger) {
+      const bb = calculateBollingerBands(visibleBars, 20, 2);
+      // Upper Band
+      ctx.strokeStyle = 'rgba(168, 85, 247, 0.5)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      let started = false;
+      for (let i = 0; i < n; i++) {
+        if (bb.upper[i] !== null) {
+          const x = paddingLeft + i * barWidth + barWidth / 2;
+          const y = getY(bb.upper[i]!);
+          if (!started) {
+            ctx.moveTo(x, y);
+            started = true;
+          } else {
+            ctx.lineTo(x, y);
+          }
+        }
+      }
+      ctx.stroke();
+
+      // Lower Band
+      ctx.beginPath();
+      started = false;
+      for (let i = 0; i < n; i++) {
+        if (bb.lower[i] !== null) {
+          const x = paddingLeft + i * barWidth + barWidth / 2;
+          const y = getY(bb.lower[i]!);
+          if (!started) {
+            ctx.moveTo(x, y);
+            started = true;
+          } else {
+            ctx.lineTo(x, y);
+          }
+        }
+      }
+      ctx.stroke();
+    }
+
+    // 4. Volume Bars (Subplot)
     visibleBars.forEach((bar, i) => {
       const x = paddingLeft + i * barWidth + barWidth / 2;
       const vHeight = (bar.volume / maxVolume) * volumeHeight;
       const vy = height - vHeight;
       const isUp = bar.close >= bar.open;
 
-      ctx.fillStyle = isUp ? 'rgba(16, 185, 129, 0.22)' : 'rgba(244, 63, 94, 0.22)';
+      ctx.fillStyle = isUp ? 'rgba(16, 185, 129, 0.25)' : 'rgba(239, 68, 68, 0.25)';
       ctx.fillRect(x - candleWidth / 2, vy, candleWidth, vHeight);
     });
 
@@ -174,7 +278,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
         const lowY = getY(bar.low);
 
         const isUp = bar.close >= bar.open;
-        const color = isUp ? '#10b981' : '#f43f5e';
+        const color = isUp ? '#10b981' : '#ef4444';
 
         // High-Low Wick
         ctx.strokeStyle = color;
@@ -191,7 +295,6 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
         ctx.fillRect(x - candleWidth / 2, bodyTop, candleWidth, bodyHeight);
       });
     } else {
-      // Line Chart with smooth area fill
       ctx.beginPath();
       visibleBars.forEach((bar, i) => {
         const x = paddingLeft + i * barWidth + barWidth / 2;
@@ -199,52 +302,57 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
         if (i === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       });
-
       ctx.strokeStyle = '#6366f1';
-      ctx.lineWidth = 2.2;
+      ctx.lineWidth = 2;
       ctx.stroke();
-
-      // Area fill
-      const lastX = paddingLeft + (n - 1) * barWidth + barWidth / 2;
-      const firstX = paddingLeft + barWidth / 2;
-      ctx.lineTo(lastX, priceHeight);
-      ctx.lineTo(firstX, priceHeight);
-      ctx.closePath();
-
-      const areaGrad = ctx.createLinearGradient(0, 0, 0, priceHeight);
-      areaGrad.addColorStop(0, 'rgba(99, 102, 241, 0.28)');
-      areaGrad.addColorStop(1, 'rgba(99, 102, 241, 0.0)');
-      ctx.fillStyle = areaGrad;
-      ctx.fill();
     }
 
-    // 6. SMA 20 Overlay
-    if (showSMA && visibleBars.length >= 20) {
+    // 6. Indicator Lines (EMA 20, EMA 50, EMA 200, VWAP)
+    const renderIndicatorLine = (values: (number | null)[], color: string) => {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.5;
       ctx.beginPath();
       let started = false;
-      for (let i = 19; i < visibleBars.length; i++) {
-        const subSlice = visibleBars.slice(i - 19, i + 1);
-        const sma = subSlice.reduce((sum, b) => sum + b.close, 0) / 20;
-        const x = paddingLeft + i * barWidth + barWidth / 2;
-        const y = getY(sma);
-
-        if (!started) {
-          ctx.moveTo(x, y);
-          started = true;
-        } else {
-          ctx.lineTo(x, y);
+      for (let i = 0; i < n; i++) {
+        if (values[i] !== null) {
+          const x = paddingLeft + i * barWidth + barWidth / 2;
+          const y = getY(values[i]!);
+          if (!started) {
+            ctx.moveTo(x, y);
+            started = true;
+          } else {
+            ctx.lineTo(x, y);
+          }
         }
       }
-      ctx.strokeStyle = '#f59e0b';
-      ctx.lineWidth = 1.5;
       ctx.stroke();
+    };
+
+    if (showEMA20) {
+      const ema20 = calculateEMA(visibleBars, 20);
+      renderIndicatorLine(ema20, '#f59e0b'); // Amber
+    }
+
+    if (showEMA50) {
+      const ema50 = calculateEMA(visibleBars, 50);
+      renderIndicatorLine(ema50, '#38bdf8'); // Sky blue
+    }
+
+    if (showEMA200) {
+      const ema200 = calculateEMA(visibleBars, Math.min(200, Math.floor(visibleBars.length * 0.9)));
+      renderIndicatorLine(ema200, '#a855f7'); // Purple
+    }
+
+    if (showVWAP) {
+      const vwap = calculateVWAP(visibleBars);
+      renderIndicatorLine(vwap, '#ec4899'); // Pink
     }
 
     // 7. Latest Price Horizontal Reference Line
     const latestBar = visibleBars[visibleBars.length - 1];
     const latestY = getY(latestBar.close);
     const isLatestUp = latestBar.close >= latestBar.open;
-    const latestColor = isLatestUp ? '#10b981' : '#f43f5e';
+    const latestColor = isLatestUp ? '#10b981' : '#ef4444';
 
     ctx.strokeStyle = latestColor;
     ctx.lineWidth = 1;
@@ -255,9 +363,9 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // Latest price tag badge on right axis
+    // Price tag on right axis
     ctx.fillStyle = latestColor;
-    ctx.fillRect(width - paddingRight + 4, latestY - 8, 60, 16);
+    ctx.fillRect(width - paddingRight + 4, latestY - 8, 62, 16);
     ctx.fillStyle = '#ffffff';
     ctx.font = 'bold 9.5px JetBrains Mono, monospace';
     ctx.textAlign = 'left';
@@ -269,24 +377,21 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
       const hx = paddingLeft + hoverIndex * barWidth + barWidth / 2;
       const hy = getY(hoverBar.close);
 
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
       ctx.lineWidth = 1;
       ctx.setLineDash([3, 3]);
 
-      // Vertical line
       ctx.beginPath();
       ctx.moveTo(hx, 0);
       ctx.lineTo(hx, height);
       ctx.stroke();
 
-      // Horizontal line
       ctx.beginPath();
       ctx.moveTo(paddingLeft, hy);
       ctx.lineTo(width - paddingRight, hy);
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Point marker
       ctx.fillStyle = '#6366f1';
       ctx.beginPath();
       ctx.arc(hx, hy, 4, 0, Math.PI * 2);
@@ -295,9 +400,8 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
       ctx.strokeStyle = '#ffffff';
       ctx.stroke();
     }
-  }, [candles, chartType, showSMA, showLevels, hoverIndex]);
+  }, [candles, chartType, showEMA20, showEMA50, showEMA200, showBollinger, showVWAP, showLevels, hoverIndex]);
 
-  // Handle canvas mouse move
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
     if (!canvas || candles.length === 0) return;
@@ -305,7 +409,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const paddingLeft = 12;
-    const paddingRight = 70;
+    const paddingRight = 72;
     const chartWidth = rect.width - paddingLeft - paddingRight;
 
     const visibleBars = candles.slice(-70);
@@ -326,9 +430,9 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
       : candles[candles.length - 1];
 
   return (
-    <div className="w-full glass-card rounded-2xl border border-white/[0.08] p-4 sm:p-5 shadow-xl flex flex-col gap-3.5">
-      {/* Chart Top Bar: Symbol, Timeframes, Controls */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.06] pb-3">
+    <div className="terminal-panel p-4 space-y-3">
+      {/* Chart Top Bar: Symbol, Timeframes, Indicators */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-2.5 border-b border-background-border">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5 font-mono text-xs">
             <span className="font-extrabold text-white text-base tracking-tight">{symbol}</span>
@@ -336,15 +440,15 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
           </div>
 
           {/* Timeframe Chips */}
-          <div className="flex items-center gap-1 bg-white/[0.03] p-1 rounded-xl border border-white/[0.06] text-[11px] font-mono shadow-inner">
+          <div className="flex items-center gap-1 bg-background-secondary p-1 rounded-lg border border-background-border text-[11px] font-mono">
             {timeframes.map((tf) => (
               <button
                 key={tf}
                 onClick={() => onSelectTimeframe(tf)}
-                className={`px-2.5 py-1 rounded-lg transition-all duration-150 ${
+                className={`px-2 py-0.5 rounded transition-colors ${
                   currentTimeframe === tf
-                    ? 'bg-brand-500 text-white font-bold shadow-sm shadow-brand-500/30'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.03]'
+                    ? 'bg-brand-500 text-white font-bold'
+                    : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
                 {tf}
@@ -353,11 +457,12 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
           </div>
         </div>
 
-        {/* View toggles */}
-        <div className="flex items-center gap-2 text-xs">
+        {/* View toggles & Indicators Toolbar */}
+        <div className="flex flex-wrap items-center gap-1.5 text-xs font-mono">
+          {/* Chart Type Toggle */}
           <button
             onClick={() => setChartType(chartType === 'CANDLE' ? 'LINE' : 'CANDLE')}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/[0.08] text-slate-300 hover:text-white hover:bg-white/[0.06] transition-colors"
+            className="flex items-center gap-1 px-2 py-1 rounded bg-background-secondary border border-background-border text-slate-300 hover:text-white"
             title="Toggle Candlestick / Line"
           >
             {chartType === 'CANDLE' ? (
@@ -365,38 +470,87 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
             ) : (
               <LineChartIcon className="w-3.5 h-3.5 text-brand-400" />
             )}
-            <span className="text-[11px] font-mono font-medium">{chartType}</span>
+            <span className="text-[11px]">{chartType}</span>
           </button>
 
+          {/* EMA 20 */}
           <button
-            onClick={() => setShowSMA(!showSMA)}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[11px] font-mono transition-colors ${
-              showSMA
-                ? 'bg-amber-500/10 border-amber-500/30 text-amber-400 font-semibold'
-                : 'bg-white/[0.03] border-white/[0.08] text-slate-400 hover:text-slate-300'
+            onClick={() => setShowEMA20(!showEMA20)}
+            className={`px-2 py-1 rounded border text-[11px] transition-colors ${
+              showEMA20
+                ? 'bg-amber-500/15 border-amber-500/30 text-amber-400 font-bold'
+                : 'bg-background-secondary border-background-border text-slate-400'
             }`}
           >
-            <Eye className="w-3 h-3" />
-            <span>SMA 20</span>
+            EMA 20
           </button>
 
+          {/* EMA 50 */}
+          <button
+            onClick={() => setShowEMA50(!showEMA50)}
+            className={`px-2 py-1 rounded border text-[11px] transition-colors ${
+              showEMA50
+                ? 'bg-sky-500/15 border-sky-500/30 text-sky-400 font-bold'
+                : 'bg-background-secondary border-background-border text-slate-400'
+            }`}
+          >
+            EMA 50
+          </button>
+
+          {/* EMA 200 */}
+          <button
+            onClick={() => setShowEMA200(!showEMA200)}
+            className={`px-2 py-1 rounded border text-[11px] transition-colors ${
+              showEMA200
+                ? 'bg-purple-500/15 border-purple-500/30 text-purple-400 font-bold'
+                : 'bg-background-secondary border-background-border text-slate-400'
+            }`}
+          >
+            EMA 200
+          </button>
+
+          {/* Bollinger Bands */}
+          <button
+            onClick={() => setShowBollinger(!showBollinger)}
+            className={`px-2 py-1 rounded border text-[11px] transition-colors ${
+              showBollinger
+                ? 'bg-purple-500/15 border-purple-500/30 text-purple-400 font-bold'
+                : 'bg-background-secondary border-background-border text-slate-400'
+            }`}
+          >
+            BB (20,2)
+          </button>
+
+          {/* VWAP */}
+          <button
+            onClick={() => setShowVWAP(!showVWAP)}
+            className={`px-2 py-1 rounded border text-[11px] transition-colors ${
+              showVWAP
+                ? 'bg-pink-500/15 border-pink-500/30 text-pink-400 font-bold'
+                : 'bg-background-secondary border-background-border text-slate-400'
+            }`}
+          >
+            VWAP
+          </button>
+
+          {/* S/R Levels */}
           <button
             onClick={() => setShowLevels(!showLevels)}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[11px] font-mono transition-colors ${
+            className={`px-2 py-1 rounded border text-[11px] transition-colors ${
               showLevels
-                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400 font-semibold'
-                : 'bg-white/[0.03] border-white/[0.08] text-slate-400 hover:text-slate-300'
+                ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400 font-bold'
+                : 'bg-background-secondary border-background-border text-slate-400'
             }`}
           >
-            <span>S/R Levels</span>
+            S/R
           </button>
 
           {onRefresh && (
             <button
               onClick={onRefresh}
               disabled={loading}
-              className="p-1.5 rounded-lg bg-white/[0.03] border border-white/[0.08] text-slate-400 hover:text-white disabled:opacity-50 transition-colors"
-              title="Refresh Data"
+              className="p-1 rounded bg-background-secondary border border-background-border text-slate-400 hover:text-white disabled:opacity-50"
+              title="Refresh Candles"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
             </button>
@@ -404,9 +558,9 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
         </div>
       </div>
 
-      {/* OHLC Interactive Bar */}
+      {/* Interactive OHLC Bar */}
       {activeBar && (
-        <div className="flex flex-wrap items-center gap-3.5 text-[11px] font-mono text-slate-400 bg-white/[0.02] px-3.5 py-1.5 rounded-xl border border-white/[0.05]">
+        <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono text-slate-400 bg-background-secondary px-3 py-1 rounded border border-background-border">
           <div>
             Time:{' '}
             <span className="text-slate-200">
@@ -414,29 +568,21 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
               {new Date(activeBar.time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </span>
           </div>
-          <div>
-            O: <span className="text-slate-200">{activeBar.open}</span>
-          </div>
-          <div>
-            H: <span className="text-emerald-400">{activeBar.high}</span>
-          </div>
-          <div>
-            L: <span className="text-rose-400">{activeBar.low}</span>
-          </div>
+          <div>O: <span className="text-slate-200">{activeBar.open}</span></div>
+          <div>H: <span className="text-emerald-400">{activeBar.high}</span></div>
+          <div>L: <span className="text-rose-400">{activeBar.low}</span></div>
           <div>
             C:{' '}
             <span className={activeBar.close >= activeBar.open ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}>
               {activeBar.close}
             </span>
           </div>
-          <div>
-            Vol: <span className="text-slate-300">{activeBar.volume.toLocaleString()}</span>
-          </div>
+          <div>Vol: <span className="text-slate-300">{activeBar.volume.toLocaleString()}</span></div>
         </div>
       )}
 
-      {/* Canvas Chart Area */}
-      <div ref={containerRef} className="relative w-full h-80 sm:h-96 rounded-xl overflow-hidden border border-white/[0.06] shadow-inner">
+      {/* Canvas Area */}
+      <div ref={containerRef} className="relative w-full h-80 sm:h-96 rounded-lg overflow-hidden border border-background-border">
         <canvas
           ref={canvasRef}
           onMouseMove={handleMouseMove}

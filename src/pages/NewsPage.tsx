@@ -68,23 +68,23 @@ export const NewsPage: React.FC = () => {
           return (
             <div
               key={item.id}
-              className="p-5 rounded-2xl glass-card flex flex-col justify-between gap-4 hover:-translate-y-0.5 transition-all shadow-lg"
+              className="p-4 rounded-lg terminal-panel flex flex-col justify-between gap-3 hover:border-slate-600 transition-colors"
             >
               <div>
                 {/* Meta Header */}
                 <div className="flex items-center justify-between gap-2 text-[10px] font-mono">
                   <span className="text-slate-400 font-semibold">{item.source}</span>
                   <div className="flex items-center gap-1.5">
-                    <span className="px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-slate-300">
+                    <span className="px-2 py-0.5 rounded bg-white/[0.04] text-slate-300">
                       {item.category}
                     </span>
                     <span
-                      className={`px-2 py-0.5 rounded-full font-bold border ${
+                      className={`px-2 py-0.5 rounded font-bold ${
                         isPos
-                          ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-glow-emerald'
+                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                           : isNeg
-                          ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 shadow-glow-rose'
-                          : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                          ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+                          : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
                       }`}
                     >
                       {item.sentimentLabel} ({item.sentimentScore > 0 ? '+' : ''}{item.sentimentScore})
@@ -92,8 +92,8 @@ export const NewsPage: React.FC = () => {
                   </div>
                 </div>
 
-                <h3 className="text-sm font-bold text-white mt-2.5 leading-snug">{item.title}</h3>
-                <p className="text-xs text-slate-300 mt-1.5 leading-relaxed">{item.summary}</p>
+                <h3 className="text-sm font-bold text-white mt-2 leading-snug">{item.title}</h3>
+                <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">{item.summary}</p>
               </div>
 
               {/* Tag Footer */}

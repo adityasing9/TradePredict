@@ -15,8 +15,22 @@ export function useSettings() {
         applyTheme(s.theme);
       }
     });
+
+    // Listen for OS theme changes if user has 'system' theme selected
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleSystemThemeChange = () => {
+      getUserSettings().then((s) => {
+        if (s.theme === 'system') {
+          applyTheme('system');
+        }
+      });
+    };
+
+    mediaQuery.addEventListener('change', handleSystemThemeChange);
+
     return () => {
       mounted = false;
+      mediaQuery.removeEventListener('change', handleSystemThemeChange);
     };
   }, []);
 
@@ -29,9 +43,17 @@ export function useSettings() {
     return updated;
   };
 
-  const applyTheme = (theme: 'dark' | 'light') => {
+  const applyTheme = (theme: 'dark' | 'light' | 'system') => {
     const root = document.documentElement;
-    if (theme === 'dark') {
+    let isDark = true;
+
+    if (theme === 'system') {
+      isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    } else {
+      isDark = theme === 'dark';
+    }
+
+    if (isDark) {
       root.classList.add('dark');
       root.classList.remove('light');
     } else {

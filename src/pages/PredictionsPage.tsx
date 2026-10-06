@@ -107,16 +107,16 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({ onSelectAsset 
             <div
               key={asset.id}
               onClick={() => onSelectAsset(asset)}
-              className="p-4 sm:p-5 rounded-2xl glass-card-hover cursor-pointer flex flex-col justify-between gap-4 group relative overflow-hidden"
+              className="p-4 rounded-lg terminal-panel hover:border-slate-600 transition-colors cursor-pointer flex flex-col justify-between gap-3 group"
             >
               <div>
                 <div className="flex items-start justify-between">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold text-base text-white group-hover:text-brand-300 transition-colors">
+                      <span className="font-mono font-bold text-sm text-white group-hover:text-brand-300 transition-colors">
                         {asset.symbol}
                       </span>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-slate-300">
+                      <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-white/[0.04] text-slate-400">
                         {asset.market}
                       </span>
                     </div>
@@ -124,12 +124,12 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({ onSelectAsset 
                   </div>
 
                   <span
-                    className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold border ${
+                    className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
                       direction === 'BULLISH'
-                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-glow-emerald'
+                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                         : direction === 'BEARISH'
-                        ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 shadow-glow-rose'
-                        : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                        ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+                        : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
                     }`}
                   >
                     {direction}

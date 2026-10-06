@@ -55,7 +55,7 @@ export const PerformancePage: React.FC = () => {
 
       {/* Top Level Metric KPIs */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="p-4 sm:p-5 rounded-2xl glass-card">
+        <div className="p-4 terminal-panel">
           <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block font-semibold">Empirical Accuracy</span>
           <div className="text-2xl sm:text-3xl font-black font-mono text-emerald-400 mt-1">
             {metrics.accuracyPercent}%
@@ -65,7 +65,7 @@ export const PerformancePage: React.FC = () => {
           </span>
         </div>
 
-        <div className="p-4 sm:p-5 rounded-2xl glass-card">
+        <div className="p-4 terminal-panel">
           <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block font-semibold">Total Tracked Forecasts</span>
           <div className="text-2xl sm:text-3xl font-black font-mono text-white mt-1">
             {metrics.totalPredictions}
@@ -75,7 +75,7 @@ export const PerformancePage: React.FC = () => {
           </span>
         </div>
 
-        <div className="p-4 sm:p-5 rounded-2xl glass-card">
+        <div className="p-4 terminal-panel">
           <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block font-semibold">Avg Absolute Return Error</span>
           <div className="text-2xl sm:text-3xl font-black font-mono text-cyan-300 mt-1">
             {metrics.averageReturnErrorPercent}%
@@ -85,7 +85,7 @@ export const PerformancePage: React.FC = () => {
           </span>
         </div>
 
-        <div className="p-4 sm:p-5 rounded-2xl glass-card">
+        <div className="p-4 terminal-panel">
           <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block font-semibold">Verification Pipeline</span>
           <div className="text-sm sm:text-base font-bold font-mono text-emerald-400 mt-1.5 flex items-center gap-1.5">
             <ShieldCheck className="w-4 h-4" />
@@ -98,19 +98,19 @@ export const PerformancePage: React.FC = () => {
       </div>
 
       {/* Performance by Market */}
-      <div className="glass-card rounded-2xl border border-white/[0.08] p-5 sm:p-6 shadow-xl space-y-3.5">
+      <div className="terminal-panel p-4 space-y-3">
         <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300">
           Directional Accuracy By Market
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs font-mono">
           {Object.entries(metrics.accuracyByMarket).map(([market, stat]: [string, { total: number; correct: number; accuracy: number }]) => (
-            <div key={market} className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+            <div key={market} className="p-3 rounded-lg bg-background-secondary border border-background-border">
               <div className="flex justify-between items-center">
                 <span className="font-bold text-white text-sm">{market}</span>
                 <span className="font-extrabold text-emerald-400 text-base">{stat.accuracy}%</span>
               </div>
-              <div className="w-full h-2 rounded-full bg-white/[0.05] mt-2 overflow-hidden">
-                <div style={{ width: `${stat.accuracy}%` }} className="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-full" />
+              <div className="w-full h-1.5 rounded-full bg-white/[0.05] mt-2 overflow-hidden">
+                <div style={{ width: `${stat.accuracy}%` }} className="h-full bg-emerald-500 rounded-full" />
               </div>
               <span className="text-[10px] text-slate-500 mt-2 block">
                 {stat.correct} / {stat.total} verified correct
@@ -121,19 +121,19 @@ export const PerformancePage: React.FC = () => {
       </div>
 
       {/* Performance by Timeframe */}
-      <div className="glass-card rounded-2xl border border-white/[0.08] p-5 sm:p-6 shadow-xl space-y-3.5">
+      <div className="terminal-panel p-4 space-y-3">
         <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300">
           Directional Accuracy By Horizon Timeframe
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
           {Object.entries(metrics.accuracyByTimeframe).map(([tf, stat]: [string, { total: number; correct: number; accuracy: number }]) => (
-            <div key={tf} className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+            <div key={tf} className="p-3 rounded-lg bg-background-secondary border border-background-border">
               <div className="flex justify-between items-center">
                 <span className="font-bold text-white text-sm">{tf} Horizon</span>
-                <span className="font-extrabold text-indigo-400 text-base">{stat.accuracy}%</span>
+                <span className="font-extrabold text-brand-300 text-base">{stat.accuracy}%</span>
               </div>
-              <div className="w-full h-2 rounded-full bg-white/[0.05] mt-2 overflow-hidden">
-                <div style={{ width: `${stat.accuracy}%` }} className="h-full bg-gradient-to-r from-brand-600 to-indigo-400 rounded-full" />
+              <div className="w-full h-1.5 rounded-full bg-white/[0.05] mt-2 overflow-hidden">
+                <div style={{ width: `${stat.accuracy}%` }} className="h-full bg-brand-500 rounded-full" />
               </div>
               <span className="text-[10px] text-slate-500 mt-2 block">
                 {stat.correct} / {stat.total} predictions
@@ -144,7 +144,7 @@ export const PerformancePage: React.FC = () => {
       </div>
 
       {/* Calibration Table */}
-      <div className="glass-card rounded-2xl border border-white/[0.08] overflow-hidden shadow-xl">
+      <div className="terminal-panel overflow-hidden">
         <div className="p-4 sm:p-5 border-b border-white/[0.06]">
           <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300">
             Probability Calibration Curve (Predicted Confidence vs Empirical Hit Rate)

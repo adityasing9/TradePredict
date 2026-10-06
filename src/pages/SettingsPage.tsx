@@ -113,10 +113,11 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
               <select
                 value={formData.theme}
                 onChange={(e) => setFormData({ ...formData, theme: e.target.value as any })}
-                className="w-full p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:outline-none focus:border-brand-500/60 font-mono"
+                className="w-full p-2 rounded-lg bg-background-secondary border border-background-border text-white focus:outline-none focus:border-brand-500 font-mono"
               >
-                <option value="dark">Dark Terminal (Recommended)</option>
-                <option value="light">Light Mode</option>
+                <option value="dark">Dark Terminal (Default)</option>
+                <option value="light">Light Theme</option>
+                <option value="system">System (Follow OS Preference)</option>
               </select>
             </div>
           </div>
