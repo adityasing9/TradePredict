@@ -52,13 +52,13 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
       {/* 1. ASSET HEADER */}
-      <div className="bg-background-card rounded-2xl border border-background-border p-5 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
+      <div className="glass-card rounded-2xl border border-white/[0.08] p-5 sm:p-6 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden">
+        <div className="relative z-10">
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-extrabold text-white font-mono tracking-tight">
-              {asset.symbol}
+            <h1 className="text-2xl sm:text-3xl font-black text-white font-mono tracking-tight flex items-center gap-2">
+              <span>{asset.symbol}</span>
             </h1>
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-background-secondary border border-background-border text-slate-300">
+            <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-brand-300 font-semibold">
               {asset.market}
             </span>
             <span className="text-xs text-slate-400 font-sans hidden sm:inline">
@@ -66,30 +66,30 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
             </span>
             <button
               onClick={onToggleWatchlist}
-              className="p-1 rounded text-slate-400 hover:text-amber-400 transition-colors"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-white/[0.04] transition-all"
               title={isWatched ? 'Remove from Watchlist' : 'Add to Watchlist'}
             >
-              <Star className={`w-4 h-4 ${isWatched ? 'fill-amber-400 text-amber-400' : ''}`} />
+              <Star className={`w-4 h-4 ${isWatched ? 'fill-amber-400 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]' : ''}`} />
             </button>
           </div>
-          <h2 className="text-xs text-slate-400 mt-1">{asset.name}</h2>
+          <h2 className="text-xs text-slate-400 mt-1">{asset.name} • {asset.exchange}</h2>
         </div>
 
         {/* Price & Quality Indicators */}
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="flex flex-wrap items-center gap-4 relative z-10">
           <DataQualityBadge quality={dataQuality} />
 
           {quote && (
             <div className="text-right font-mono">
-              <div className="text-2xl font-black text-white">
+              <div className="text-2xl sm:text-3xl font-black text-white tracking-tight">
                 {asset.currency} {quote.price.toLocaleString()}
               </div>
               <div
-                className={`text-xs font-bold flex items-center justify-end gap-1 ${
+                className={`text-xs font-bold flex items-center justify-end gap-1 mt-0.5 ${
                   isUp ? 'text-emerald-400' : 'text-rose-400'
                 }`}
               >
-                {isUp ? <TrendingUp className="w-3.5 h-3.5" /> : <TrendingDown className="w-3.5 h-3.5" />}
+                {isUp ? <TrendingUp className="w-3.5 h-3.5 stroke-[2.5]" /> : <TrendingDown className="w-3.5 h-3.5 stroke-[2.5]" />}
                 <span>
                   {isUp ? '+' : ''}{quote.changePercent}% ({quote.change > 0 ? '+' : ''}{quote.change})
                 </span>
@@ -138,25 +138,26 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
       )}
 
       {/* 5. MULTI-ENGINE DEEP DIVE TABS */}
+      {/* 5. MULTI-ENGINE DEEP DIVE TABS */}
       <div className="space-y-4">
         {/* Navigation Tabs */}
-        <div className="flex items-center gap-1.5 overflow-x-auto border-b border-background-border pb-2 text-xs font-mono">
+        <div className="flex items-center gap-1.5 overflow-x-auto p-1.5 rounded-2xl bg-white/[0.03] border border-white/[0.06] text-xs font-mono shadow-inner">
           <button
             onClick={() => setActiveTab('OVERVIEW')}
-            className={`px-3 py-1.5 rounded-lg font-medium transition-colors ${
+            className={`px-3.5 py-2 rounded-xl font-medium transition-all duration-150 shrink-0 ${
               activeTab === 'OVERVIEW'
-                ? 'bg-brand-500 text-white font-bold'
-                : 'text-slate-400 hover:text-white bg-background-secondary border border-background-border'
+                ? 'bg-gradient-to-r from-brand-600 to-brand-500 text-white font-bold shadow-glow-indigo'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]'
             }`}
           >
             Terminal Overview
           </button>
           <button
             onClick={() => setActiveTab('TECHNICAL')}
-            className={`px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5 transition-colors ${
+            className={`px-3.5 py-2 rounded-xl font-medium flex items-center gap-1.5 transition-all duration-150 shrink-0 ${
               activeTab === 'TECHNICAL'
-                ? 'bg-brand-500 text-white font-bold'
-                : 'text-slate-400 hover:text-white bg-background-secondary border border-background-border'
+                ? 'bg-gradient-to-r from-brand-600 to-brand-500 text-white font-bold shadow-glow-indigo'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]'
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
@@ -164,10 +165,10 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('FUNDAMENTAL')}
-            className={`px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5 transition-colors ${
+            className={`px-3.5 py-2 rounded-xl font-medium flex items-center gap-1.5 transition-all duration-150 shrink-0 ${
               activeTab === 'FUNDAMENTAL'
-                ? 'bg-brand-500 text-white font-bold'
-                : 'text-slate-400 hover:text-white bg-background-secondary border border-background-border'
+                ? 'bg-gradient-to-r from-brand-600 to-brand-500 text-white font-bold shadow-glow-indigo'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]'
             }`}
           >
             <Building2 className="w-3.5 h-3.5" />
@@ -175,10 +176,10 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('QUANT')}
-            className={`px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5 transition-colors ${
+            className={`px-3.5 py-2 rounded-xl font-medium flex items-center gap-1.5 transition-all duration-150 shrink-0 ${
               activeTab === 'QUANT'
-                ? 'bg-brand-500 text-white font-bold'
-                : 'text-slate-400 hover:text-white bg-background-secondary border border-background-border'
+                ? 'bg-gradient-to-r from-brand-600 to-brand-500 text-white font-bold shadow-glow-indigo'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]'
             }`}
           >
             <BarChart2 className="w-3.5 h-3.5" />
@@ -186,10 +187,10 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('SENTIMENT')}
-            className={`px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5 transition-colors ${
+            className={`px-3.5 py-2 rounded-xl font-medium flex items-center gap-1.5 transition-all duration-150 shrink-0 ${
               activeTab === 'SENTIMENT'
-                ? 'bg-brand-500 text-white font-bold'
-                : 'text-slate-400 hover:text-white bg-background-secondary border border-background-border'
+                ? 'bg-gradient-to-r from-brand-600 to-brand-500 text-white font-bold shadow-glow-indigo'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]'
             }`}
           >
             <Newspaper className="w-3.5 h-3.5" />
@@ -197,10 +198,10 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('AI_REPORT')}
-            className={`px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5 transition-colors ${
+            className={`px-3.5 py-2 rounded-xl font-medium flex items-center gap-1.5 transition-all duration-150 shrink-0 ${
               activeTab === 'AI_REPORT'
-                ? 'bg-brand-500 text-white font-bold'
-                : 'text-slate-400 hover:text-white bg-background-secondary border border-background-border'
+                ? 'bg-gradient-to-r from-brand-600 to-brand-500 text-white font-bold shadow-glow-indigo'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]'
             }`}
           >
             <FileText className="w-3.5 h-3.5" />
@@ -208,10 +209,10 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('TRANSPARENCY')}
-            className={`px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5 transition-colors ${
+            className={`px-3.5 py-2 rounded-xl font-medium flex items-center gap-1.5 transition-all duration-150 shrink-0 ${
               activeTab === 'TRANSPARENCY'
-                ? 'bg-brand-500 text-white font-bold'
-                : 'text-slate-400 hover:text-white bg-background-secondary border border-background-border'
+                ? 'bg-gradient-to-r from-brand-600 to-brand-500 text-white font-bold shadow-glow-indigo'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]'
             }`}
           >
             <Cpu className="w-3.5 h-3.5" />

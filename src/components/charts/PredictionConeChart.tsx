@@ -22,10 +22,10 @@ export const PredictionConeChart: React.FC<PredictionConeChartProps> = ({
 
   const svgWidth = 600;
   const svgHeight = 220;
-  const paddingLeft = 50;
+  const paddingLeft = 55;
   const paddingRight = 60;
-  const paddingTop = 20;
-  const paddingBottom = 30;
+  const paddingTop = 25;
+  const paddingBottom = 35;
 
   const chartW = svgWidth - paddingLeft - paddingRight;
   const chartH = svgHeight - paddingTop - paddingBottom;
@@ -59,72 +59,88 @@ export const PredictionConeChart: React.FC<PredictionConeChartProps> = ({
   const polygon68 = [...pts68Top, ...pts68Bottom].join(' ');
 
   return (
-    <div className="w-full bg-background-card rounded-xl border border-background-border p-4 shadow-lg flex flex-col gap-2">
-      <div className="flex items-center justify-between">
+    <div className="w-full glass-card rounded-2xl border border-white/[0.08] p-5 shadow-xl flex flex-col justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/[0.06] pb-3">
         <div>
-          <h4 className="text-xs font-mono font-bold text-white uppercase tracking-wider">
+          <h4 className="text-xs font-mono font-bold text-white uppercase tracking-wider flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
             Probabilistic Price Projection Cone
           </h4>
-          <p className="text-[11px] text-slate-400">
+          <p className="text-[11px] text-slate-400 mt-0.5">
             Geometric Brownian drift with 1-sigma (68% CI) & 2-sigma (95% CI) volatility expansion
           </p>
         </div>
         <div className="flex items-center gap-3 text-[10px] font-mono">
-          <span className="flex items-center gap-1 text-indigo-400">
-            <span className="w-2.5 h-2.5 rounded bg-indigo-500/20 border border-indigo-400 inline-block" />
-            68% Confidence
+          <span className="flex items-center gap-1.5 text-indigo-300 font-semibold">
+            <span className="w-2.5 h-2.5 rounded bg-indigo-500/30 border border-indigo-400 inline-block shadow-sm" />
+            68% CI (1σ)
           </span>
-          <span className="flex items-center gap-1 text-slate-400">
-            <span className="w-2.5 h-2.5 rounded bg-slate-500/10 border border-slate-600 inline-block" />
-            95% Confidence
+          <span className="flex items-center gap-1.5 text-slate-400">
+            <span className="w-2.5 h-2.5 rounded bg-white/[0.05] border border-slate-500 inline-block" />
+            95% CI (2σ)
           </span>
         </div>
       </div>
 
-      <div className="relative w-full overflow-x-auto">
+      <div className="relative w-full overflow-x-auto py-1">
         <svg
           viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-          className="w-full h-48 select-none"
+          className="w-full h-48 select-none overflow-visible"
         >
+          <defs>
+            <linearGradient id="cone95" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#6366f1" stopOpacity="0.15" />
+              <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.05" />
+            </linearGradient>
+            <linearGradient id="cone68" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#6366f1" stopOpacity="0.3" />
+              <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.18" />
+            </linearGradient>
+          </defs>
+
           {/* 95% Confidence Band Polygon */}
           <polygon
             points={polygon95}
-            fill="rgba(99, 102, 241, 0.08)"
-            stroke="rgba(99, 102, 241, 0.2)"
+            fill="url(#cone95)"
+            stroke="rgba(99, 102, 241, 0.25)"
             strokeWidth="1"
-            strokeDasharray="3 3"
+            strokeDasharray="4 3"
           />
 
           {/* 68% Confidence Band Polygon */}
           <polygon
             points={polygon68}
-            fill="rgba(99, 102, 241, 0.18)"
-            stroke="rgba(99, 102, 241, 0.45)"
-            strokeWidth="1"
+            fill="url(#cone68)"
+            stroke="rgba(99, 102, 241, 0.55)"
+            strokeWidth="1.2"
           />
 
           {/* Median Trajectory Line */}
           <polyline
             points={medianPts.join(' ')}
             fill="none"
-            stroke="#6366f1"
+            stroke="#818cf8"
             strokeWidth="2.5"
             strokeLinecap="round"
+            strokeLinejoin="round"
           />
 
           {/* Current Price Anchor Point */}
           <circle
             cx={paddingLeft}
             cy={getY(currentPrice)}
-            r="4"
+            r="4.5"
             fill="#10b981"
+            stroke="#ffffff"
+            strokeWidth="1.5"
           />
           <text
-            x={paddingLeft - 5}
-            y={getY(currentPrice) - 8}
+            x={paddingLeft - 8}
+            y={getY(currentPrice) + 3}
             fill="#10b981"
             fontSize="9"
             fontFamily="monospace"
+            fontWeight="bold"
             textAnchor="end"
           >
             Now: {currentPrice}
@@ -141,17 +157,17 @@ export const PredictionConeChart: React.FC<PredictionConeChartProps> = ({
                   y1={getY(c.ci95High)}
                   x2={x}
                   y2={getY(c.ci95Low)}
-                  stroke="#334155"
+                  stroke="rgba(255, 255, 255, 0.15)"
                   strokeWidth="1"
                   strokeDasharray="2 2"
                 />
-                <circle cx={x} cy={getY(c.medianProjected)} r="3.5" fill="#6366f1" />
+                <circle cx={x} cy={getY(c.medianProjected)} r="4" fill="#06b6d4" stroke="#ffffff" strokeWidth="1.5" />
                 {/* Step Label on bottom */}
                 <text
                   x={x}
-                  y={svgHeight - 10}
+                  y={svgHeight - 12}
                   fill="#94a3b8"
-                  fontSize="9"
+                  fontSize="9.5"
                   fontFamily="monospace"
                   textAnchor="middle"
                 >
@@ -164,11 +180,11 @@ export const PredictionConeChart: React.FC<PredictionConeChartProps> = ({
       </div>
 
       {/* Projection Summary Table */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-2 border-t border-background-border text-[11px] font-mono">
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 pt-3 border-t border-white/[0.06] text-[11px] font-mono">
         {cones.slice(0, 5).map((c) => (
-          <div key={c.step} className="p-2 rounded bg-background-secondary border border-background-border">
+          <div key={c.step} className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
             <div className="text-slate-400 font-semibold">{c.label}</div>
-            <div className="text-brand-400 font-bold mt-0.5">
+            <div className="text-cyan-300 font-bold mt-0.5 text-xs">
               {currency} {c.medianProjected}
             </div>
             <div className="text-[10px] text-slate-500 mt-0.5">

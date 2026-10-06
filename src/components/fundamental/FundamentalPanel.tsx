@@ -25,9 +25,9 @@ export const FundamentalPanel: React.FC<FundamentalPanelProps> = ({ fundamental,
   };
 
   return (
-    <div className="w-full bg-background-card rounded-xl border border-background-border p-5 shadow-lg flex flex-col gap-4">
+    <div className="w-full glass-card rounded-2xl border border-white/[0.08] p-5 sm:p-6 shadow-xl flex flex-col gap-5">
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-background-border pb-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.06] pb-3.5">
         <div>
           <div className="flex items-center gap-2">
             {assetType === 'CRYPTO' ? (
@@ -66,28 +66,28 @@ export const FundamentalPanel: React.FC<FundamentalPanelProps> = ({ fundamental,
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
-            <div className="p-3 rounded-lg bg-background-secondary border border-background-border">
+            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
               <span className="text-[10px] text-slate-500 uppercase block">EPS (NPR)</span>
               <span className="text-base font-bold text-white block mt-0.5">
                 NPR {nepse.epsNpr !== undefined ? nepse.epsNpr : 'N/A'}
               </span>
             </div>
 
-            <div className="p-3 rounded-lg bg-background-secondary border border-background-border">
+            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
               <span className="text-[10px] text-slate-500 uppercase block">Book Value (BVPS)</span>
               <span className="text-base font-bold text-white block mt-0.5">
                 NPR {nepse.bookValuePerShare !== undefined ? nepse.bookValuePerShare : 'N/A'}
               </span>
             </div>
 
-            <div className="p-3 rounded-lg bg-background-secondary border border-background-border">
+            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
               <span className="text-[10px] text-slate-500 uppercase block">P/E Ratio</span>
               <span className="text-base font-bold text-slate-200 block mt-0.5">
                 {nepse.peRatio !== undefined ? `${nepse.peRatio}x` : 'N/A'}
               </span>
             </div>
 
-            <div className="p-3 rounded-lg bg-background-secondary border border-background-border">
+            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
               <span className="text-[10px] text-slate-500 uppercase block">Dividend Yield</span>
               <span className="text-base font-bold text-emerald-400 block mt-0.5">
                 {nepse.dividendYield !== undefined ? `${nepse.dividendYield}%` : 'N/A'}
@@ -95,7 +95,7 @@ export const FundamentalPanel: React.FC<FundamentalPanelProps> = ({ fundamental,
             </div>
 
             {nepse.nonPerformingLoanPercent !== undefined && (
-              <div className="p-3 rounded-lg bg-background-secondary border border-background-border">
+              <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
                 <span className="text-[10px] text-slate-500 uppercase block">NPL Ratio</span>
                 <span className={`text-base font-bold block mt-0.5 ${nepse.nonPerformingLoanPercent > 4.0 ? 'text-rose-400' : 'text-slate-200'}`}>
                   {nepse.nonPerformingLoanPercent}%
@@ -104,7 +104,7 @@ export const FundamentalPanel: React.FC<FundamentalPanelProps> = ({ fundamental,
             )}
 
             {nepse.capitalAdequacyRatio !== undefined && (
-              <div className="p-3 rounded-lg bg-background-secondary border border-background-border">
+              <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
                 <span className="text-[10px] text-slate-500 uppercase block">Capital Adequacy (CAR)</span>
                 <span className="text-base font-bold text-slate-200 block mt-0.5">
                   {nepse.capitalAdequacyRatio}%
@@ -113,7 +113,7 @@ export const FundamentalPanel: React.FC<FundamentalPanelProps> = ({ fundamental,
             )}
 
             {nepse.quarterlyProfitYoY !== undefined && (
-              <div className="p-3 rounded-lg bg-background-secondary border border-background-border">
+              <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
                 <span className="text-[10px] text-slate-500 uppercase block">YoY Profit Growth</span>
                 <span className={`text-base font-bold block mt-0.5 ${nepse.quarterlyProfitYoY >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
                   {nepse.quarterlyProfitYoY > 0 ? '+' : ''}{nepse.quarterlyProfitYoY}%
@@ -146,42 +146,42 @@ export const FundamentalPanel: React.FC<FundamentalPanelProps> = ({ fundamental,
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
-            <div className="p-3 rounded-lg bg-background-secondary border border-background-border">
+            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
               <span className="text-[10px] text-slate-500 uppercase block">Trailing P/E</span>
               <span className="text-base font-bold text-white block mt-0.5">{stock.peRatio || 'N/A'}x</span>
             </div>
 
-            <div className="p-3 rounded-lg bg-background-secondary border border-background-border">
+            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
               <span className="text-[10px] text-slate-500 uppercase block">Forward P/E</span>
               <span className="text-base font-bold text-white block mt-0.5">{stock.forwardPE || 'N/A'}x</span>
             </div>
 
-            <div className="p-3 rounded-lg bg-background-secondary border border-background-border">
+            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
               <span className="text-[10px] text-slate-500 uppercase block">Return on Equity (ROE)</span>
               <span className="text-base font-bold text-emerald-400 block mt-0.5">{stock.roe ? `${stock.roe}%` : 'N/A'}</span>
             </div>
 
-            <div className="p-3 rounded-lg bg-background-secondary border border-background-border">
+            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
               <span className="text-[10px] text-slate-500 uppercase block">Operating Margin</span>
               <span className="text-base font-bold text-slate-200 block mt-0.5">{stock.operatingMargin ? `${stock.operatingMargin}%` : 'N/A'}</span>
             </div>
 
-            <div className="p-3 rounded-lg bg-background-secondary border border-background-border">
+            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
               <span className="text-[10px] text-slate-500 uppercase block">Revenue YoY Growth</span>
               <span className="text-base font-bold text-slate-200 block mt-0.5">{stock.revenueYoY ? `+${stock.revenueYoY}%` : 'N/A'}</span>
             </div>
 
-            <div className="p-3 rounded-lg bg-background-secondary border border-background-border">
+            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
               <span className="text-[10px] text-slate-500 uppercase block">Debt-to-Equity</span>
               <span className="text-base font-bold text-slate-200 block mt-0.5">{stock.debtToEquity ?? 'N/A'}</span>
             </div>
 
-            <div className="p-3 rounded-lg bg-background-secondary border border-background-border">
+            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
               <span className="text-[10px] text-slate-500 uppercase block">Dividend Yield</span>
               <span className="text-base font-bold text-slate-200 block mt-0.5">{stock.dividendYield ? `${stock.dividendYield}%` : '0%'}</span>
             </div>
 
-            <div className="p-3 rounded-lg bg-background-secondary border border-background-border">
+            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
               <span className="text-[10px] text-slate-500 uppercase block">EV / EBITDA</span>
               <span className="text-base font-bold text-slate-200 block mt-0.5">{stock.evToEbitda ? `${stock.evToEbitda}x` : 'N/A'}</span>
             </div>
@@ -205,28 +205,28 @@ export const FundamentalPanel: React.FC<FundamentalPanelProps> = ({ fundamental,
               Tokenomics & Protocol Economics
             </h4>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
-              <div className="p-3 rounded-lg bg-background-secondary border border-background-border">
+              <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
                 <span className="text-[10px] text-slate-500 uppercase block">Circulating Supply Float</span>
                 <span className="text-base font-bold text-white block mt-0.5">
                   {crypto.tokenomics.circulatingPercent.toFixed(1)}%
                 </span>
               </div>
 
-              <div className="p-3 rounded-lg bg-background-secondary border border-background-border">
+              <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
                 <span className="text-[10px] text-slate-500 uppercase block">Annual Inflation Rate</span>
                 <span className="text-base font-bold text-emerald-400 block mt-0.5">
                   {crypto.tokenomics.annualInflationRate}%
                 </span>
               </div>
 
-              <div className="p-3 rounded-lg bg-background-secondary border border-background-border">
+              <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
                 <span className="text-[10px] text-slate-500 uppercase block">24h Protocol Fees</span>
                 <span className="text-base font-bold text-slate-200 block mt-0.5">
                   ${(crypto.protocol.fees24h / 1000000).toFixed(2)}M
                 </span>
               </div>
 
-              <div className="p-3 rounded-lg bg-background-secondary border border-background-border">
+              <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
                 <span className="text-[10px] text-slate-500 uppercase block">Active Addresses (24h)</span>
                 <span className="text-base font-bold text-slate-200 block mt-0.5">
                   {crypto.network.activeAddresses24h.toLocaleString()}

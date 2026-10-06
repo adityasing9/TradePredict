@@ -64,16 +64,16 @@ Disclaimer: Probabilistic estimate based on historical and technical data. Not f
   };
 
   return (
-    <div className="w-full bg-background-card rounded-xl border border-background-border p-6 shadow-xl flex flex-col gap-5">
+    <div className="w-full glass-card rounded-2xl border border-white/[0.08] p-6 sm:p-7 shadow-xl flex flex-col gap-5">
       {/* Report Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-background-border pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.06] pb-4">
         <div>
           <div className="flex items-center gap-2">
             <FileText className="w-4 h-4 text-brand-400" />
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-brand-400">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-brand-300">
               Institutional Research Dossier
             </span>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-background-secondary border border-background-border text-slate-400">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-slate-300">
               {report.provider}
             </span>
           </div>
@@ -87,7 +87,7 @@ Disclaimer: Probabilistic estimate based on historical and technical data. Not f
 
         <button
           onClick={copyToClipboard}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-background-secondary border border-background-border text-xs font-mono text-slate-300 hover:text-white transition-colors"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/[0.03] hover:bg-white/[0.07] border border-white/[0.08] text-xs font-mono text-slate-200 hover:text-white transition-all shadow-sm"
         >
           {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
           <span>{copied ? 'Copied Markdown' : 'Copy Report'}</span>
@@ -96,10 +96,10 @@ Disclaimer: Probabilistic estimate based on historical and technical data. Not f
 
       {/* 1. Executive Summary */}
       <section className="space-y-1.5">
-        <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-brand-400">
+        <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-brand-300">
           1. Executive Summary
         </h3>
-        <p className="text-xs text-slate-200 leading-relaxed bg-background-secondary/60 p-3.5 rounded-lg border border-background-border/80">
+        <p className="text-xs text-slate-200 leading-relaxed bg-white/[0.02] p-4 rounded-xl border border-white/[0.05]">
           {report.executiveSummary}
         </p>
       </section>

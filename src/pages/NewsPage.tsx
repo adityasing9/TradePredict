@@ -16,17 +16,17 @@ export const NewsPage: React.FC = () => {
   });
 
   return (
-    <div className="space-y-5 animate-in fade-in duration-150">
+    <div className="space-y-6 animate-in fade-in duration-150">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-background-border pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.07] pb-4">
         <div>
           <div className="flex items-center gap-2">
             <Newspaper className="w-5 h-5 text-brand-400" />
-            <h1 className="text-xl font-extrabold text-white font-mono tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-black text-white font-mono tracking-tight">
               Financial News & Sentiment Telemetry
             </h1>
           </div>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-400 mt-1">
             Deduplicated news flow with algorithmic event classification and impact scoring.
           </p>
         </div>
@@ -36,7 +36,7 @@ export const NewsPage: React.FC = () => {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value as any)}
-            className="p-1.5 rounded-lg bg-background-card border border-background-border text-white focus:outline-none focus:border-brand-500 font-mono"
+            className="px-3 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:outline-none focus:border-brand-500/60 font-mono"
           >
             <option value="ALL">All Event Categories</option>
             <option value="EARNINGS">Earnings Results</option>
@@ -49,7 +49,7 @@ export const NewsPage: React.FC = () => {
           <select
             value={selectedSentiment}
             onChange={(e) => setSelectedSentiment(e.target.value as any)}
-            className="p-1.5 rounded-lg bg-background-card border border-background-border text-white focus:outline-none focus:border-brand-500 font-mono"
+            className="px-3 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:outline-none focus:border-brand-500/60 font-mono"
           >
             <option value="ALL">All Sentiments</option>
             <option value="POSITIVE">Positive Only</option>
@@ -68,23 +68,23 @@ export const NewsPage: React.FC = () => {
           return (
             <div
               key={item.id}
-              className="p-4 rounded-xl bg-background-card border border-background-border shadow-md flex flex-col justify-between gap-3"
+              className="p-5 rounded-2xl glass-card flex flex-col justify-between gap-4 hover:-translate-y-0.5 transition-all shadow-lg"
             >
               <div>
                 {/* Meta Header */}
                 <div className="flex items-center justify-between gap-2 text-[10px] font-mono">
-                  <span className="text-slate-400">{item.source}</span>
+                  <span className="text-slate-400 font-semibold">{item.source}</span>
                   <div className="flex items-center gap-1.5">
-                    <span className="px-1.5 py-0.2 rounded bg-background-secondary border border-background-border text-slate-300">
+                    <span className="px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-slate-300">
                       {item.category}
                     </span>
                     <span
-                      className={`px-1.5 py-0.2 rounded font-bold border ${
+                      className={`px-2 py-0.5 rounded-full font-bold border ${
                         isPos
-                          ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                          ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-glow-emerald'
                           : isNeg
-                          ? 'bg-rose-500/10 text-rose-400 border-rose-500/30'
-                          : 'bg-amber-500/10 text-amber-400 border-amber-500/30'
+                          ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 shadow-glow-rose'
+                          : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
                       }`}
                     >
                       {item.sentimentLabel} ({item.sentimentScore > 0 ? '+' : ''}{item.sentimentScore})
@@ -92,16 +92,16 @@ export const NewsPage: React.FC = () => {
                   </div>
                 </div>
 
-                <h3 className="text-sm font-bold text-white mt-2 leading-snug">{item.title}</h3>
-                <p className="text-xs text-slate-300 mt-1 leading-relaxed">{item.summary}</p>
+                <h3 className="text-sm font-bold text-white mt-2.5 leading-snug">{item.title}</h3>
+                <p className="text-xs text-slate-300 mt-1.5 leading-relaxed">{item.summary}</p>
               </div>
 
               {/* Tag Footer */}
-              <div className="flex items-center justify-between pt-2 border-t border-background-border/60 text-[10px] font-mono text-slate-500">
-                <div className="flex items-center gap-1">
-                  <span>Assets:</span>
+              <div className="flex items-center justify-between pt-2.5 border-t border-white/[0.06] text-[10px] font-mono text-slate-400">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-slate-500">Assets:</span>
                   {item.symbols.map((s) => (
-                    <span key={s} className="px-1.5 py-0.2 rounded bg-background-secondary text-brand-400">
+                    <span key={s} className="px-2 py-0.5 rounded-full bg-brand-500/15 text-brand-300 border border-brand-500/30 font-semibold">
                       {s}
                     </span>
                   ))}

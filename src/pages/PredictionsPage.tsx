@@ -54,17 +54,17 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({ onSelectAsset 
   });
 
   return (
-    <div className="space-y-5 animate-in fade-in duration-150">
+    <div className="space-y-6 animate-in fade-in duration-150">
       {/* Title */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-background-border pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.07] pb-4">
         <div>
           <div className="flex items-center gap-2">
             <Binary className="w-5 h-5 text-brand-400" />
-            <h1 className="text-xl font-extrabold text-white font-mono tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-black text-white font-mono tracking-tight">
               Multi-Asset ML Forecast Scanner
             </h1>
           </div>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-400 mt-1">
             Probabilistic direction estimations, calibrated confidence ratings, and expected target ranges.
           </p>
         </div>
@@ -75,7 +75,7 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({ onSelectAsset 
           <select
             value={selectedMarket}
             onChange={(e) => setSelectedMarket(e.target.value as any)}
-            className="p-1.5 rounded-lg bg-background-card border border-background-border text-white focus:outline-none focus:border-brand-500 font-mono"
+            className="px-3 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:outline-none focus:border-brand-500/60 font-mono"
           >
             <option value="ALL">All Markets</option>
             <option value="NEPSE">🇳🇵 NEPSE</option>
@@ -88,7 +88,7 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({ onSelectAsset 
           <select
             value={directionFilter}
             onChange={(e) => setDirectionFilter(e.target.value as any)}
-            className="p-1.5 rounded-lg bg-background-card border border-background-border text-white focus:outline-none focus:border-brand-500 font-mono"
+            className="px-3 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:outline-none focus:border-brand-500/60 font-mono"
           >
             <option value="ALL">All Biases</option>
             <option value="BULLISH">Bullish Only</option>
@@ -107,16 +107,16 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({ onSelectAsset 
             <div
               key={asset.id}
               onClick={() => onSelectAsset(asset)}
-              className="p-4 rounded-xl bg-background-card border border-background-border hover:border-brand-500/50 hover:bg-background-elevated cursor-pointer transition-all shadow-md flex flex-col justify-between gap-3 group"
+              className="p-4 sm:p-5 rounded-2xl glass-card-hover cursor-pointer flex flex-col justify-between gap-4 group relative overflow-hidden"
             >
               <div>
                 <div className="flex items-start justify-between">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold text-base text-white group-hover:text-brand-400 transition-colors">
+                      <span className="font-mono font-bold text-base text-white group-hover:text-brand-300 transition-colors">
                         {asset.symbol}
                       </span>
-                      <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-background-secondary border border-background-border text-slate-400">
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-slate-300">
                         {asset.market}
                       </span>
                     </div>
@@ -124,12 +124,12 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({ onSelectAsset 
                   </div>
 
                   <span
-                    className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${
+                    className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold border ${
                       direction === 'BULLISH'
-                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-glow-emerald'
                         : direction === 'BEARISH'
-                        ? 'bg-rose-500/10 text-rose-400 border-rose-500/30'
-                        : 'bg-amber-500/10 text-amber-400 border-amber-500/30'
+                        ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 shadow-glow-rose'
+                        : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
                     }`}
                   >
                     {direction}
@@ -137,32 +137,32 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({ onSelectAsset 
                 </div>
 
                 {/* Probability Bar */}
-                <div className="mt-3 space-y-1">
+                <div className="mt-3.5 space-y-1.5">
                   <div className="flex justify-between text-[10px] font-mono">
                     <span className="text-emerald-400 font-bold">UP: {up}%</span>
-                    <span className="text-amber-400">NEUT: {neutral}%</span>
+                    <span className="text-amber-400 font-bold">NEUT: {neutral}%</span>
                     <span className="text-rose-400 font-bold">DOWN: {down}%</span>
                   </div>
-                  <div className="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden flex">
-                    <div style={{ width: `${up}%` }} className="bg-emerald-500" />
-                    <div style={{ width: `${neutral}%` }} className="bg-amber-500" />
-                    <div style={{ width: `${down}%` }} className="bg-rose-500" />
+                  <div className="w-full h-2 rounded-full bg-white/[0.04] overflow-hidden flex border border-white/[0.05]">
+                    <div style={{ width: `${up}%` }} className="bg-gradient-to-r from-emerald-600 to-emerald-400" />
+                    <div style={{ width: `${neutral}%` }} className="bg-gradient-to-r from-amber-600 to-amber-400" />
+                    <div style={{ width: `${down}%` }} className="bg-gradient-to-r from-rose-600 to-rose-400" />
                   </div>
                 </div>
               </div>
 
               {/* Footer info */}
-              <div className="pt-2 border-t border-background-border/60 text-[11px] font-mono flex items-center justify-between">
+              <div className="pt-2.5 border-t border-white/[0.06] text-[11px] font-mono flex items-center justify-between">
                 <div>
-                  <span className="text-slate-500 text-[10px] block">TARGET BAND</span>
-                  <span className="text-slate-200 font-bold">
+                  <span className="text-slate-400 text-[10px] uppercase tracking-wider block font-semibold">Target Band</span>
+                  <span className="text-white font-bold text-xs">
                     {asset.currency} {rangeLow} – {rangeHigh}
                   </span>
                 </div>
 
                 <div className="text-right">
-                  <span className="text-slate-500 text-[10px] block">CONFIDENCE</span>
-                  <span className="text-indigo-400 font-bold">{confidence}%</span>
+                  <span className="text-slate-400 text-[10px] uppercase tracking-wider block font-semibold">Confidence</span>
+                  <span className="text-cyan-300 font-bold text-xs">{confidence}%</span>
                 </div>
               </div>
             </div>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Asset, Market, AssetType } from '../types/asset';
 import { ALL_ASSETS, filterAssets, SUPPORTED_MARKETS } from '../data/universe';
 import { ASSET_PRICE_BASELINES } from '../services/marketDataProvider';
-import { Search, Star, Filter, TrendingUp, TrendingDown, ArrowUpRight } from 'lucide-react';
+import { Search, Star, Filter, TrendingUp, TrendingDown, ArrowUpRight, Compass } from 'lucide-react';
 
 interface MarketsPageProps {
   onSelectAsset: (asset: Asset) => void;
@@ -26,44 +26,45 @@ export const MarketsPage: React.FC<MarketsPageProps> = ({
   });
 
   return (
-    <div className="space-y-5 animate-in fade-in duration-150">
+    <div className="space-y-6 animate-in fade-in duration-150">
       {/* Title & Stats */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-background-border pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.07] pb-4">
         <div>
-          <h1 className="text-xl font-extrabold text-white font-mono tracking-tight">
-            Market Asset Explorer
+          <h1 className="text-xl sm:text-2xl font-black text-white font-mono tracking-tight flex items-center gap-2">
+            <Compass className="w-5 h-5 text-brand-400" />
+            <span>Market Asset Explorer</span>
           </h1>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Searchable registry across Nepal (NEPSE), India (NSE), US Equities, and Cryptocurrencies.
+          <p className="text-xs text-slate-400 mt-1">
+            Institutional asset catalog across Nepal (NEPSE), India (NSE), US Equities, and Cryptocurrencies.
           </p>
         </div>
-        <div className="text-xs font-mono text-slate-400">
-          Showing <span className="text-white font-bold">{filtered.length}</span> of {ALL_ASSETS.length} assets
+        <div className="text-xs font-mono text-slate-400 bg-white/[0.03] px-3 py-1.5 rounded-xl border border-white/[0.06] w-fit">
+          Displaying <span className="text-brand-300 font-bold">{filtered.length}</span> / {ALL_ASSETS.length} assets
         </div>
       </div>
 
       {/* Filter Toolbar */}
-      <div className="flex flex-wrap items-center gap-3 bg-background-card p-3 rounded-xl border border-background-border">
+      <div className="flex flex-wrap items-center gap-3 glass-card p-3.5 rounded-2xl border border-white/[0.08] shadow-md">
         {/* Search Input */}
-        <div className="relative flex-1 min-w-[200px]">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+        <div className="relative flex-1 min-w-[220px]">
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Filter by symbol, company name, or sector..."
-            className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-background-secondary border border-background-border text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-brand-500 font-mono"
+            className="w-full pl-9 pr-3.5 py-2 rounded-xl bg-white/[0.03] border border-white/[0.07] text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-brand-500/60 focus:ring-1 focus:ring-brand-500/30 font-mono transition-all"
           />
         </div>
 
         {/* Market Filter Chips */}
-        <div className="flex items-center gap-1 overflow-x-auto text-xs font-mono">
+        <div className="flex items-center gap-1 overflow-x-auto text-xs font-mono p-1 rounded-xl bg-white/[0.02] border border-white/[0.05]">
           <button
             onClick={() => setSelectedMarket('ALL')}
-            className={`px-2.5 py-1.5 rounded-lg transition-colors ${
+            className={`px-3 py-1.5 rounded-lg transition-all duration-150 ${
               selectedMarket === 'ALL'
-                ? 'bg-brand-500 text-white font-bold'
-                : 'bg-background-secondary text-slate-400 hover:text-white border border-background-border'
+                ? 'bg-brand-500 text-white font-bold shadow-sm shadow-brand-500/30'
+                : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
             }`}
           >
             All Markets
@@ -72,10 +73,10 @@ export const MarketsPage: React.FC<MarketsPageProps> = ({
             <button
               key={m.key}
               onClick={() => setSelectedMarket(m.key)}
-              className={`px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition-colors ${
+              className={`px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-all duration-150 ${
                 selectedMarket === m.key
-                  ? 'bg-brand-500 text-white font-bold'
-                  : 'bg-background-secondary text-slate-400 hover:text-white border border-background-border'
+                  ? 'bg-brand-500 text-white font-bold shadow-sm shadow-brand-500/30'
+                  : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
               }`}
             >
               <span>{m.flag}</span>
@@ -90,10 +91,10 @@ export const MarketsPage: React.FC<MarketsPageProps> = ({
             <button
               key={t}
               onClick={() => setSelectedType(t)}
-              className={`px-2 py-1 rounded text-[11px] transition-colors ${
+              className={`px-2.5 py-1.5 rounded-lg text-[11px] transition-all duration-150 ${
                 selectedType === t
-                  ? 'bg-background-elevated text-brand-400 border border-brand-500/40 font-bold'
-                  : 'text-slate-500 hover:text-slate-300'
+                  ? 'bg-brand-500/20 text-brand-300 border border-brand-500/40 font-bold'
+                  : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               {t}
@@ -103,10 +104,10 @@ export const MarketsPage: React.FC<MarketsPageProps> = ({
       </div>
 
       {/* Asset Table / Cards */}
-      <div className="bg-background-card rounded-xl border border-background-border overflow-hidden shadow-lg">
+      <div className="glass-card rounded-2xl border border-white/[0.08] overflow-hidden shadow-xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs font-mono">
-            <thead className="bg-background-secondary border-b border-background-border text-slate-400 uppercase text-[10px]">
+            <thead className="bg-white/[0.02] border-b border-white/[0.06] text-slate-400 uppercase text-[10px] tracking-wider">
               <tr>
                 <th className="py-3 px-4 w-10"></th>
                 <th className="py-3 px-4">Asset / Name</th>
@@ -117,7 +118,7 @@ export const MarketsPage: React.FC<MarketsPageProps> = ({
                 <th className="py-3 px-4 text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-background-border/60">
+            <tbody className="divide-y divide-white/[0.04]">
               {filtered.map((asset) => {
                 const watched = isWatched(asset.id);
                 const baseline = ASSET_PRICE_BASELINES[asset.id] || { price: 100, dailyChange: 0 };
@@ -129,7 +130,7 @@ export const MarketsPage: React.FC<MarketsPageProps> = ({
                 return (
                   <tr
                     key={asset.id}
-                    className="hover:bg-background-elevated transition-colors group cursor-pointer"
+                    className="hover:bg-white/[0.04] transition-colors group cursor-pointer"
                     onClick={() => onSelectAsset(asset)}
                   >
                     <td
@@ -140,17 +141,17 @@ export const MarketsPage: React.FC<MarketsPageProps> = ({
                       }}
                     >
                       <button
-                        className="p-1 text-slate-500 hover:text-amber-400 transition-colors"
+                        className="p-1 rounded-lg text-slate-500 hover:text-amber-400 hover:bg-white/[0.04] transition-colors"
                         title={watched ? 'Remove from Watchlist' : 'Add to Watchlist'}
                       >
                         <Star
-                          className={`w-4 h-4 ${watched ? 'fill-amber-400 text-amber-400' : ''}`}
+                          className={`w-4 h-4 ${watched ? 'fill-amber-400 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]' : ''}`}
                         />
                       </button>
                     </td>
 
                     <td className="py-3 px-4">
-                      <div className="font-bold text-white group-hover:text-brand-400 transition-colors">
+                      <div className="font-bold text-white group-hover:text-brand-300 transition-colors text-sm">
                         {asset.symbol}
                       </div>
                       <div className="text-[11px] text-slate-400 truncate max-w-[200px]">
@@ -159,7 +160,7 @@ export const MarketsPage: React.FC<MarketsPageProps> = ({
                     </td>
 
                     <td className="py-3 px-4">
-                      <span className="px-2 py-0.5 rounded bg-background-secondary border border-background-border text-slate-300 text-[10px]">
+                      <span className="px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-slate-300 text-[10px]">
                         {asset.market}
                       </span>
                     </td>
@@ -168,14 +169,14 @@ export const MarketsPage: React.FC<MarketsPageProps> = ({
                       {asset.sector}
                     </td>
 
-                    <td className="py-3 px-4 text-right font-bold text-white">
+                    <td className="py-3 px-4 text-right font-bold text-white text-sm">
                       {asset.currency} {baseline.price.toLocaleString()}
                     </td>
 
                     <td className="py-3 px-4 text-right">
                       <span
-                        className={`inline-flex items-center gap-1 font-bold ${
-                          isUp ? 'text-emerald-400' : 'text-rose-400'
+                        className={`inline-flex items-center gap-1 font-bold px-2 py-0.5 rounded-lg ${
+                          isUp ? 'text-emerald-400 bg-emerald-500/10' : 'text-rose-400 bg-rose-500/10'
                         }`}
                       >
                         {isUp ? <TrendingUp className="w-3.5 h-3.5" /> : <TrendingDown className="w-3.5 h-3.5" />}
@@ -189,10 +190,10 @@ export const MarketsPage: React.FC<MarketsPageProps> = ({
                           e.stopPropagation();
                           onSelectAsset(asset);
                         }}
-                        className="px-2.5 py-1 rounded bg-brand-500/10 hover:bg-brand-500 hover:text-white border border-brand-500/30 text-brand-400 transition-colors inline-flex items-center gap-1 font-semibold"
+                        className="px-3 py-1.5 rounded-xl bg-brand-500/10 hover:bg-brand-500 hover:text-white border border-brand-500/30 text-brand-300 transition-all inline-flex items-center gap-1 font-semibold hover:shadow-glow-indigo text-[11px]"
                       >
                         <span>Analyze</span>
-                        <ArrowUpRight className="w-3 h-3" />
+                        <ArrowUpRight className="w-3.5 h-3.5" />
                       </button>
                     </td>
                   </tr>

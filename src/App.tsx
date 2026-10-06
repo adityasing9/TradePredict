@@ -46,7 +46,11 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-background text-slate-100 flex flex-col font-sans relative selection:bg-brand-500/30 selection:text-brand-100">
+      {/* Ambient background light orbs for aesthetic depth */}
+      <div className="fixed top-[-10%] right-[-5%] w-[550px] h-[550px] rounded-full bg-brand-500/10 blur-[130px] pointer-events-none z-0" />
+      <div className="fixed bottom-[-10%] left-[-5%] w-[550px] h-[550px] rounded-full bg-terminal-cyan/8 blur-[140px] pointer-events-none z-0" />
+
       {/* Header */}
       <Header
         isOnline={isOnline}
@@ -63,7 +67,7 @@ export function App() {
         onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
       />
 
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden relative z-10">
         {/* Sidebar */}
         <Sidebar
           currentPage={currentPage}

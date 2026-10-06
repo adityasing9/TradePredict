@@ -24,10 +24,10 @@ export const AIChatDrawer: React.FC<AIChatDrawerProps> = ({
 
   // Suggested prompts
   const suggestedPrompts = [
-    `Why is ${bundle?.asset.symbol || 'this asset'} showing this prediction?`,
-    `What would invalidate the current scenario?`,
-    `Explain the risk profile and suggested stop level.`,
-    `How does the 14-period RSI affect this forecast?`
+    `Why is ${bundle?.asset.symbol || 'this asset'} showing this forecast?`,
+    `What triggers invalidate this outlook?`,
+    `Explain the quantitative risk profile.`,
+    `How does the 14-period RSI affect this?`
   ];
 
   // Initialize greeting on open
@@ -90,11 +90,11 @@ export const AIChatDrawer: React.FC<AIChatDrawerProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-background-secondary border-l border-background-border shadow-2xl flex flex-col animate-in slide-in-from-right duration-200">
+    <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-background-secondary/95 backdrop-blur-2xl border-l border-white/[0.08] shadow-2xl flex flex-col animate-in slide-in-from-right duration-200">
       {/* Header */}
-      <div className="p-4 border-b border-background-border flex items-center justify-between bg-background-card/80 backdrop-blur-sm">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-brand-500/20 border border-brand-500/30 flex items-center justify-center text-brand-400">
+      <div className="p-4 border-b border-white/[0.07] flex items-center justify-between bg-white/[0.02]">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-brand-500/15 border border-brand-500/30 flex items-center justify-center text-brand-300 shadow-glow-indigo">
             <Sparkles className="w-4 h-4" />
           </div>
           <div>
@@ -102,38 +102,38 @@ export const AIChatDrawer: React.FC<AIChatDrawerProps> = ({
               AI Analyst Assistant
             </h3>
             <p className="text-[10px] text-slate-400 font-mono">
-              Context: {bundle?.asset.symbol || 'No asset loaded'}
+              Context: <span className="text-brand-300 font-semibold">{bundle?.asset.symbol || 'No asset loaded'}</span>
             </p>
           </div>
         </div>
 
-        <button onClick={onClose} className="p-1 rounded text-slate-400 hover:text-white">
+        <button onClick={onClose} className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.05] transition-colors">
           <X className="w-5 h-5" />
         </button>
       </div>
 
       {/* Message Stream */}
-      <div className="flex-1 p-4 overflow-y-auto space-y-3.5">
+      <div className="flex-1 p-4 overflow-y-auto space-y-4">
         {messages.map((m) => (
           <div
             key={m.id}
             className={`flex items-start gap-2.5 ${m.role === 'user' ? 'flex-row-reverse' : ''}`}
           >
             <div
-              className={`w-6 h-6 rounded-md flex items-center justify-center text-xs flex-shrink-0 mt-0.5 ${
+              className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs flex-shrink-0 mt-0.5 ${
                 m.role === 'user'
-                  ? 'bg-brand-600 text-white'
-                  : 'bg-background-elevated text-brand-400 border border-background-border'
+                  ? 'bg-gradient-to-r from-brand-600 to-brand-500 text-white shadow-sm'
+                  : 'bg-white/[0.04] text-brand-300 border border-white/[0.08]'
               }`}
             >
               {m.role === 'user' ? <User className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5" />}
             </div>
 
             <div
-              className={`p-3 rounded-xl text-xs leading-relaxed max-w-[85%] ${
+              className={`p-3.5 rounded-2xl text-xs leading-relaxed max-w-[85%] ${
                 m.role === 'user'
-                  ? 'bg-brand-500 text-white rounded-tr-none'
-                  : 'bg-background-card border border-background-border text-slate-200 rounded-tl-none whitespace-pre-wrap'
+                  ? 'bg-gradient-to-r from-brand-600 to-brand-500 text-white rounded-tr-none shadow-md'
+                  : 'bg-white/[0.03] border border-white/[0.07] text-slate-200 rounded-tl-none whitespace-pre-wrap'
               }`}
             >
               {m.content}
@@ -142,7 +142,7 @@ export const AIChatDrawer: React.FC<AIChatDrawerProps> = ({
         ))}
 
         {loading && (
-          <div className="flex items-center gap-2 text-xs text-slate-400 font-mono pl-8">
+          <div className="flex items-center gap-2 text-xs text-brand-300 font-mono pl-9">
             <span className="w-2 h-2 rounded-full bg-brand-400 animate-ping" />
             Synthesizing analytical telemetry...
           </div>
@@ -152,12 +152,12 @@ export const AIChatDrawer: React.FC<AIChatDrawerProps> = ({
 
       {/* Suggested Questions */}
       {bundle && (
-        <div className="px-4 py-2 border-t border-background-border/60 bg-background/50 flex flex-wrap gap-1.5">
+        <div className="px-4 py-2.5 border-t border-white/[0.06] bg-white/[0.01] flex flex-wrap gap-1.5">
           {suggestedPrompts.map((prompt, i) => (
             <button
               key={i}
               onClick={() => handleSend(prompt)}
-              className="text-[10px] font-mono px-2 py-1 rounded bg-background-elevated hover:bg-brand-500/10 hover:text-brand-400 border border-background-border text-slate-400 text-left transition-colors"
+              className="text-[10px] font-mono px-2.5 py-1 rounded-lg bg-white/[0.03] hover:bg-brand-500/15 hover:border-brand-500/40 hover:text-brand-300 border border-white/[0.06] text-slate-400 text-left transition-all"
             >
               {prompt}
             </button>
@@ -171,7 +171,7 @@ export const AIChatDrawer: React.FC<AIChatDrawerProps> = ({
           e.preventDefault();
           handleSend();
         }}
-        className="p-3 border-t border-background-border bg-background-card flex items-center gap-2"
+        className="p-3.5 border-t border-white/[0.07] bg-white/[0.02] flex items-center gap-2"
       >
         <input
           type="text"
@@ -179,12 +179,12 @@ export const AIChatDrawer: React.FC<AIChatDrawerProps> = ({
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask AI Analyst about this asset..."
           disabled={!bundle || loading}
-          className="flex-1 py-2 px-3 rounded-lg bg-background-secondary border border-background-border text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-brand-500 font-sans"
+          className="flex-1 py-2.5 px-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-brand-500/60 font-sans"
         />
         <button
           type="submit"
           disabled={!input.trim() || !bundle || loading}
-          className="p-2 rounded-lg bg-brand-500 text-white hover:bg-brand-600 disabled:opacity-40 transition-colors"
+          className="p-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 text-white hover:from-brand-500 hover:to-brand-400 disabled:opacity-40 transition-all shadow-md hover:shadow-glow-indigo"
         >
           <Send className="w-4 h-4" />
         </button>
