@@ -44,13 +44,15 @@ interface AnalysisPageProps {
   isWatched: boolean;
   onToggleWatchlist: () => void;
   initialTab?: AnalysisTabType;
+  onTabChange?: (tab: AnalysisTabType) => void;
 }
 
 export const AnalysisPage: React.FC<AnalysisPageProps> = ({
   asset,
   isWatched,
   onToggleWatchlist,
-  initialTab = 'OVERVIEW'
+  initialTab = 'OVERVIEW',
+  onTabChange
 }) => {
   const [timeframe, setTimeframe] = useState<Timeframe>('1D');
   const [activeTab, setActiveTab] = useState<AnalysisTabType>(initialTab);
@@ -62,6 +64,11 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
       setActiveTab(initialTab);
     }
   }, [initialTab]);
+
+  const handleSelectTab = (tab: AnalysisTabType) => {
+    setActiveTab(tab);
+    if (onTabChange) onTabChange(tab);
+  };
 
   const { candles, quote, dataQuality, loading: dataLoading, refetch } = useMarketData(asset, timeframe);
   const { bundle, report, loading: pipelineLoading } = useAnalysisPipeline(asset, candles, timeframe);
@@ -243,7 +250,7 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
         {/* Navigation Tabs */}
         <div className="flex items-center gap-1 overflow-x-auto p-1 rounded-lg bg-background-secondary border border-background-border text-xs font-mono">
           <button
-            onClick={() => setActiveTab('OVERVIEW')}
+            onClick={() => handleSelectTab('OVERVIEW')}
             className={`px-3 py-1.5 rounded transition-colors shrink-0 ${
               activeTab === 'OVERVIEW'
                 ? 'bg-brand-500 text-white font-bold'
@@ -253,7 +260,7 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
             Overview
           </button>
           <button
-            onClick={() => setActiveTab('TECHNICAL')}
+            onClick={() => handleSelectTab('TECHNICAL')}
             className={`px-3 py-1.5 rounded flex items-center gap-1.5 transition-colors shrink-0 ${
               activeTab === 'TECHNICAL'
                 ? 'bg-brand-500 text-white font-bold'
@@ -264,7 +271,7 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
             <span>Technical</span>
           </button>
           <button
-            onClick={() => setActiveTab('FUNDAMENTAL')}
+            onClick={() => handleSelectTab('FUNDAMENTAL')}
             className={`px-3 py-1.5 rounded flex items-center gap-1.5 transition-colors shrink-0 ${
               activeTab === 'FUNDAMENTAL'
                 ? 'bg-brand-500 text-white font-bold'
@@ -275,7 +282,7 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
             <span>Fundamentals</span>
           </button>
           <button
-            onClick={() => setActiveTab('QUANT')}
+            onClick={() => handleSelectTab('QUANT')}
             className={`px-3 py-1.5 rounded flex items-center gap-1.5 transition-colors shrink-0 ${
               activeTab === 'QUANT'
                 ? 'bg-brand-500 text-white font-bold'
@@ -286,7 +293,7 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
             <span>Quant & Risk</span>
           </button>
           <button
-            onClick={() => setActiveTab('SENTIMENT')}
+            onClick={() => handleSelectTab('SENTIMENT')}
             className={`px-3 py-1.5 rounded flex items-center gap-1.5 transition-colors shrink-0 ${
               activeTab === 'SENTIMENT'
                 ? 'bg-brand-500 text-white font-bold'
@@ -297,7 +304,7 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
             <span>Sentiment & Macro</span>
           </button>
           <button
-            onClick={() => setActiveTab('AI_REPORT')}
+            onClick={() => handleSelectTab('AI_REPORT')}
             className={`px-3 py-1.5 rounded flex items-center gap-1.5 transition-colors shrink-0 ${
               activeTab === 'AI_REPORT'
                 ? 'bg-brand-500 text-white font-bold'
@@ -308,7 +315,7 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
             <span>AI Research Report</span>
           </button>
           <button
-            onClick={() => setActiveTab('TRANSPARENCY')}
+            onClick={() => handleSelectTab('TRANSPARENCY')}
             className={`px-3 py-1.5 rounded flex items-center gap-1.5 transition-colors shrink-0 ${
               activeTab === 'TRANSPARENCY'
                 ? 'bg-brand-500 text-white font-bold'

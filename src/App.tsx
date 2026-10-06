@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from './components/common/Header';
 import { Sidebar, NavItemKey } from './components/common/Sidebar';
 import { BottomNav } from './components/common/BottomNav';
@@ -16,13 +16,20 @@ import { useSettings } from './hooks/useSettings';
 import { useWatchlist } from './hooks/useWatchlist';
 import { useMarketData } from './hooks/useMarketData';
 import { useAnalysisPipeline } from './hooks/useAnalysisPipeline';
-import { ALL_ASSETS } from './data/universe';
+import { ALL_ASSETS, getAssetById } from './data/universe';
 import { Asset, Market } from './types/asset';
+import { getInitialRoute, persistRoute } from './utils/router';
 
 export function App() {
-  const [currentNav, setCurrentNav] = useState<NavItemKey>('dashboard');
-  const [analysisTab, setAnalysisTab] = useState<AnalysisTabType>('OVERVIEW');
-  const [activeAsset, setActiveAsset] = useState<Asset>(ALL_ASSETS[0]); // NABIL by default
+  // Initialize route from URL hash, pathname, or sessionStorage
+  const [initialRoute] = useState(() => getInitialRoute());
+  const [currentNav, setCurrentNav] = useState<NavItemKey>(initialRoute.nav);
+  const [analysisTab, setAnalysisTab] = useState<AnalysisTabType>(initialRoute.tab);
+  const [activeAsset, setActiveAsset] = useState<Asset>(() => {
+    const asset = getAssetById(initialRoute.assetId);
+    return asset || ALL_ASSETS[0];
+  });
+
   const [currentMarket, setCurrentMarket] = useState<Market | 'ALL'>('ALL');
   const [sidebarOpenMobile, setSidebarOpenMobile] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
@@ -35,10 +42,46 @@ export function App() {
   const { candles } = useMarketData(activeAsset, '1D');
   const { bundle } = useAnalysisPipeline(activeAsset, candles, '1D');
 
+  // Sync initial state into URL hash on mount if needed
+  useEffect(() => {
+    persistRoute(
+      {
+        nav: currentNav,
+        assetId: activeAsset.id,
+        tab: analysisTab
+      },
+      true
+    );
+  }, []);
+
+  // Listen for browser Back/Forward and hashchange navigation
+  useEffect(() => {
+    const handleLocationChange = () => {
+      const route = getInitialRoute();
+      setCurrentNav(route.nav);
+      setAnalysisTab(route.tab);
+      const asset = getAssetById(route.assetId);
+      if (asset) setActiveAsset(asset);
+    };
+
+    window.addEventListener('hashchange', handleLocationChange);
+    window.addEventListener('popstate', handleLocationChange);
+
+    return () => {
+      window.removeEventListener('hashchange', handleLocationChange);
+      window.removeEventListener('popstate', handleLocationChange);
+    };
+  }, []);
+
   const handleSelectAsset = (asset: Asset) => {
     setActiveAsset(asset);
     setAnalysisTab('OVERVIEW');
-    setCurrentNav('technical'); // open analysis
+    setCurrentNav('technical');
+    persistRoute({
+      nav: 'technical',
+      assetId: asset.id,
+      tab: 'OVERVIEW'
+    });
   };
 
   const handleNavSelect = (key: NavItemKey) => {
@@ -50,18 +93,52 @@ export function App() {
     if (key === 'technical') {
       setAnalysisTab('TECHNICAL');
       setCurrentNav('technical');
+      persistRoute({
+        nav: 'technical',
+        assetId: activeAsset.id,
+        tab: 'TECHNICAL'
+      });
     } else if (key === 'fundamentals') {
       setAnalysisTab('FUNDAMENTAL');
       setCurrentNav('fundamentals');
+      persistRoute({
+        nav: 'fundamentals',
+        assetId: activeAsset.id,
+        tab: 'FUNDAMENTAL'
+      });
     } else if (key === 'sentiment') {
       setAnalysisTab('SENTIMENT');
       setCurrentNav('sentiment');
+      persistRoute({
+        nav: 'sentiment',
+        assetId: activeAsset.id,
+        tab: 'SENTIMENT'
+      });
     } else if (key === 'risk') {
       setAnalysisTab('QUANT');
       setCurrentNav('risk');
+      persistRoute({
+        nav: 'risk',
+        assetId: activeAsset.id,
+        tab: 'QUANT'
+      });
     } else {
       setCurrentNav(key);
+      persistRoute({
+        nav: key,
+        assetId: activeAsset.id,
+        tab: analysisTab
+      });
     }
+  };
+
+  const handleAnalysisTabChange = (tab: AnalysisTabType) => {
+    setAnalysisTab(tab);
+    persistRoute({
+      nav: currentNav,
+      assetId: activeAsset.id,
+      tab
+    });
   };
 
   return (
@@ -73,13 +150,13 @@ export function App() {
         currentMarket={currentMarket}
         onSelectMarket={(m) => {
           setCurrentMarket(m);
-          setCurrentNav('markets');
+          handleNavSelect('markets');
         }}
         onSelectAsset={handleSelectAsset}
         onToggleChat={() => setChatOpen(!chatOpen)}
         theme={settings.theme}
         onSelectTheme={(t) => updateSettings({ theme: t })}
-        onOpenSettings={() => setCurrentNav('settings')}
+        onOpenSettings={() => handleNavSelect('settings')}
         onToggleSidebar={() => setSidebarOpenMobile(!sidebarOpenMobile)}
       />
 
@@ -134,6 +211,7 @@ export function App() {
               isWatched={isWatched(activeAsset.id)}
               onToggleWatchlist={() => toggleWatchlist(activeAsset.id)}
               initialTab={analysisTab}
+              onTabChange={handleAnalysisTabChange}
             />
           )}
 
