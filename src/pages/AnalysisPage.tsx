@@ -34,7 +34,8 @@ import {
   Compass,
   ArrowUpRight,
   ArrowDownRight,
-  Minus
+  Minus,
+  Pin
 } from 'lucide-react';
 
 export type AnalysisTabType =
@@ -53,6 +54,9 @@ interface AnalysisPageProps {
   initialTab?: AnalysisTabType;
   onTabChange?: (tab: AnalysisTabType) => void;
   onSelectAsset?: (asset: Asset) => void;
+  isPinned?: boolean;
+  onTogglePin?: () => void;
+  pinnedIds?: string[];
 }
 
 export const AnalysisPage: React.FC<AnalysisPageProps> = ({
@@ -61,7 +65,10 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
   onToggleWatchlist,
   initialTab = 'OVERVIEW',
   onTabChange,
-  onSelectAsset
+  onSelectAsset,
+  isPinned = false,
+  onTogglePin,
+  pinnedIds = []
 }) => {
   const [timeframe, setTimeframe] = useState<Timeframe>('1D');
   const [activeTab, setActiveTab] = useState<AnalysisTabType>(initialTab);
@@ -124,8 +131,15 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
       ? 'Fear'
       : 'Neutral';
 
-  // Watchlist quick items (first 5 popular assets from other markets)
-  const quickAssets = ALL_ASSETS.filter((a) => a.id !== asset.id).slice(0, 5);
+  // Quick switch items (prioritizes pinned assets, with fallback to popular assets)
+  const quickAssets = (() => {
+    const pinned = (pinnedIds || [])
+      .map((id) => ALL_ASSETS.find((a) => a.id === id))
+      .filter((a): a is Asset => a !== undefined && a.id !== asset.id);
+    if (pinned.length >= 5) return pinned.slice(0, 5);
+    const others = ALL_ASSETS.filter((a) => a.id !== asset.id && !pinned.some((p) => p.id === a.id));
+    return [...pinned, ...others].slice(0, 5);
+  })();
 
   return (
     <div className="space-y-4 animate-in fade-in duration-100">
@@ -161,6 +175,20 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
                 }`}
               />
             </button>
+            {onTogglePin && (
+              <button
+                onClick={onTogglePin}
+                className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono font-bold border transition-all ${
+                  isPinned
+                    ? 'bg-cyan-500/15 border-cyan-500 text-cyan-600 dark:text-accent-cyan shadow-2xs'
+                    : 'bg-surface hover:bg-surface-secondary border-border text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                }`}
+                title={isPinned ? 'Unpin asset from Quick Bar' : 'Pin asset to Quick Bar'}
+              >
+                <Pin className={`w-3.5 h-3.5 ${isPinned ? 'fill-cyan-500 text-cyan-500' : ''}`} />
+                <span>{isPinned ? 'Pinned' : 'Pin'}</span>
+              </button>
+            )}
           </div>
           <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-1 font-mono">
             <span className="font-semibold">{asset.exchange}</span>
@@ -484,11 +512,12 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
 
         {/* RIGHT COLUMN: INTELLIGENCE PANEL (4 of 12 cols = 33%) */}
         <div className="lg:col-span-4 space-y-3.5">
-          {/* A. QUICK WATCHLIST STRIP */}
+          {/* A. QUICK PINNED TICKERS STRIP */}
           <div className="terminal-panel p-3 space-y-2">
             <div className="flex items-center justify-between pb-1.5 border-b border-border">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
-                Quick Watchlist Strip
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                <Pin className="w-3 h-3 text-cyan-500 fill-cyan-500" />
+                <span>Quick Pinned Tickers</span>
               </span>
               <span className="text-[9px] font-mono text-slate-500">1-Click Switch</span>
             </div>

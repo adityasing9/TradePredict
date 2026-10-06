@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Sparkles, Moon, Sun, Monitor, Menu, X, Settings as SettingsIcon, Database, ArrowRight } from 'lucide-react';
+import { Search, Sparkles, Moon, Sun, Monitor, Menu, X, Settings as SettingsIcon, Database, ArrowRight, Pin } from 'lucide-react';
 import { OfflineBadge } from './OfflineBadge';
 import { MarketStatus } from './MarketStatus';
 import { Asset, Market } from '../../types/asset';
@@ -16,6 +16,8 @@ interface HeaderProps {
   onSelectTheme: (theme: 'dark' | 'light' | 'system') => void;
   onOpenSettings?: () => void;
   onToggleSidebar?: () => void;
+  isPinned?: (assetId: string) => boolean;
+  onTogglePin?: (assetId: string) => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -28,7 +30,9 @@ export const Header: React.FC<HeaderProps> = ({
   theme,
   onSelectTheme,
   onOpenSettings,
-  onToggleSidebar
+  onToggleSidebar,
+  isPinned,
+  onTogglePin
 }) => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -193,18 +197,39 @@ export const Header: React.FC<HeaderProps> = ({
                   {['NEPSE:NEPSE', 'NSE:RELIANCE', 'NASDAQ:AAPL', 'NASDAQ:NVDA', 'NASDAQ:META', 'CRYPTO:BTCUSDT', 'CRYPTO:NEARUSDT'].map((id) => {
                     const asset = ALL_ASSETS.find((a) => a.id === id);
                     if (!asset) return null;
+                    const pinned = isPinned ? isPinned(asset.id) : false;
                     return (
-                      <button
+                      <div
                         key={asset.id}
-                        onClick={() => {
-                          onSelectAsset(asset);
-                          setSearchOpen(false);
-                        }}
-                        className="px-2 py-1 rounded bg-surface-secondary border border-border hover:border-accent-cyan/50 hover:bg-accent-cyan/10 text-xs font-mono text-slate-700 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-accent-cyan transition-colors flex items-center gap-1.5"
+                        className="flex items-center gap-1 rounded bg-surface-secondary border border-border hover:border-accent-cyan/50 text-xs font-mono"
                       >
-                        <span className="font-bold">{asset.symbol}</span>
-                        <span className="text-[10px] text-slate-500">{asset.market}</span>
-                      </button>
+                        <button
+                          onClick={() => {
+                            onSelectAsset(asset);
+                            setSearchOpen(false);
+                          }}
+                          className="px-2 py-1 text-slate-700 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-accent-cyan transition-colors flex items-center gap-1.5"
+                        >
+                          <span className="font-bold">{asset.symbol}</span>
+                          <span className="text-[10px] text-slate-500">{asset.market}</span>
+                        </button>
+                        {onTogglePin && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onTogglePin(asset.id);
+                            }}
+                            className={`p-1 pr-1.5 transition-colors ${
+                              pinned
+                                ? 'text-cyan-500 fill-cyan-500 hover:text-cyan-400'
+                                : 'text-slate-400 hover:text-cyan-500'
+                            }`}
+                            title={pinned ? 'Unpin ticker' : 'Pin ticker to quick bar'}
+                          >
+                            <Pin className={`w-3 h-3 ${pinned ? 'fill-cyan-500' : ''}`} />
+                          </button>
+                        )}
+                      </div>
                     );
                   })}
                 </div>
@@ -214,33 +239,52 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Search Results list */}
             <div className="max-h-72 overflow-y-auto p-1.5">
               {filteredAssets.length > 0 ? (
-                filteredAssets.map((asset) => (
-                  <button
-                    key={asset.id}
-                    onClick={() => {
-                      onSelectAsset(asset);
-                      setSearchOpen(false);
-                      setSearchQuery('');
-                    }}
-                    className="w-full flex items-center justify-between p-2 rounded hover:bg-surface-secondary text-left transition-colors group"
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <span className="font-mono font-bold text-xs text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-accent-cyan transition-colors">
-                        {asset.symbol}
-                      </span>
-                      <span className="text-xs text-slate-600 dark:text-slate-400 truncate max-w-[240px]">
-                        {asset.name}
-                      </span>
+                filteredAssets.map((asset) => {
+                  const pinned = isPinned ? isPinned(asset.id) : false;
+                  return (
+                    <div
+                      key={asset.id}
+                      onClick={() => {
+                        onSelectAsset(asset);
+                        setSearchOpen(false);
+                        setSearchQuery('');
+                      }}
+                      className="w-full flex items-center justify-between p-2 rounded hover:bg-surface-secondary text-left transition-colors group cursor-pointer"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <span className="font-mono font-bold text-xs text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-accent-cyan transition-colors">
+                          {asset.symbol}
+                        </span>
+                        <span className="text-xs text-slate-600 dark:text-slate-400 truncate max-w-[240px]">
+                          {asset.name}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-surface-elevated text-slate-700 dark:text-slate-300 border border-border">
+                          {asset.market}
+                        </span>
+                        <span className="text-xs font-mono text-slate-600 dark:text-slate-400">{asset.currency}</span>
+                        {onTogglePin && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onTogglePin(asset.id);
+                            }}
+                            className={`p-1 rounded hover:bg-surface-elevated transition-colors ${
+                              pinned
+                                ? 'text-cyan-500 hover:text-cyan-400'
+                                : 'text-slate-400 hover:text-cyan-500'
+                            }`}
+                            title={pinned ? 'Unpin from quick bar' : 'Pin to quick bar'}
+                          >
+                            <Pin className={`w-3.5 h-3.5 ${pinned ? 'fill-cyan-500' : ''}`} />
+                          </button>
+                        )}
+                        <ArrowRight className="w-3 h-3 text-slate-500 group-hover:text-cyan-600 dark:group-hover:text-accent-cyan transition-colors" />
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-surface-elevated text-slate-700 dark:text-slate-300 border border-border">
-                        {asset.market}
-                      </span>
-                      <span className="text-xs font-mono text-slate-600 dark:text-slate-400">{asset.currency}</span>
-                      <ArrowRight className="w-3 h-3 text-slate-500 group-hover:text-cyan-600 dark:group-hover:text-accent-cyan transition-colors" />
-                    </div>
-                  </button>
-                ))
+                  );
+                })
               ) : searchQuery.trim() ? (
                 <div className="p-6 text-center text-xs text-slate-500 font-mono">
                   No assets found matching "{searchQuery}".

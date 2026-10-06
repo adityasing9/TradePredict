@@ -13,13 +13,16 @@ import {
   Newspaper,
   Activity,
   ShieldAlert,
-  Zap
+  Zap,
+  Pin
 } from 'lucide-react';
 
 interface DashboardPageProps {
   onSelectAsset: (asset: Asset) => void;
   onNavigate: (page: string) => void;
   watchlistItems: string[];
+  pinnedItems?: string[];
+  onTogglePin?: (assetId: string) => void;
 }
 
 interface BenchmarkItem {
@@ -47,10 +50,15 @@ const BENCHMARKS: BenchmarkItem[] = [
 export const DashboardPage: React.FC<DashboardPageProps> = ({
   onSelectAsset,
   onNavigate,
-  watchlistItems
+  watchlistItems,
+  pinnedItems = [],
+  onTogglePin
 }) => {
   const [recentPredictions, setRecentPredictions] = useState<TrackedPrediction[]>([]);
   const [benchmarkList, setBenchmarkList] = useState<BenchmarkItem[]>(BENCHMARKS);
+  const [activeListTab, setActiveListTab] = useState<'PINNED' | 'WATCHLIST'>(() =>
+    pinnedItems.length > 0 ? 'PINNED' : 'WATCHLIST'
+  );
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -266,22 +274,43 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 
       {/* 4. WATCHLIST & RECENT PREDICTIONS (Two Columns) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Monitored Watchlist */}
+        {/* Pinned & Monitored Assets */}
         <div className="terminal-panel p-3.5 space-y-2.5">
           <div className="flex items-center justify-between pb-2 border-b border-border">
-            <div className="flex items-center gap-2">
-              <div className="p-1 rounded-md bg-amber-500/15 border border-amber-500/30 text-amber-500">
-                <Star className="w-3.5 h-3.5 fill-amber-500" />
-              </div>
-              <span className="text-[11px] font-mono font-black uppercase tracking-wider text-slate-800 dark:text-slate-300">
-                Monitored Watchlist
-              </span>
-              <span className="text-[10px] font-mono px-2 py-0.2 rounded-full bg-amber-500 text-white font-black shadow-xs">
-                {watchlistItems.length}
-              </span>
+            <div className="flex items-center gap-1.5 font-mono text-xs">
+              <button
+                onClick={() => setActiveListTab('PINNED')}
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md font-bold transition-all ${
+                  activeListTab === 'PINNED'
+                    ? 'bg-cyan-500/15 border border-cyan-500/40 text-cyan-700 dark:text-cyan-300 shadow-2xs'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+              >
+                <Pin className={`w-3.5 h-3.5 ${activeListTab === 'PINNED' ? 'fill-cyan-500 text-cyan-500' : ''}`} />
+                <span>Pinned</span>
+                <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-cyan-500 text-white font-black">
+                  {pinnedItems.length}
+                </span>
+              </button>
+
+              <button
+                onClick={() => setActiveListTab('WATCHLIST')}
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md font-bold transition-all ${
+                  activeListTab === 'WATCHLIST'
+                    ? 'bg-amber-500/15 border border-amber-500/40 text-amber-700 dark:text-amber-300 shadow-2xs'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+              >
+                <Star className={`w-3.5 h-3.5 ${activeListTab === 'WATCHLIST' ? 'fill-amber-500 text-amber-500' : ''}`} />
+                <span>Watchlist</span>
+                <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-amber-500 text-white font-black">
+                  {watchlistItems.length}
+                </span>
+              </button>
             </div>
+
             <button
-              onClick={() => onNavigate('watchlist')}
+              onClick={() => onNavigate(activeListTab === 'PINNED' ? 'markets' : 'watchlist')}
               className="text-[11px] font-mono font-bold text-accent-cyan hover:underline flex items-center gap-1"
             >
               <span>Manage</span>
@@ -289,9 +318,69 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             </button>
           </div>
 
-          {watchlistItems.length > 0 ? (
+          {activeListTab === 'PINNED' ? (
+            pinnedItems.length > 0 ? (
+              <div className="divide-y divide-border">
+                {pinnedItems.slice(0, 6).map((assetId) => {
+                  const asset = getAssetById(assetId);
+                  if (!asset) return null;
+
+                  const marketBadge =
+                    asset.market === 'NEPSE'
+                      ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/25'
+                      : asset.market === 'NSE'
+                      ? 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/25'
+                      : asset.market === 'NASDAQ'
+                      ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/25'
+                      : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/25';
+
+                  return (
+                    <div
+                      key={asset.id}
+                      onClick={() => onSelectAsset(asset)}
+                      className="py-2 px-2 flex items-center justify-between hover:bg-surface-secondary rounded-lg cursor-pointer transition-colors group"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Pin className="w-3.5 h-3.5 text-cyan-500 fill-cyan-500 shrink-0" />
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono font-black text-slate-900 dark:text-white text-xs group-hover:text-accent-cyan transition-colors">
+                              {asset.symbol}
+                            </span>
+                            <span className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded border ${marketBadge}`}>
+                              {asset.market}
+                            </span>
+                          </div>
+                          <span className="text-xs text-slate-600 dark:text-slate-400 truncate max-w-[180px] block mt-0.5 font-medium">
+                            {asset.name}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="text-right font-mono flex items-center gap-2.5">
+                        <span className="text-xs font-black text-slate-900 dark:text-white">{asset.currency}</span>
+                        <span className="px-2 py-1 rounded bg-cyan-500/10 hover:bg-cyan-500 hover:text-white text-cyan-700 dark:text-cyan-300 border border-cyan-500/30 text-[10px] font-bold transition-all shadow-xs">
+                          Analyze →
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="p-6 text-center text-xs text-slate-500 font-mono">
+                <Pin className="w-6 h-6 mx-auto mb-2 text-cyan-400/50" />
+                <span className="font-semibold text-slate-600 dark:text-slate-400">No assets pinned to quick bar yet.</span>
+                <button
+                  onClick={() => onNavigate('markets')}
+                  className="block mx-auto mt-2 text-accent-cyan hover:underline text-xs font-bold"
+                >
+                  Pin your favorite tickers from Markets catalog →
+                </button>
+              </div>
+            )
+          ) : watchlistItems.length > 0 ? (
             <div className="divide-y divide-border">
-              {watchlistItems.slice(0, 5).map((assetId) => {
+              {watchlistItems.slice(0, 6).map((assetId) => {
                 const asset = getAssetById(assetId);
                 if (!asset) return null;
 
@@ -308,7 +397,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                   <div
                     key={asset.id}
                     onClick={() => onSelectAsset(asset)}
-                    className="py-2.5 px-2 flex items-center justify-between hover:bg-surface-secondary rounded-lg cursor-pointer transition-colors group"
+                    className="py-2 px-2 flex items-center justify-between hover:bg-surface-secondary rounded-lg cursor-pointer transition-colors group"
                   >
                     <div>
                       <div className="flex items-center gap-2">

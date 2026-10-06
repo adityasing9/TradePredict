@@ -2,13 +2,19 @@ import React, { useState } from 'react';
 import { Asset, Market } from '../types/asset';
 import { ALL_ASSETS } from '../data/universe';
 import { ASSET_PRICE_BASELINES } from '../services/marketDataProvider';
-import { Binary } from 'lucide-react';
+import { Binary, Pin } from 'lucide-react';
 
 interface PredictionsPageProps {
   onSelectAsset: (asset: Asset) => void;
+  isPinned?: (assetId: string) => boolean;
+  onTogglePin?: (assetId: string) => void;
 }
 
-export const PredictionsPage: React.FC<PredictionsPageProps> = ({ onSelectAsset }) => {
+export const PredictionsPage: React.FC<PredictionsPageProps> = ({
+  onSelectAsset,
+  isPinned,
+  onTogglePin
+}) => {
   const [selectedMarket, setSelectedMarket] = useState<Market | 'ALL'>('ALL');
   const [directionFilter, setDirectionFilter] = useState<'ALL' | 'BULLISH' | 'BEARISH' | 'NEUTRAL'>('ALL');
 
@@ -131,17 +137,35 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({ onSelectAsset 
                     <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate max-w-[180px] mt-0.5">{asset.name}</p>
                   </div>
 
-                  <span
-                    className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold shadow-sm ${
-                      direction === 'BULLISH'
-                        ? 'bg-emerald-500/15 text-emerald-700 dark:text-market-bullish border border-emerald-500/30'
-                        : direction === 'BEARISH'
-                        ? 'bg-rose-500/15 text-rose-700 dark:text-market-bearish border border-rose-500/30'
-                        : 'bg-amber-500/15 text-amber-700 dark:text-market-warning border border-amber-500/30'
-                    }`}
-                  >
-                    {direction}
-                  </span>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    {onTogglePin && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onTogglePin(asset.id);
+                        }}
+                        className={`p-1 rounded transition-colors ${
+                          isPinned && isPinned(asset.id)
+                            ? 'text-cyan-500 fill-cyan-500'
+                            : 'text-slate-400 hover:text-cyan-500'
+                        }`}
+                        title={isPinned && isPinned(asset.id) ? 'Unpin ticker' : 'Pin ticker to quick bar'}
+                      >
+                        <Pin className={`w-3.5 h-3.5 ${isPinned && isPinned(asset.id) ? 'fill-cyan-500' : ''}`} />
+                      </button>
+                    )}
+                    <span
+                      className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold shadow-sm ${
+                        direction === 'BULLISH'
+                          ? 'bg-emerald-500/15 text-emerald-700 dark:text-market-bullish border border-emerald-500/30'
+                          : direction === 'BEARISH'
+                          ? 'bg-rose-500/15 text-rose-700 dark:text-market-bearish border border-rose-500/30'
+                          : 'bg-amber-500/15 text-amber-700 dark:text-market-warning border border-amber-500/30'
+                      }`}
+                    >
+                      {direction}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Probability Bar */}

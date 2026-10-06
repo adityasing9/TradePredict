@@ -14,8 +14,10 @@ import { SettingsPage } from './pages/SettingsPage';
 import { useNetworkStatus } from './hooks/useNetworkStatus';
 import { useSettings } from './hooks/useSettings';
 import { useWatchlist } from './hooks/useWatchlist';
+import { usePinnedAssets } from './hooks/usePinnedAssets';
 import { useMarketData } from './hooks/useMarketData';
 import { useAnalysisPipeline } from './hooks/useAnalysisPipeline';
+import { PinnedTickerBar } from './components/common/PinnedTickerBar';
 import { ALL_ASSETS, getAssetById } from './data/universe';
 import { Asset, Market } from './types/asset';
 import { getInitialRoute, persistRoute } from './utils/router';
@@ -37,6 +39,13 @@ export function App() {
   const { isOnline, offlineSince } = useNetworkStatus();
   const { settings, updateSettings } = useSettings();
   const { items: watchlistItems, toggle: toggleWatchlist, isWatched } = useWatchlist();
+  const {
+    pinnedIds,
+    isPinned,
+    togglePin,
+    isBarVisible,
+    toggleBarVisible
+  } = usePinnedAssets();
 
   // Active asset data bundle for the AI Chat Drawer & analysis
   const { candles } = useMarketData(activeAsset, '1D');
@@ -158,6 +167,19 @@ export function App() {
         onSelectTheme={(t) => updateSettings({ theme: t })}
         onOpenSettings={() => handleNavSelect('settings')}
         onToggleSidebar={() => setSidebarOpenMobile(!sidebarOpenMobile)}
+        isPinned={isPinned}
+        onTogglePin={togglePin}
+      />
+
+      {/* Pinned Assets Quick-Ticker Bar across top */}
+      <PinnedTickerBar
+        pinnedIds={pinnedIds}
+        activeAsset={activeAsset}
+        onSelectAsset={handleSelectAsset}
+        onTogglePin={togglePin}
+        isPinned={isPinned}
+        isVisible={isBarVisible}
+        onToggleVisibility={toggleBarVisible}
       />
 
       <div className="flex-1 flex overflow-hidden relative">
@@ -177,6 +199,8 @@ export function App() {
               onSelectAsset={handleSelectAsset}
               onNavigate={(page) => handleNavSelect(page as NavItemKey)}
               watchlistItems={watchlistItems.map((w) => w.assetId)}
+              pinnedItems={pinnedIds}
+              onTogglePin={togglePin}
             />
           )}
 
@@ -185,6 +209,8 @@ export function App() {
               onSelectAsset={handleSelectAsset}
               isWatched={isWatched}
               onToggleWatchlist={toggleWatchlist}
+              isPinned={isPinned}
+              onTogglePin={togglePin}
             />
           )}
 
@@ -198,6 +224,8 @@ export function App() {
                 onSelectAsset={handleSelectAsset}
                 isWatched={isWatched}
                 onToggleWatchlist={toggleWatchlist}
+                isPinned={isPinned}
+                onTogglePin={togglePin}
               />
             </div>
           )}
@@ -210,6 +238,9 @@ export function App() {
               asset={activeAsset}
               isWatched={isWatched(activeAsset.id)}
               onToggleWatchlist={() => toggleWatchlist(activeAsset.id)}
+              isPinned={isPinned(activeAsset.id)}
+              onTogglePin={() => togglePin(activeAsset.id)}
+              pinnedIds={pinnedIds}
               initialTab={analysisTab}
               onTabChange={handleAnalysisTabChange}
               onSelectAsset={handleSelectAsset}
@@ -217,7 +248,11 @@ export function App() {
           )}
 
           {currentNav === 'prediction' && (
-            <PredictionsPage onSelectAsset={handleSelectAsset} />
+            <PredictionsPage
+              onSelectAsset={handleSelectAsset}
+              isPinned={isPinned}
+              onTogglePin={togglePin}
+            />
           )}
 
           {currentNav === 'backtesting' && <BacktestingPage />}

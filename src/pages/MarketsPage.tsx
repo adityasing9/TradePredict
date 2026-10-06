@@ -2,32 +2,50 @@ import React, { useState } from 'react';
 import { Asset, Market, AssetType } from '../types/asset';
 import { ALL_ASSETS, filterAssets, SUPPORTED_MARKETS } from '../data/universe';
 import { ASSET_PRICE_BASELINES } from '../services/marketDataProvider';
-import { Search, Star, TrendingUp, TrendingDown, ArrowUpRight, Compass } from 'lucide-react';
+import { Search, Star, TrendingUp, TrendingDown, ArrowUpRight, Compass, Pin } from 'lucide-react';
 
 interface MarketsPageProps {
   onSelectAsset: (asset: Asset) => void;
   isWatched: (assetId: string) => boolean;
   onToggleWatchlist: (assetId: string) => void;
+  isPinned?: (assetId: string) => boolean;
+  onTogglePin?: (assetId: string) => void;
 }
 
 export const MarketsPage: React.FC<MarketsPageProps> = ({
   onSelectAsset,
   isWatched,
-  onToggleWatchlist
+  onToggleWatchlist,
+  isPinned,
+  onTogglePin
 }) => {
   const [selectedMarket, setSelectedMarket] = useState<Market | 'ALL'>('ALL');
   const [selectedType, setSelectedType] = useState<AssetType | 'ALL'>('ALL');
   const [selectedSector, setSelectedSector] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
+  const [scopeFilter, setScopeFilter] = useState<'ALL' | 'PINNED' | 'WATCHLIST'>('ALL');
 
   const sectors = ['ALL', ...Array.from(new Set(ALL_ASSETS.map((a) => a.sector)))];
 
-  const filtered = filterAssets({
+  let filtered = filterAssets({
     market: selectedMarket,
     assetType: selectedType,
     sector: selectedSector,
     searchQuery
   });
+
+  if (scopeFilter === 'PINNED' && isPinned) {
+    filtered = filtered.filter((a) => isPinned(a.id));
+  } else if (scopeFilter === 'WATCHLIST') {
+    filtered = filtered.filter((a) => isWatched(a.id));
+  } else if (isPinned) {
+    // Sort pinned assets towards the top for fast discovery
+    filtered = [...filtered].sort((a, b) => {
+      const aPin = isPinned(a.id) ? 1 : 0;
+      const bPin = isPinned(b.id) ? 1 : 0;
+      return bPin - aPin;
+    });
+  }
 
   return (
     <div className="space-y-4">
@@ -96,7 +114,43 @@ export const MarketsPage: React.FC<MarketsPageProps> = ({
 
         {/* Secondary: Type & Sector filters */}
         <div className="flex flex-wrap items-center justify-between gap-3 pt-2.5 border-t border-border text-xs font-mono">
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black mr-1">View:</span>
+            <button
+              onClick={() => setScopeFilter('ALL')}
+              className={`px-2.5 py-0.5 rounded text-[11px] font-bold transition-colors ${
+                scopeFilter === 'ALL'
+                  ? 'bg-surface-secondary text-cyan-700 dark:text-cyan-300 border border-cyan-500/30'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setScopeFilter('PINNED')}
+              className={`px-2.5 py-0.5 rounded text-[11px] font-bold transition-colors flex items-center gap-1 ${
+                scopeFilter === 'PINNED'
+                  ? 'bg-cyan-500/15 text-cyan-600 dark:text-accent-cyan border border-cyan-500/40 shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <Pin className="w-3 h-3 fill-cyan-500 text-cyan-500" />
+              <span>Pinned</span>
+            </button>
+            <button
+              onClick={() => setScopeFilter('WATCHLIST')}
+              className={`px-2.5 py-0.5 rounded text-[11px] font-bold transition-colors flex items-center gap-1 ${
+                scopeFilter === 'WATCHLIST'
+                  ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/40 shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
+              <span>Watchlist</span>
+            </button>
+
+            <span className="text-slate-400 mx-1">|</span>
+
             <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black mr-1">Type:</span>
             {(['ALL', 'STOCK', 'CRYPTO', 'INDEX', 'ETF'] as (AssetType | 'ALL')[]).map((t) => (
               <button
@@ -135,7 +189,8 @@ export const MarketsPage: React.FC<MarketsPageProps> = ({
         <table className="w-full text-left text-xs font-mono">
           <thead className="bg-surface-secondary border-b border-border text-slate-500 dark:text-slate-400 text-[10px] uppercase font-black tracking-wider">
             <tr>
-              <th className="py-2.5 px-3 w-10 text-center">Watch</th>
+              <th className="py-2.5 px-2 w-8 text-center" title="Pin to top bar">Pin</th>
+              <th className="py-2.5 px-2 w-8 text-center" title="Save to watchlist">Watch</th>
               <th className="py-2.5 px-3">Symbol & Name</th>
               <th className="py-2.5 px-3">Market</th>
               <th className="py-2.5 px-3">Sector</th>
@@ -151,6 +206,7 @@ export const MarketsPage: React.FC<MarketsPageProps> = ({
               const isUp = baseline.dailyChange >= 0;
               const changePct = Math.abs(changePercent).toFixed(2);
               const watched = isWatched(asset.id);
+              const pinned = isPinned ? isPinned(asset.id) : false;
 
               const marketBadge =
                 asset.market === 'NEPSE'
@@ -167,7 +223,23 @@ export const MarketsPage: React.FC<MarketsPageProps> = ({
                   onClick={() => onSelectAsset(asset)}
                   className="hover:bg-surface-secondary/80 transition-colors cursor-pointer group"
                 >
-                  <td className="py-2.5 px-3 text-center" onClick={(e) => e.stopPropagation()}>
+                  <td className="py-2.5 px-2 text-center" onClick={(e) => e.stopPropagation()}>
+                    {onTogglePin && (
+                      <button
+                        onClick={() => onTogglePin(asset.id)}
+                        className={`p-1 rounded transition-colors ${
+                          pinned
+                            ? 'text-cyan-500 fill-cyan-500 hover:text-cyan-400'
+                            : 'text-slate-400 hover:text-cyan-500'
+                        }`}
+                        title={pinned ? 'Unpin from Quick Bar' : 'Pin to Quick Bar'}
+                      >
+                        <Pin className={`w-3.5 h-3.5 ${pinned ? 'fill-cyan-500' : ''}`} />
+                      </button>
+                    )}
+                  </td>
+
+                  <td className="py-2.5 px-2 text-center" onClick={(e) => e.stopPropagation()}>
                     <button
                       onClick={() => onToggleWatchlist(asset.id)}
                       className="p-1 rounded text-slate-400 hover:text-amber-500 transition-colors"
@@ -182,9 +254,20 @@ export const MarketsPage: React.FC<MarketsPageProps> = ({
                   </td>
 
                   <td className="py-2.5 px-3">
-                    <span className="font-black text-slate-950 dark:text-white group-hover:text-accent-cyan transition-colors block text-xs">
-                      {asset.symbol}
-                    </span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-black text-slate-950 dark:text-white group-hover:text-accent-cyan transition-colors text-xs">
+                        {asset.symbol}
+                      </span>
+                      {pinned && (
+                        <span
+                          className="text-[9px] font-mono px-1 py-0.2 rounded bg-cyan-500/15 text-cyan-600 dark:text-cyan-300 border border-cyan-500/30 flex items-center gap-0.5"
+                          title="Pinned to Quick Bar"
+                        >
+                          <Pin className="w-2.5 h-2.5 fill-cyan-500" />
+                          <span>PINNED</span>
+                        </span>
+                      )}
+                    </div>
                     <span className="text-[10px] text-slate-600 dark:text-slate-400 truncate max-w-[200px] block font-medium">
                       {asset.name}
                     </span>
@@ -245,6 +328,7 @@ export const MarketsPage: React.FC<MarketsPageProps> = ({
           const isUp = baseline.dailyChange >= 0;
           const changePct = Math.abs(changePercent).toFixed(2);
           const watched = isWatched(asset.id);
+          const pinned = isPinned ? isPinned(asset.id) : false;
 
           return (
             <div
@@ -253,15 +337,26 @@ export const MarketsPage: React.FC<MarketsPageProps> = ({
               className="p-3 rounded-lg terminal-panel flex items-center justify-between gap-2.5 cursor-pointer shadow-xs"
             >
               <div className="flex items-center gap-2 min-w-0">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onToggleWatchlist(asset.id);
-                  }}
-                  className="p-1 rounded text-slate-400 hover:text-amber-500"
-                >
-                  <Star className={`w-4 h-4 ${watched ? 'fill-amber-500 text-amber-500' : ''}`} />
-                </button>
+                <div className="flex flex-col gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
+                  <button
+                    onClick={() => onToggleWatchlist(asset.id)}
+                    className="p-1 rounded text-slate-400 hover:text-amber-500"
+                    title={watched ? 'Remove from Watchlist' : 'Add to Watchlist'}
+                  >
+                    <Star className={`w-3.5 h-3.5 ${watched ? 'fill-amber-500 text-amber-500' : ''}`} />
+                  </button>
+                  {onTogglePin && (
+                    <button
+                      onClick={() => onTogglePin(asset.id)}
+                      className={`p-1 rounded ${
+                        pinned ? 'text-cyan-500 fill-cyan-500' : 'text-slate-400 hover:text-cyan-500'
+                      }`}
+                      title={pinned ? 'Unpin ticker' : 'Pin ticker'}
+                    >
+                      <Pin className={`w-3.5 h-3.5 ${pinned ? 'fill-cyan-500' : ''}`} />
+                    </button>
+                  )}
+                </div>
 
                 <div className="min-w-0">
                   <div className="flex items-center gap-1.5">
@@ -269,6 +364,11 @@ export const MarketsPage: React.FC<MarketsPageProps> = ({
                     <span className="text-[9px] font-mono font-bold px-1 rounded bg-surface-secondary text-slate-600 dark:text-slate-400 border border-border">
                       {asset.market}
                     </span>
+                    {pinned && (
+                      <span className="text-[9px] font-mono px-1 rounded bg-cyan-500/15 text-cyan-600 dark:text-cyan-300 border border-cyan-500/30">
+                        PINNED
+                      </span>
+                    )}
                   </div>
                   <p className="text-[10px] text-slate-600 dark:text-slate-400 truncate mt-0.5">{asset.name}</p>
                 </div>
