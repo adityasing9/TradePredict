@@ -2,10 +2,74 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import path from 'path';
+import quoteHandler from './api/market/quote.ts';
+import historyHandler from './api/market/history.ts';
+
+function devApiMiddlewarePlugin() {
+  return {
+    name: 'dev-api-middleware',
+    configureServer(server: any) {
+      server.middlewares.use(async (req: any, res: any, next: any) => {
+        if (!req.url) return next();
+        const url = new URL(req.url, 'http://localhost:3000');
+        if (url.pathname === '/api/market/quote') {
+          const query: Record<string, string> = {};
+          url.searchParams.forEach((v, k) => { query[k] = v; });
+          const mockReq: any = { query, method: req.method };
+          const mockRes: any = {
+            setHeader: (k: string, v: string) => res.setHeader(k, v),
+            status: (code: number) => {
+              res.statusCode = code;
+              return {
+                json: (data: any) => {
+                  res.setHeader('Content-Type', 'application/json');
+                  res.end(JSON.stringify(data));
+                },
+                end: () => res.end()
+              };
+            }
+          };
+          try {
+            await quoteHandler(mockReq, mockRes);
+          } catch (e: any) {
+            res.statusCode = 500;
+            res.end(JSON.stringify({ error: e.message }));
+          }
+        } else if (url.pathname === '/api/market/history') {
+          const query: Record<string, string> = {};
+          url.searchParams.forEach((v, k) => { query[k] = v; });
+          const mockReq: any = { query, method: req.method };
+          const mockRes: any = {
+            setHeader: (k: string, v: string) => res.setHeader(k, v),
+            status: (code: number) => {
+              res.statusCode = code;
+              return {
+                json: (data: any) => {
+                  res.setHeader('Content-Type', 'application/json');
+                  res.end(JSON.stringify(data));
+                },
+                end: () => res.end()
+              };
+            }
+          };
+          try {
+            await historyHandler(mockReq, mockRes);
+          } catch (e: any) {
+            res.statusCode = 500;
+            res.end(JSON.stringify({ error: e.message }));
+          }
+        } else {
+          next();
+        }
+      });
+    }
+  };
+}
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    devApiMiddlewarePlugin(),
     react(),
     VitePWA({
       registerType: 'autoUpdate',

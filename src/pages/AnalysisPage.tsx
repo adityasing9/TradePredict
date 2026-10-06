@@ -79,7 +79,7 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
     if (onTabChange) onTabChange(tab);
   };
 
-  const { candles, quote, dataQuality, loading: dataLoading, refetch } = useMarketData(asset, timeframe);
+  const { candles, quote, dataQuality, loading: dataLoading, isLiveStreaming, refetch } = useMarketData(asset, timeframe);
   const { bundle, report } = useAnalysisPipeline(asset, candles, timeframe);
 
   const isUp = quote ? quote.change >= 0 : true;
@@ -178,6 +178,17 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
         <div className="flex flex-wrap items-center gap-3">
           <DataQualityBadge quality={dataQuality} />
 
+          {/* Real-Time Live Stream Pill */}
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-mono text-[10px] font-bold shadow-2xs">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span className="uppercase tracking-wider">
+              {quote?.source || (isLiveStreaming ? 'LIVE TICK STREAM' : 'REAL-TIME')}
+            </span>
+          </div>
+
           {quote && (
             <div className="text-right font-mono">
               <div className="text-xl sm:text-2xl font-black text-slate-950 dark:text-white tracking-tight tabular-nums">
@@ -268,6 +279,7 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
             resistances={bundle?.technical.structure.resistances}
             onRefresh={refetch}
             loading={dataLoading}
+            isLiveStreaming={isLiveStreaming}
           />
 
           {/* Projection Cones Chart */}

@@ -24,6 +24,8 @@ export interface Quote {
   bid?: number;
   ask?: number;
   marketCap?: number;
+  source?: string;
+  isLiveStreaming?: boolean;
 }
 
 export type DataQualityStatus = 'HIGH' | 'MEDIUM' | 'LIMITED' | 'STALE';

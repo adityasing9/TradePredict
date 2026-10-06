@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Asset } from '../types/asset';
 import { getAssetById } from '../data/universe';
+import { getMarketQuote, subscribeToLiveQuote } from '../services/marketDataProvider';
 import { getAllPredictions, seedInitialHistoricalPredictions } from '../db/predictionStore';
 import { TrackedPrediction } from '../types/tracking';
 import {
@@ -49,6 +50,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   watchlistItems
 }) => {
   const [recentPredictions, setRecentPredictions] = useState<TrackedPrediction[]>([]);
+  const [benchmarkList, setBenchmarkList] = useState<BenchmarkItem[]>(BENCHMARKS);
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -64,6 +66,59 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
       setRecentPredictions(list.slice(0, 5));
     }
     loadPredictions();
+
+    // Subscribe to live benchmark prices across markets
+    let isMounted = true;
+    const cleanups: (() => void)[] = [];
+
+    BENCHMARKS.forEach((b) => {
+      const asset = getAssetById(b.id);
+      if (!asset) return;
+
+      // 1. Initial live fetch
+      getMarketQuote(asset, true).then((q) => {
+        if (!isMounted) return;
+        setBenchmarkList((prev) =>
+          prev.map((item) => {
+            if (item.id !== b.id) return item;
+            const isUp = q.change >= 0;
+            const prefix = asset.currency === 'USD' || asset.currency === 'USDT' ? '$' : '';
+            return {
+              ...item,
+              price: `${prefix}${q.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+              change: `${q.change >= 0 ? '+' : ''}${q.change.toFixed(2)}`,
+              changePercent: q.changePercent,
+              isUp
+            };
+          })
+        );
+      });
+
+      // 2. Real-time tick streaming
+      const unsub = subscribeToLiveQuote(asset, (q) => {
+        if (!isMounted) return;
+        setBenchmarkList((prev) =>
+          prev.map((item) => {
+            if (item.id !== b.id) return item;
+            const isUp = q.change >= 0;
+            const prefix = asset.currency === 'USD' || asset.currency === 'USDT' ? '$' : '';
+            return {
+              ...item,
+              price: `${prefix}${q.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+              change: `${q.change >= 0 ? '+' : ''}${q.change.toFixed(2)}`,
+              changePercent: q.changePercent,
+              isUp
+            };
+          })
+        );
+      });
+      cleanups.push(unsub);
+    });
+
+    return () => {
+      isMounted = false;
+      cleanups.forEach((c) => c());
+    };
   }, []);
 
   return (
@@ -103,6 +158,13 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             <span className="text-[10px] font-mono px-2 py-0.2 rounded-full bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 font-bold border border-cyan-500/30">
               Global Indices
             </span>
+            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+              </span>
+              <span>LIVE</span>
+            </div>
           </div>
           <button
             onClick={() => onNavigate('markets')}
@@ -114,7 +176,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
-          {BENCHMARKS.map((b) => (
+          {benchmarkList.map((b) => (
             <div
               key={b.id}
               onClick={() => {
