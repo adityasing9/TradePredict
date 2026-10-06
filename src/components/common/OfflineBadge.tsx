@@ -16,18 +16,18 @@ export const OfflineBadge: React.FC<OfflineBadgeProps> = ({ isOnline, offlineSin
 
   if (!isOnline) {
     return (
-      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-mono">
+      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-500/15 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs font-mono font-bold shadow-xs">
         <WifiOff className="w-3.5 h-3.5 animate-pulse" />
-        <span>Offline — showing cached data {offlineSince ? `since ${formatTime(offlineSince)}` : ''}</span>
+        <span>Offline {offlineSince ? `since ${formatTime(offlineSince)}` : ''}</span>
       </div>
     );
   }
 
   return (
-    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono">
-      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/15 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 text-xs font-mono font-bold shadow-xs">
+      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
       <Wifi className="w-3.5 h-3.5" />
-      <span>Live {lastUpdated ? `• updated ${formatTime(lastUpdated)}` : ''}</span>
+      <span>Live {lastUpdated ? `• ${formatTime(lastUpdated)}` : ''}</span>
     </div>
   );
 };

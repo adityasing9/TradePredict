@@ -34,75 +34,78 @@ export const MarketsPage: React.FC<MarketsPageProps> = ({
       {/* 1. TITLE & SUMMARY */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border pb-3">
         <div>
-          <h1 className="text-xl font-bold text-white font-mono tracking-tight flex items-center gap-2">
-            <Compass className="w-4 h-4 text-accent-cyan" />
+          <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-mono tracking-tight flex items-center gap-2">
+            <Compass className="w-5 h-5 text-cyan-500" />
             <span>Market Asset Catalog & Telemetry</span>
           </h1>
-          <p className="text-xs text-slate-400 mt-0.5 font-mono">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 font-mono">
             Coverage across Nepal (NEPSE), India (NSE), US Equities, and Cryptocurrencies.
           </p>
         </div>
-        <div className="text-[11px] font-mono text-slate-400 bg-surface px-2.5 py-1 rounded border border-border w-fit">
-          Showing <span className="text-white font-bold">{filtered.length}</span> / {ALL_ASSETS.length} assets
+        <div className="text-[11px] font-mono text-slate-700 dark:text-slate-300 bg-surface px-3 py-1.5 rounded-md border border-border shadow-xs w-fit">
+          Showing <span className="text-slate-950 dark:text-white font-black">{filtered.length}</span> / {ALL_ASSETS.length} assets
         </div>
       </div>
 
       {/* 2. FILTER & SEARCH TOOLBAR */}
-      <div className="terminal-panel p-3 space-y-2.5">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2.5">
+      <div className="terminal-panel p-3.5 space-y-3">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
           {/* Search Input */}
           <div className="relative flex-1 max-w-md">
-            <Search className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-slate-500 dark:text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search symbol, company name, crypto, or exchange..."
-              className="w-full pl-8 pr-3 py-1 rounded bg-surface-secondary border border-border text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-accent-cyan/50 font-mono transition-colors"
+              className="w-full pl-9 pr-3 py-1.5 rounded-md bg-surface-secondary border border-border text-xs text-slate-900 dark:text-white placeholder:text-slate-500 focus:outline-none focus:border-accent-cyan font-mono transition-colors shadow-xs"
             />
           </div>
 
           {/* Market Tabs */}
-          <div className="flex items-center gap-1 overflow-x-auto text-xs font-mono pb-1 lg:pb-0">
+          <div className="flex items-center gap-1.5 overflow-x-auto text-xs font-mono pb-1 lg:pb-0">
             <button
               onClick={() => setSelectedMarket('ALL')}
-              className={`px-2 py-0.5 rounded transition-colors shrink-0 ${
+              className={`px-3 py-1 rounded-md transition-all font-bold shrink-0 ${
                 selectedMarket === 'ALL'
-                  ? 'bg-surface-elevated text-accent-cyan font-bold border border-border'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-xs force-white'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-surface-secondary'
               }`}
             >
-              All
+              All Markets
             </button>
-            {SUPPORTED_MARKETS.map((m) => (
-              <button
-                key={m.key}
-                onClick={() => setSelectedMarket(m.key)}
-                className={`px-2 py-0.5 rounded flex items-center gap-1 transition-colors shrink-0 ${
-                  selectedMarket === m.key
-                    ? 'bg-surface-elevated text-accent-cyan font-bold border border-border'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                <span>{m.flag}</span>
-                <span>{m.key}</span>
-              </button>
-            ))}
+            {SUPPORTED_MARKETS.map((m) => {
+              const isActive = selectedMarket === m.key;
+              return (
+                <button
+                  key={m.key}
+                  onClick={() => setSelectedMarket(m.key)}
+                  className={`px-2.5 py-1 rounded-md flex items-center gap-1.5 transition-all font-bold shrink-0 ${
+                    isActive
+                      ? 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 border border-cyan-500/40 shadow-xs'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-surface-secondary'
+                  }`}
+                >
+                  <span>{m.flag}</span>
+                  <span>{m.key}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
         {/* Secondary: Type & Sector filters */}
-        <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-border text-xs font-mono">
-          <div className="flex items-center gap-1">
-            <span className="text-[10px] text-slate-500 uppercase mr-1">Type:</span>
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-2.5 border-t border-border text-xs font-mono">
+          <div className="flex items-center gap-1.5">
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black mr-1">Type:</span>
             {(['ALL', 'STOCK', 'CRYPTO', 'INDEX', 'ETF'] as (AssetType | 'ALL')[]).map((t) => (
               <button
                 key={t}
                 onClick={() => setSelectedType(t)}
-                className={`px-2 py-0.5 rounded text-[11px] transition-colors ${
+                className={`px-2.5 py-0.5 rounded text-[11px] font-bold transition-colors ${
                   selectedType === t
-                    ? 'bg-surface-elevated text-white font-bold border border-border'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-surface-secondary text-cyan-700 dark:text-cyan-300 border border-cyan-500/30'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 {t}
@@ -110,16 +113,16 @@ export const MarketsPage: React.FC<MarketsPageProps> = ({
             ))}
           </div>
 
-          <div className="flex items-center gap-1 ml-auto">
-            <span className="text-[10px] text-slate-500 uppercase mr-1">Sector:</span>
+          <div className="flex items-center gap-1.5 ml-auto">
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black mr-1">Sector:</span>
             <select
               value={selectedSector}
               onChange={(e) => setSelectedSector(e.target.value)}
-              className="bg-surface-secondary border border-border text-slate-300 rounded px-2 py-0.5 text-xs focus:outline-none focus:border-accent-cyan font-mono"
+              className="bg-surface-secondary border border-border text-slate-800 dark:text-slate-200 rounded px-2.5 py-1 text-xs focus:outline-none focus:border-accent-cyan font-mono shadow-xs font-semibold"
             >
               {sectors.map((s) => (
                 <option key={s} value={s}>
-                  {s === 'ALL' ? 'All Sectors' : s}
+                  {s}
                 </option>
               ))}
             </select>
@@ -127,94 +130,101 @@ export const MarketsPage: React.FC<MarketsPageProps> = ({
         </div>
       </div>
 
-      {/* 3. DESKTOP VIEW: High-density Table */}
-      <div className="hidden md:block terminal-panel overflow-hidden">
+      {/* 3. ASSETS TABLE (DESKTOP) */}
+      <div className="terminal-panel overflow-hidden hidden md:block">
         <table className="w-full text-left text-xs font-mono">
-          <thead className="bg-surface-secondary border-b border-border text-slate-400 uppercase text-[10px] tracking-wider">
+          <thead className="bg-surface-secondary border-b border-border text-slate-500 dark:text-slate-400 text-[10px] uppercase font-black tracking-wider">
             <tr>
-              <th className="py-2 px-3 w-8"></th>
-              <th className="py-2 px-3">Asset</th>
-              <th className="py-2 px-3">Exchange</th>
-              <th className="py-2 px-3">Sector</th>
-              <th className="py-2 px-3 text-right">Price</th>
-              <th className="py-2 px-3 text-right">24h Change</th>
-              <th className="py-2 px-3 text-right">Action</th>
+              <th className="py-2.5 px-3 w-10 text-center">Watch</th>
+              <th className="py-2.5 px-3">Symbol & Name</th>
+              <th className="py-2.5 px-3">Market</th>
+              <th className="py-2.5 px-3">Sector</th>
+              <th className="py-2.5 px-3 text-right">Last Price</th>
+              <th className="py-2.5 px-3 text-right">24h Change</th>
+              <th className="py-2.5 px-3 text-right">Action</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
             {filtered.map((asset) => {
+              const baseline = ASSET_PRICE_BASELINES[asset.id] || { price: 100, dailyChange: 0, high: 100, low: 100, vol: 1000 };
+              const changePercent = baseline.price ? (baseline.dailyChange / baseline.price) * 100 : 0;
+              const isUp = baseline.dailyChange >= 0;
+              const changePct = Math.abs(changePercent).toFixed(2);
               const watched = isWatched(asset.id);
-              const baseline = ASSET_PRICE_BASELINES[asset.id] || { price: 100, dailyChange: 0 };
-              const changePct = Number(
-                ((baseline.dailyChange / (baseline.price - baseline.dailyChange)) * 100).toFixed(2)
-              );
-              const isUp = changePct >= 0;
+
+              const marketBadge =
+                asset.market === 'NEPSE'
+                  ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/25'
+                  : asset.market === 'NSE'
+                  ? 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/25'
+                  : asset.market === 'NASDAQ'
+                  ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/25'
+                  : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/25';
 
               return (
                 <tr
                   key={asset.id}
                   onClick={() => onSelectAsset(asset)}
-                  className="hover:bg-surface-secondary transition-colors cursor-pointer group"
+                  className="hover:bg-surface-secondary/80 transition-colors cursor-pointer group"
                 >
-                  <td
-                    className="py-2 px-3"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onToggleWatchlist(asset.id);
-                    }}
-                  >
+                  <td className="py-2.5 px-3 text-center" onClick={(e) => e.stopPropagation()}>
                     <button
-                      className="p-1 rounded text-slate-500 hover:text-amber-400 transition-colors"
+                      onClick={() => onToggleWatchlist(asset.id)}
+                      className="p-1 rounded text-slate-400 hover:text-amber-500 transition-colors"
                       title={watched ? 'Remove from Watchlist' : 'Add to Watchlist'}
                     >
                       <Star
                         className={`w-3.5 h-3.5 ${
-                          watched ? 'fill-amber-400 text-amber-400' : ''
+                          watched ? 'fill-amber-500 text-amber-500' : ''
                         }`}
                       />
                     </button>
                   </td>
 
-                  <td className="py-2 px-3">
-                    <span className="font-bold text-white group-hover:text-accent-cyan transition-colors block">
+                  <td className="py-2.5 px-3">
+                    <span className="font-black text-slate-950 dark:text-white group-hover:text-accent-cyan transition-colors block text-xs">
                       {asset.symbol}
                     </span>
-                    <span className="text-[10px] text-slate-400 truncate max-w-[200px] block">
+                    <span className="text-[10px] text-slate-600 dark:text-slate-400 truncate max-w-[200px] block font-medium">
                       {asset.name}
                     </span>
                   </td>
 
-                  <td className="py-2 px-3">
-                    <span className="text-slate-300">{asset.market}</span>
-                    <span className="text-slate-500 text-[10px] block">{asset.exchange}</span>
+                  <td className="py-2.5 px-3">
+                    <span className={`inline-block px-1.5 py-0.2 rounded border text-[9px] font-bold ${marketBadge}`}>
+                      {asset.market}
+                    </span>
+                    <span className="text-slate-500 text-[10px] block mt-0.5">{asset.exchange}</span>
                   </td>
 
-                  <td className="py-2 px-3 text-slate-400 truncate max-w-[150px]">
+                  <td className="py-2.5 px-3 text-slate-600 dark:text-slate-400 truncate max-w-[150px] font-medium">
                     {asset.sector}
                   </td>
 
-                  <td className="py-2 px-3 text-right font-bold text-white">
+                  <td className="py-2.5 px-3 text-right font-black text-slate-950 dark:text-white tabular-nums">
                     {asset.currency} {baseline.price.toLocaleString()}
                   </td>
 
-                  <td className="py-2 px-3 text-right">
+                  <td className="py-2.5 px-3 text-right">
                     <span
-                      className={`inline-flex items-center gap-0.5 font-bold px-1.5 py-0.2 rounded text-[10px] ${
-                        isUp ? 'text-market-bullish bg-market-bullish/10' : 'text-market-bearish bg-market-bearish/10'
+                      className={`inline-flex items-center gap-1 font-black px-2 py-0.5 rounded-full text-[10px] ${
+                        isUp
+                          ? 'text-emerald-700 dark:text-emerald-300 bg-emerald-500/15 border border-emerald-500/30'
+                          : 'text-rose-700 dark:text-rose-300 bg-rose-500/15 border border-rose-500/30'
                       }`}
                     >
                       {isUp ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
-                      {isUp ? '+' : ''}{changePct}%
+                      {isUp ? '+' : '-'}{changePct}%
                     </span>
                   </td>
 
-                  <td className="py-2 px-3 text-right">
+                  <td className="py-2.5 px-3 text-right">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         onSelectAsset(asset);
                       }}
-                      className="px-2 py-0.5 rounded bg-surface-elevated hover:bg-surface text-accent-cyan border border-border hover:border-accent-cyan/40 transition-colors inline-flex items-center gap-1 text-[11px] font-semibold"
+                      className="px-2.5 py-1 rounded bg-cyan-500/10 hover:bg-cyan-500 hover:text-white text-cyan-700 dark:text-cyan-300 border border-cyan-500/30 transition-all inline-flex items-center gap-1 text-[11px] font-bold shadow-xs"
                     >
                       <span>Analyze</span>
                       <ArrowUpRight className="w-3 h-3" />
@@ -227,21 +237,20 @@ export const MarketsPage: React.FC<MarketsPageProps> = ({
         </table>
       </div>
 
-      {/* 4. MOBILE VIEW: Compact Cards */}
-      <div className="md:hidden space-y-1.5">
+      {/* 4. ASSETS LIST (MOBILE CARDS) */}
+      <div className="md:hidden space-y-2">
         {filtered.map((asset) => {
+          const baseline = ASSET_PRICE_BASELINES[asset.id] || { price: 100, dailyChange: 0, high: 100, low: 100, vol: 1000 };
+          const changePercent = baseline.price ? (baseline.dailyChange / baseline.price) * 100 : 0;
+          const isUp = baseline.dailyChange >= 0;
+          const changePct = Math.abs(changePercent).toFixed(2);
           const watched = isWatched(asset.id);
-          const baseline = ASSET_PRICE_BASELINES[asset.id] || { price: 100, dailyChange: 0 };
-          const changePct = Number(
-            ((baseline.dailyChange / (baseline.price - baseline.dailyChange)) * 100).toFixed(2)
-          );
-          const isUp = changePct >= 0;
 
           return (
             <div
               key={asset.id}
               onClick={() => onSelectAsset(asset)}
-              className="p-2.5 rounded terminal-panel flex items-center justify-between gap-2.5 cursor-pointer"
+              className="p-3 rounded-lg terminal-panel flex items-center justify-between gap-2.5 cursor-pointer shadow-xs"
             >
               <div className="flex items-center gap-2 min-w-0">
                 <button
@@ -249,32 +258,32 @@ export const MarketsPage: React.FC<MarketsPageProps> = ({
                     e.stopPropagation();
                     onToggleWatchlist(asset.id);
                   }}
-                  className="p-1 rounded text-slate-500 hover:text-amber-400"
+                  className="p-1 rounded text-slate-400 hover:text-amber-500"
                 >
-                  <Star className={`w-3.5 h-3.5 ${watched ? 'fill-amber-400 text-amber-400' : ''}`} />
+                  <Star className={`w-4 h-4 ${watched ? 'fill-amber-500 text-amber-500' : ''}`} />
                 </button>
 
                 <div className="min-w-0">
                   <div className="flex items-center gap-1.5">
-                    <span className="font-mono font-bold text-white text-xs">{asset.symbol}</span>
-                    <span className="text-[10px] font-mono px-1 rounded bg-surface-secondary text-slate-400 border border-border">
+                    <span className="font-mono font-black text-slate-950 dark:text-white text-xs">{asset.symbol}</span>
+                    <span className="text-[9px] font-mono font-bold px-1 rounded bg-surface-secondary text-slate-600 dark:text-slate-400 border border-border">
                       {asset.market}
                     </span>
                   </div>
-                  <p className="text-[10px] text-slate-400 truncate">{asset.name}</p>
+                  <p className="text-[10px] text-slate-600 dark:text-slate-400 truncate mt-0.5">{asset.name}</p>
                 </div>
               </div>
 
               <div className="text-right font-mono shrink-0">
-                <div className="text-xs font-bold text-white">
+                <div className="text-xs font-black text-slate-950 dark:text-white">
                   {asset.currency} {baseline.price.toLocaleString()}
                 </div>
                 <div
-                  className={`text-[10px] font-bold ${
-                    isUp ? 'text-market-bullish' : 'text-market-bearish'
+                  className={`text-[10px] font-black mt-0.5 ${
+                    isUp ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
                   }`}
                 >
-                  {isUp ? '+' : ''}{changePct}%
+                  {isUp ? '+' : '-'}{changePct}%
                 </div>
               </div>
             </div>

@@ -71,14 +71,14 @@ export const Header: React.FC<HeaderProps> = ({
           className="flex items-center gap-2 cursor-pointer group"
           title="TradePredict AI — Analyze. Predict. Understand."
         >
-          <div className="w-6 h-6 rounded bg-surface-elevated border border-border flex items-center justify-center text-accent-cyan font-mono font-bold text-[11px] shadow-sm">
+          <div className="w-7 h-7 rounded-md bg-gradient-to-tr from-cyan-500 via-sky-500 to-blue-600 flex items-center justify-center text-white font-mono font-black text-xs shadow-md shadow-cyan-500/25 shrink-0 force-white">
             TP
           </div>
           <div className="flex items-baseline gap-1.5">
-            <span className="font-extrabold text-xs tracking-tight text-white font-mono group-hover:text-accent-cyan transition-colors">
+            <span className="font-black text-sm tracking-tight text-slate-900 dark:text-white font-mono group-hover:text-accent-cyan transition-colors">
               TradePredict
             </span>
-            <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-cyan-500/10 text-accent-cyan font-bold border border-cyan-500/25">
+            <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-md bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold shadow-xs force-white">
               AI
             </span>
           </div>
@@ -89,13 +89,13 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="flex-1 max-w-md mx-2">
         <button
           onClick={() => setSearchOpen(true)}
-          className="w-full h-8 flex items-center justify-between px-2.5 rounded bg-surface border border-border hover:border-slate-600 text-xs text-slate-400 transition-colors group"
+          className="w-full h-8 flex items-center justify-between px-2.5 rounded-md bg-surface border border-border hover:border-accent-cyan text-xs text-slate-600 dark:text-slate-400 transition-colors group shadow-xs"
         >
           <div className="flex items-center gap-2 truncate">
-            <Search className="w-3.5 h-3.5 text-slate-500 group-hover:text-slate-300 transition-colors shrink-0" />
-            <span className="truncate text-[11px] font-mono">Search stocks, crypto, indices...</span>
+            <Search className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 group-hover:text-accent-cyan transition-colors shrink-0" />
+            <span className="truncate text-[11px] font-mono font-medium">Search stocks, crypto, indices...</span>
           </div>
-          <kbd className="hidden sm:inline-block text-[9px] font-mono px-1.5 py-0.5 rounded bg-surface-elevated border border-border text-slate-400 shrink-0">
+          <kbd className="hidden sm:inline-block text-[9px] font-mono px-1.5 py-0.5 rounded bg-surface-secondary border border-border text-slate-500 dark:text-slate-400 shrink-0">
             ⌘K
           </kbd>
         </button>
@@ -114,17 +114,17 @@ export const Header: React.FC<HeaderProps> = ({
         {/* AI Analyst Trigger */}
         <button
           onClick={onToggleChat}
-          className="flex items-center gap-1.5 px-2 py-1 rounded bg-accent-cyan-subtle hover:bg-cyan-500/15 text-accent-cyan border border-accent-cyan-border text-[11px] font-mono font-semibold transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-gradient-to-r from-cyan-500 via-sky-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-mono font-bold text-xs shadow-sm shadow-cyan-500/25 transition-all force-white"
           title="Open AI Analyst Assistant"
         >
-          <Sparkles className="w-3 h-3 text-accent-cyan" />
+          <Sparkles className="w-3.5 h-3.5 text-white" />
           <span className="hidden sm:inline">AI Analyst</span>
         </button>
 
         {/* Theme Toggle (Dark / Light / System) */}
         <button
           onClick={handleNextTheme}
-          className="p-1.5 rounded bg-surface border border-border hover:border-slate-600 text-slate-400 hover:text-white transition-colors"
+          className="p-1.5 rounded-md bg-surface border border-border hover:border-slate-500 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors shadow-xs"
           title={`Theme: ${theme.toUpperCase()} (Click to toggle)`}
         >
           {theme === 'dark' ? (

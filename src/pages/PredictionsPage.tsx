@@ -58,12 +58,12 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({ onSelectAsset 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border pb-3">
         <div>
           <div className="flex items-center gap-2">
-            <Binary className="w-4 h-4 text-accent-cyan" />
-            <h1 className="text-xl sm:text-2xl font-black text-white font-mono tracking-tight">
+            <Binary className="w-5 h-5 text-cyan-600 dark:text-accent-cyan" />
+            <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-mono tracking-tight">
               Multi-Asset ML Forecast Scanner
             </h1>
           </div>
-          <p className="text-xs text-slate-400 mt-0.5 font-mono">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5 font-mono">
             Probabilistic direction estimations, calibrated confidence ratings, and expected target ranges.
           </p>
         </div>
@@ -73,7 +73,7 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({ onSelectAsset 
           <select
             value={selectedMarket}
             onChange={(e) => setSelectedMarket(e.target.value as any)}
-            className="px-2.5 py-1 rounded bg-surface-secondary border border-border text-white focus:outline-none focus:border-accent-cyan font-mono text-xs"
+            className="px-2.5 py-1.5 rounded bg-white dark:bg-surface-secondary border border-border text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 font-mono text-xs shadow-sm font-semibold"
           >
             <option value="ALL">All Markets</option>
             <option value="NEPSE">🇳🇵 NEPSE</option>
@@ -85,7 +85,7 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({ onSelectAsset 
           <select
             value={directionFilter}
             onChange={(e) => setDirectionFilter(e.target.value as any)}
-            className="px-2.5 py-1 rounded bg-surface-secondary border border-border text-white focus:outline-none focus:border-accent-cyan font-mono text-xs"
+            className="px-2.5 py-1.5 rounded bg-white dark:bg-surface-secondary border border-border text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 font-mono text-xs shadow-sm font-semibold"
           >
             <option value="ALL">All Biases</option>
             <option value="BULLISH">Bullish Only</option>
@@ -100,33 +100,44 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({ onSelectAsset 
         {filtered.map((item) => {
           const { asset, direction, up, neutral, down, rangeLow, rangeHigh, confidence } = item;
 
+          const flag =
+            asset.market === 'NEPSE' ? '🇳🇵' :
+            asset.market === 'NSE' ? '🇮🇳' :
+            asset.market === 'NASDAQ' ? '🇺🇸' : '₿';
+
+          const borderTopClass =
+            direction === 'BULLISH' ? 'border-t-2 border-t-emerald-500' :
+            direction === 'BEARISH' ? 'border-t-2 border-t-rose-500' :
+            'border-t-2 border-t-amber-500';
+
           return (
             <div
               key={asset.id}
               onClick={() => onSelectAsset(asset)}
-              className="p-3.5 rounded terminal-panel hover:border-slate-600 transition-colors cursor-pointer flex flex-col justify-between gap-3 group"
+              className={`p-3.5 rounded terminal-panel ${borderTopClass} hover:border-slate-500 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between gap-3 group`}
             >
               <div>
                 <div className="flex items-start justify-between">
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <span className="font-mono font-bold text-xs text-white group-hover:text-accent-cyan transition-colors">
+                      <span className="text-sm">{flag}</span>
+                      <span className="font-mono font-black text-sm text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-accent-cyan transition-colors">
                         {asset.symbol}
                       </span>
-                      <span className="text-[10px] font-mono px-1 py-0.2 rounded bg-surface-secondary text-slate-400 border border-border">
+                      <span className="text-[10px] font-mono px-1 py-0.2 rounded bg-surface-secondary text-slate-600 dark:text-slate-400 border border-border font-semibold">
                         {asset.market}
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-400 truncate max-w-[180px] mt-0.5">{asset.name}</p>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate max-w-[180px] mt-0.5">{asset.name}</p>
                   </div>
 
                   <span
-                    className={`px-1.5 py-0.2 rounded text-[10px] font-mono font-bold ${
+                    className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold shadow-sm ${
                       direction === 'BULLISH'
-                        ? 'bg-market-bullish/10 text-market-bullish border border-market-bullish/25'
+                        ? 'bg-emerald-500/15 text-emerald-700 dark:text-market-bullish border border-emerald-500/30'
                         : direction === 'BEARISH'
-                        ? 'bg-market-bearish/10 text-market-bearish border border-market-bearish/25'
-                        : 'bg-market-warning/10 text-market-warning border border-market-warning/25'
+                        ? 'bg-rose-500/15 text-rose-700 dark:text-market-bearish border border-rose-500/30'
+                        : 'bg-amber-500/15 text-amber-700 dark:text-market-warning border border-amber-500/30'
                     }`}
                   >
                     {direction}
@@ -137,12 +148,12 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({ onSelectAsset 
                 <div className="mt-2.5 space-y-1">
                   <div className="flex justify-between text-[10px] font-mono">
                     <span className="text-market-bullish font-bold">UP: {up}%</span>
-                    <span className="text-slate-400 font-bold">NEUT: {neutral}%</span>
+                    <span className="text-slate-500 dark:text-slate-400 font-bold">NEUT: {neutral}%</span>
                     <span className="text-market-bearish font-bold">DOWN: {down}%</span>
                   </div>
                   <div className="w-full h-1.5 rounded bg-surface-secondary overflow-hidden flex border border-border">
                     <div style={{ width: `${up}%` }} className="bg-market-bullish" />
-                    <div style={{ width: `${neutral}%` }} className="bg-slate-500" />
+                    <div style={{ width: `${neutral}%` }} className="bg-slate-400 dark:bg-slate-500" />
                     <div style={{ width: `${down}%` }} className="bg-market-bearish" />
                   </div>
                 </div>
@@ -151,15 +162,15 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({ onSelectAsset 
               {/* Footer info */}
               <div className="pt-2 border-t border-border text-[11px] font-mono flex items-center justify-between">
                 <div>
-                  <span className="text-slate-500 text-[10px] uppercase tracking-wider block">Target Band</span>
-                  <span className="text-white font-bold text-xs">
+                  <span className="text-slate-500 text-[10px] uppercase tracking-wider block font-semibold">Target Band</span>
+                  <span className="text-slate-900 dark:text-white font-extrabold text-xs">
                     {asset.currency} {rangeLow} – {rangeHigh}
                   </span>
                 </div>
 
                 <div className="text-right">
-                  <span className="text-slate-500 text-[10px] uppercase tracking-wider block">Confidence</span>
-                  <span className="text-accent-cyan font-bold text-xs">{confidence}%</span>
+                  <span className="text-slate-500 text-[10px] uppercase tracking-wider block font-semibold">Confidence</span>
+                  <span className="text-cyan-600 dark:text-accent-cyan font-black text-xs">{confidence}%</span>
                 </div>
               </div>
             </div>

@@ -15,14 +15,14 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   watchlistCount = 0
 }) => {
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-background-deep/95 backdrop-blur-md border-t border-border px-2 py-1 flex items-center justify-around select-none">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-background-deep/95 backdrop-blur-md border-t border-border px-2 py-1.5 flex items-center justify-around select-none shadow-lg">
       {/* 1. HOME */}
       <button
         onClick={() => onSelectTab('dashboard')}
         className={`flex flex-col items-center justify-center py-1 px-2.5 rounded transition-colors ${
           currentTab === 'dashboard'
-            ? 'text-accent-cyan font-semibold'
-            : 'text-slate-400 hover:text-slate-200'
+            ? 'text-cyan-600 dark:text-accent-cyan font-bold'
+            : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
         }`}
       >
         <LayoutDashboard className="w-4 h-4 mb-0.5" />
@@ -34,8 +34,8 @@ export const BottomNav: React.FC<BottomNavProps> = ({
         onClick={() => onSelectTab('markets')}
         className={`flex flex-col items-center justify-center py-1 px-2.5 rounded transition-colors ${
           currentTab === 'markets'
-            ? 'text-accent-cyan font-semibold'
-            : 'text-slate-400 hover:text-slate-200'
+            ? 'text-blue-600 dark:text-blue-400 font-bold'
+            : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
         }`}
       >
         <Compass className="w-4 h-4 mb-0.5" />
@@ -47,14 +47,14 @@ export const BottomNav: React.FC<BottomNavProps> = ({
         onClick={() => onSelectTab('watchlist')}
         className={`flex flex-col items-center justify-center py-1 px-2.5 rounded transition-colors relative ${
           currentTab === 'watchlist'
-            ? 'text-amber-400 font-semibold'
-            : 'text-slate-400 hover:text-slate-200'
+            ? 'text-amber-500 dark:text-amber-400 font-bold'
+            : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
         }`}
       >
         <div className="relative">
           <Star className="w-4 h-4 mb-0.5" />
           {watchlistCount > 0 && (
-            <span className="absolute -top-1 -right-2 text-[8px] font-mono px-1 rounded bg-amber-500 text-black font-bold">
+            <span className="absolute -top-1 -right-2 text-[8px] font-mono px-1 rounded bg-amber-500 text-white font-bold shadow-sm">
               {watchlistCount}
             </span>
           )}
@@ -72,8 +72,8 @@ export const BottomNav: React.FC<BottomNavProps> = ({
           currentTab === 'sentiment' ||
           currentTab === 'prediction' ||
           currentTab === 'risk'
-            ? 'text-accent-cyan font-semibold'
-            : 'text-slate-400 hover:text-slate-200'
+            ? 'text-emerald-600 dark:text-emerald-400 font-bold'
+            : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
         }`}
       >
         <LineChart className="w-4 h-4 mb-0.5" />
@@ -83,10 +83,10 @@ export const BottomNav: React.FC<BottomNavProps> = ({
       {/* 5. AI */}
       <button
         onClick={onOpenAI}
-        className="flex flex-col items-center justify-center py-1 px-2.5 rounded text-accent-cyan hover:opacity-80 transition-opacity"
+        className="flex flex-col items-center justify-center py-1 px-2.5 rounded text-cyan-600 dark:text-accent-cyan hover:opacity-80 transition-opacity"
       >
-        <Sparkles className="w-4 h-4 mb-0.5 text-accent-cyan" />
-        <span className="text-[10px] font-mono tracking-tight font-bold">AI</span>
+        <Sparkles className="w-4 h-4 mb-0.5 text-cyan-600 dark:text-accent-cyan" />
+        <span className="text-[10px] font-mono tracking-tight font-bold">AI Co-Pilot</span>
       </button>
     </nav>
   );

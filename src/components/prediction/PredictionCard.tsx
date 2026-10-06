@@ -111,8 +111,8 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
               >
                 {dir} BIAS
               </h3>
-              <span className="text-[10px] font-mono text-slate-400 block -mt-0.5">
-                Confidence: <span className="text-white font-bold">{prediction.confidenceScore}%</span> • Volatility: {prediction.volatilityForecast}
+              <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 block -mt-0.5">
+                Confidence: <span className="text-slate-900 dark:text-white font-black">{prediction.confidenceScore}%</span> • Volatility: {prediction.volatilityForecast}
               </span>
             </div>
           </div>
@@ -125,7 +125,7 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
             className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-mono font-bold transition-colors ${
               isTracked
                 ? 'bg-market-bullish/10 text-market-bullish border border-market-bullish/30 cursor-default'
-                : 'bg-surface-elevated hover:bg-surface-secondary text-accent-cyan border border-accent-cyan-border'
+                : 'bg-surface-elevated hover:bg-surface-secondary text-cyan-600 dark:text-accent-cyan border border-accent-cyan-border shadow-sm'
             }`}
           >
             {isTracked ? <CheckCircle className="w-3 h-3" /> : <PlusCircle className="w-3 h-3" />}
@@ -141,7 +141,7 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
             <span className="w-1.5 h-1.5 rounded-full bg-market-bullish" />
             Bull: {p.up}%
           </span>
-          <span className="text-slate-400 font-bold flex items-center gap-1">
+          <span className="text-slate-500 dark:text-slate-400 font-bold flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
             Neutral: {p.neutral}%
           </span>
@@ -153,7 +153,7 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
 
         <div className="w-full h-2 rounded bg-surface-secondary overflow-hidden flex border border-border">
           <div style={{ width: `${p.up}%` }} className="h-full bg-market-bullish transition-all" />
-          <div style={{ width: `${p.neutral}%` }} className="h-full bg-slate-500 transition-all" />
+          <div style={{ width: `${p.neutral}%` }} className="h-full bg-slate-400 dark:bg-slate-500 transition-all" />
           <div style={{ width: `${p.down}%` }} className="h-full bg-market-bearish transition-all" />
         </div>
       </div>
@@ -161,10 +161,10 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
       {/* 3. EXPECTED PRICE RANGE SLIDER BAND */}
       <div className="p-3 rounded bg-surface-secondary border border-border space-y-2.5">
         <div className="flex items-center justify-between text-xs font-mono">
-          <span className="text-slate-400 uppercase text-[10px] tracking-wider font-semibold">
+          <span className="text-slate-500 dark:text-slate-400 uppercase text-[10px] tracking-wider font-semibold">
             Expected Range Horizon
           </span>
-          <span className="text-accent-cyan font-bold text-xs">
+          <span className="text-cyan-600 dark:text-accent-cyan font-black text-xs">
             {currency} {targetLow.toFixed(1)} – {targetHigh.toFixed(1)} (
             {prediction.expectedReturnRange[0] > 0 ? '+' : ''}{prediction.expectedReturnRange[0]}% to{' '}
             {prediction.expectedReturnRange[1] > 0 ? '+' : ''}{prediction.expectedReturnRange[1]}%)
@@ -175,14 +175,14 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
         <div className="relative pt-3 pb-1">
           <div className="w-full h-1.5 rounded bg-surface-elevated relative">
             <div
-              className="absolute top-0 bottom-0 bg-accent-cyan/30 border-y border-accent-cyan/50 rounded"
+              className="absolute top-0 bottom-0 bg-cyan-500/25 dark:bg-accent-cyan/30 border-y border-cyan-500/50 rounded"
               style={{
                 left: `${targetLowPos}%`,
                 width: `${Math.max(2, targetHighPos - targetLowPos)}%`
               }}
             />
             <div
-              className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white border border-accent-cyan shadow"
+              className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white border border-cyan-500 shadow-md"
               style={{ left: `calc(${currentPos}% - 6px)` }}
               title={`Current Price: ${currency} ${currentPrice}`}
             />
@@ -191,15 +191,15 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
           <div className="flex justify-between items-center text-[10px] font-mono text-slate-500 mt-2">
             <div>
               <span className="block text-slate-400">Support</span>
-              <span>{currency} {supportAnchor.toFixed(1)}</span>
+              <span className="font-semibold text-slate-700 dark:text-slate-300">{currency} {supportAnchor.toFixed(1)}</span>
             </div>
-            <div className="text-center font-bold text-white">
+            <div className="text-center font-bold">
               <span className="block text-slate-400">Current</span>
-              <span>{currency} {currentPrice.toFixed(1)}</span>
+              <span className="text-slate-900 dark:text-white font-extrabold">{currency} {currentPrice.toFixed(1)}</span>
             </div>
             <div className="text-right">
               <span className="block text-slate-400">Resistance</span>
-              <span>{currency} {resistanceAnchor.toFixed(1)}</span>
+              <span className="font-semibold text-slate-700 dark:text-slate-300">{currency} {resistanceAnchor.toFixed(1)}</span>
             </div>
           </div>
         </div>
@@ -207,13 +207,13 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
 
       {/* 4. INVALIDATION CONDITION BANNER */}
       {invalidationText && (
-        <div className="p-2.5 rounded bg-market-bearish/5 border border-market-bearish/20 text-xs font-mono flex items-start gap-2 text-rose-300">
-          <AlertTriangle className="w-3.5 h-3.5 text-market-bearish shrink-0 mt-0.5" />
+        <div className="p-2.5 rounded bg-rose-500/10 border border-rose-500/30 text-xs font-mono flex items-start gap-2 text-rose-800 dark:text-rose-200">
+          <AlertTriangle className="w-3.5 h-3.5 text-rose-600 dark:text-market-bearish shrink-0 mt-0.5" />
           <div>
-            <span className="font-bold uppercase text-[9px] tracking-wider block text-market-bearish">
+            <span className="font-black uppercase text-[9px] tracking-wider block text-rose-700 dark:text-market-bearish">
               Invalidation Trigger
             </span>
-            <span className="text-[11px] leading-relaxed block mt-0.5">{invalidationText}</span>
+            <span className="text-[11px] leading-relaxed block mt-0.5 font-medium">{invalidationText}</span>
           </div>
         </div>
       )}
@@ -222,10 +222,10 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
       <div className="border-t border-border pt-2.5 space-y-1.5">
         <button
           onClick={() => setShowWhyFactors(!showWhyFactors)}
-          className="w-full flex items-center justify-between text-xs font-mono text-slate-300 hover:text-white transition-colors"
+          className="w-full flex items-center justify-between text-xs font-mono text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
         >
-          <div className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-[10px] text-slate-400">
-            <HelpCircle className="w-3 h-3 text-accent-cyan" />
+          <div className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-[10px] text-slate-500 dark:text-slate-400">
+            <HelpCircle className="w-3 h-3 text-cyan-600 dark:text-accent-cyan" />
             <span>Why This Prediction? (Primary Drivers)</span>
           </div>
           {showWhyFactors ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
@@ -257,22 +257,22 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
                               : 'bg-slate-400'
                           }`}
                         />
-                        <span className="font-bold text-white text-[11px]">{f.name}</span>
+                        <span className="font-bold text-slate-900 dark:text-white text-[11px]">{f.name}</span>
                         <span className="text-[10px] text-slate-500">({f.category})</span>
                       </div>
 
                       <div className="flex items-center gap-2">
-                        <span className="text-slate-300 font-semibold text-[11px]">{f.rawValue}</span>
-                        <span className="text-[9px] text-accent-cyan px-1 rounded bg-accent-cyan-subtle">
+                        <span className="text-slate-700 dark:text-slate-300 font-semibold text-[11px]">{f.rawValue}</span>
+                        <span className="text-[9px] text-cyan-600 dark:text-accent-cyan px-1 rounded bg-accent-cyan-subtle font-bold">
                           {(f.weight * 100).toFixed(0)}% wt
                         </span>
-                        <Info className="w-3 h-3 text-slate-500 hover:text-accent-cyan" />
+                        <Info className="w-3 h-3 text-slate-400 hover:text-cyan-600 dark:hover:text-accent-cyan" />
                       </div>
                     </button>
 
                     {isSelected && (
-                      <div className="p-2 bg-surface-elevated border-t border-border text-[10px] font-sans text-slate-300 space-y-1 animate-in fade-in duration-100">
-                        <div className="font-mono text-[9px] text-accent-cyan font-semibold uppercase">
+                      <div className="p-2 bg-surface-elevated border-t border-border text-[10px] font-sans text-slate-700 dark:text-slate-300 space-y-1 animate-in fade-in duration-100">
+                        <div className="font-mono text-[9px] text-cyan-600 dark:text-accent-cyan font-bold uppercase">
                           Driver Interpretation:
                         </div>
                         <p>{explanation}</p>

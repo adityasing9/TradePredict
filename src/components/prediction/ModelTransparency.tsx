@@ -14,12 +14,12 @@ export const ModelTransparency: React.FC<ModelTransparencyProps> = ({ prediction
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border pb-2.5">
         <div className="flex items-center gap-2">
-          <Cpu className="w-3.5 h-3.5 text-accent-cyan" />
-          <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-white">
+          <Cpu className="w-4 h-4 text-cyan-600 dark:text-accent-cyan" />
+          <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-white">
             Model Transparency & Feature Attribution
           </h3>
         </div>
-        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-secondary border border-border text-slate-400">
+        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-secondary border border-border text-slate-500 dark:text-slate-400 font-semibold">
           Version: {metadata.modelVersion}
         </span>
       </div>
@@ -27,32 +27,32 @@ export const ModelTransparency: React.FC<ModelTransparencyProps> = ({ prediction
       {/* Model Spec Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs font-mono">
         <div className="p-2.5 rounded bg-surface-secondary border border-border">
-          <span className="text-[10px] text-slate-500 uppercase block">Model Architecture</span>
-          <span className="text-slate-200 font-semibold block mt-0.5 truncate">{metadata.modelType}</span>
+          <span className="text-[10px] text-slate-500 uppercase block font-bold">Model Architecture</span>
+          <span className="text-slate-900 dark:text-slate-200 font-bold block mt-0.5 truncate">{metadata.modelType}</span>
         </div>
         <div className="p-2.5 rounded bg-surface-secondary border border-border">
-          <span className="text-[10px] text-slate-500 uppercase block">Training & Validation</span>
-          <span className="text-slate-200 font-semibold block mt-0.5 truncate">{metadata.trainingWindow}</span>
+          <span className="text-[10px] text-slate-500 uppercase block font-bold">Training & Validation</span>
+          <span className="text-slate-900 dark:text-slate-200 font-bold block mt-0.5 truncate">{metadata.trainingWindow}</span>
         </div>
         <div className="p-2.5 rounded bg-surface-secondary border border-border">
-          <span className="text-[10px] text-slate-500 uppercase block">Feature Engineering</span>
-          <span className="text-slate-200 font-semibold block mt-0.5 truncate">{metadata.featureVersion}</span>
+          <span className="text-[10px] text-slate-500 uppercase block font-bold">Feature Engineering</span>
+          <span className="text-slate-900 dark:text-slate-200 font-bold block mt-0.5 truncate">{metadata.featureVersion}</span>
         </div>
       </div>
 
       {/* Ensemble Weights Breakdown */}
       <div className="space-y-1.5">
-        <h4 className="text-[11px] font-mono font-bold text-slate-300 uppercase">
+        <h4 className="text-[11px] font-mono font-bold text-slate-800 dark:text-slate-300 uppercase">
           Ensemble Component Allocations
         </h4>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono">
           {ensembleWeights.map((comp) => (
             <div key={comp.component} className="p-2.5 rounded bg-surface-secondary border border-border">
               <div className="flex items-center justify-between">
-                <span className="text-slate-300 font-medium">{comp.component}</span>
-                <span className="text-accent-cyan font-bold">{comp.weight}%</span>
+                <span className="text-slate-900 dark:text-slate-200 font-bold">{comp.component}</span>
+                <span className="text-cyan-600 dark:text-accent-cyan font-black">{comp.weight}%</span>
               </div>
-              <p className="text-[10px] text-slate-400 mt-0.5">{comp.note}</p>
+              <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">{comp.note}</p>
             </div>
           ))}
         </div>
@@ -60,7 +60,7 @@ export const ModelTransparency: React.FC<ModelTransparencyProps> = ({ prediction
 
       {/* Top Feature Weights */}
       <div className="space-y-1.5">
-        <h4 className="text-[11px] font-mono font-bold text-slate-300 uppercase">
+        <h4 className="text-[11px] font-mono font-bold text-slate-800 dark:text-slate-300 uppercase">
           Dominant Decision Features
         </h4>
         <div className="space-y-1.5">
@@ -69,16 +69,16 @@ export const ModelTransparency: React.FC<ModelTransparencyProps> = ({ prediction
             return (
               <div key={feat.name} className="space-y-1">
                 <div className="flex items-center justify-between text-xs font-mono">
-                  <span className="text-slate-300">{feat.name}</span>
+                  <span className="text-slate-900 dark:text-slate-200 font-semibold">{feat.name}</span>
                   <div className="flex items-center gap-2">
-                    <span className="text-slate-400 font-semibold text-[11px]">{feat.rawValue}</span>
+                    <span className="text-slate-600 dark:text-slate-400 font-semibold text-[11px]">{feat.rawValue}</span>
                     <span
                       className={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
                         feat.impact === 'POSITIVE'
-                          ? 'bg-market-bullish/10 text-market-bullish'
+                          ? 'bg-emerald-500/15 text-emerald-700 dark:text-market-bullish border border-emerald-500/30'
                           : feat.impact === 'NEGATIVE'
-                          ? 'bg-market-bearish/10 text-market-bearish'
-                          : 'bg-surface-elevated text-slate-400'
+                          ? 'bg-rose-500/15 text-rose-700 dark:text-market-bearish border border-rose-500/30'
+                          : 'bg-surface-elevated text-slate-600 dark:text-slate-400 border border-border'
                       }`}
                     >
                       {feat.impact}
@@ -88,7 +88,7 @@ export const ModelTransparency: React.FC<ModelTransparencyProps> = ({ prediction
                 <div className="w-full h-1.5 rounded bg-surface-secondary overflow-hidden border border-border">
                   <div
                     style={{ width: `${pct * 3.5}%` }}
-                    className="h-full bg-accent-cyan"
+                    className="h-full bg-cyan-500 dark:bg-accent-cyan"
                   />
                 </div>
               </div>

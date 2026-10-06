@@ -57,15 +57,15 @@ export const ScenariosCard: React.FC<ScenariosCardProps> = ({ scenarios, currenc
             </span>
           </div>
 
-          <h5 className="text-xs font-bold text-white mt-2 leading-snug">{s.title}</h5>
+          <h5 className="text-xs font-bold text-slate-900 dark:text-white mt-2 leading-snug">{s.title}</h5>
 
           {/* Supporting Catalysts */}
           <div className="mt-2.5 space-y-1">
-            <span className="text-[10px] font-mono text-slate-400 uppercase font-semibold block">Supporting Catalysts:</span>
-            <ul className="text-xs text-slate-300 space-y-1 pl-0.5">
+            <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase font-bold block">Supporting Catalysts:</span>
+            <ul className="text-xs text-slate-700 dark:text-slate-300 space-y-1 pl-0.5 font-medium">
               {s.supportingFactors.map((factor, i) => (
                 <li key={i} className="flex items-start gap-1.5 text-[11px]">
-                  <span className="text-slate-500 mt-0.5">▸</span>
+                  <span className="text-slate-400 mt-0.5">▸</span>
                   <span className="leading-relaxed">{factor}</span>
                 </li>
               ))}
@@ -75,11 +75,11 @@ export const ScenariosCard: React.FC<ScenariosCardProps> = ({ scenarios, currenc
 
         {/* Invalidation Condition */}
         <div className="pt-2 border-t border-border text-[10px] font-mono">
-          <div className="flex items-center gap-1.5 text-slate-400 mb-0.5">
+          <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 mb-0.5">
             <AlertCircle className="w-3 h-3 text-slate-400" />
-            <span className="font-semibold uppercase tracking-wider text-slate-400">Invalidation Trigger:</span>
+            <span className="font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Invalidation Trigger:</span>
           </div>
-          <p className="text-slate-400 leading-relaxed pl-4 text-[11px]">
+          <p className="text-slate-600 dark:text-slate-400 leading-relaxed pl-4 text-[11px] font-medium">
             {s.invalidationCondition}
           </p>
         </div>
@@ -90,11 +90,11 @@ export const ScenariosCard: React.FC<ScenariosCardProps> = ({ scenarios, currenc
   return (
     <div className="w-full terminal-panel p-4 flex flex-col gap-3">
       <div className="border-b border-border pb-2.5">
-        <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
-          <Compass className="w-3.5 h-3.5 text-accent-cyan" />
+        <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-slate-300 flex items-center gap-2">
+          <Compass className="w-4 h-4 text-cyan-600 dark:text-accent-cyan" />
           Multi-Scenario Path & Boundary Analysis
         </h3>
-        <p className="text-[11px] text-slate-400 mt-0.5 font-mono">
+        <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5 font-mono">
           Statistically derived market trajectories with specific invalidation boundary triggers
         </p>
       </div>

@@ -62,12 +62,12 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
       {/* Title */}
       <div className="border-b border-border pb-3">
         <div className="flex items-center gap-2">
-          <Settings className="w-4 h-4 text-accent-cyan" />
-          <h1 className="text-xl sm:text-2xl font-black text-white font-mono tracking-tight">
+          <Settings className="w-5 h-5 text-cyan-600 dark:text-accent-cyan" />
+          <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-mono tracking-tight">
             System & User Settings
           </h1>
         </div>
-        <p className="text-xs text-slate-400 mt-0.5 font-mono">
+        <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5 font-mono">
           Configure default market preferences, AI engine providers, and manage your browser-local database.
         </p>
       </div>
@@ -75,17 +75,17 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
       <form onSubmit={handleSave} className="space-y-4">
         {/* Market Preferences */}
         <div className="terminal-panel p-4 space-y-3">
-          <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300">
+          <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-slate-300">
             Market & Interface Defaults
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
             <div>
-              <label className="text-slate-400 block text-[10px] uppercase font-semibold mb-1">Default Market</label>
+              <label className="text-slate-700 dark:text-slate-400 block text-[10px] uppercase font-bold mb-1">Default Market</label>
               <select
                 value={formData.defaultMarket}
                 onChange={(e) => setFormData({ ...formData, defaultMarket: e.target.value as any })}
-                className="w-full p-2 rounded bg-surface-secondary border border-border text-white focus:outline-none focus:border-accent-cyan font-mono text-xs"
+                className="w-full p-2 rounded bg-white dark:bg-surface-secondary border border-border text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 font-mono text-xs shadow-sm font-semibold"
               >
                 <option value="NEPSE">🇳🇵 Nepal (NEPSE)</option>
                 <option value="NSE">🇮🇳 India (NSE)</option>
@@ -95,11 +95,11 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
             </div>
 
             <div>
-              <label className="text-slate-400 block text-[10px] uppercase font-semibold mb-1">Default Currency</label>
+              <label className="text-slate-700 dark:text-slate-400 block text-[10px] uppercase font-bold mb-1">Default Currency</label>
               <select
                 value={formData.defaultCurrency}
                 onChange={(e) => setFormData({ ...formData, defaultCurrency: e.target.value as any })}
-                className="w-full p-2 rounded bg-surface-secondary border border-border text-white focus:outline-none focus:border-accent-cyan font-mono text-xs"
+                className="w-full p-2 rounded bg-white dark:bg-surface-secondary border border-border text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 font-mono text-xs shadow-sm font-semibold"
               >
                 <option value="NPR">NPR (Nepalese Rupee)</option>
                 <option value="INR">INR (Indian Rupee)</option>
@@ -109,11 +109,11 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
             </div>
 
             <div>
-              <label className="text-slate-400 block text-[10px] uppercase font-semibold mb-1">Color Theme</label>
+              <label className="text-slate-700 dark:text-slate-400 block text-[10px] uppercase font-bold mb-1">Color Theme</label>
               <select
                 value={formData.theme}
                 onChange={(e) => setFormData({ ...formData, theme: e.target.value as any })}
-                className="w-full p-2 rounded bg-surface-secondary border border-border text-white focus:outline-none focus:border-accent-cyan font-mono text-xs"
+                className="w-full p-2 rounded bg-white dark:bg-surface-secondary border border-border text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 font-mono text-xs shadow-sm font-semibold"
               >
                 <option value="dark">Dark Financial Terminal</option>
                 <option value="light">Institutional Light</option>
@@ -126,18 +126,18 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
         {/* AI Provider Settings */}
         <div className="terminal-panel p-4 space-y-3">
           <div className="flex items-center justify-between border-b border-border pb-2.5">
-            <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
-              <Cpu className="w-3.5 h-3.5 text-accent-cyan" />
+            <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-slate-300 flex items-center gap-2">
+              <Cpu className="w-4 h-4 text-cyan-600 dark:text-accent-cyan" />
               AI Analyst Provider Configuration
             </h3>
-            <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-surface-secondary text-accent-cyan border border-border">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-secondary text-cyan-700 dark:text-accent-cyan border border-border font-bold">
               Configurable Engine
             </span>
           </div>
 
           <div className="space-y-3 text-xs font-mono">
             <div>
-              <label className="text-slate-400 block text-[10px] uppercase font-semibold mb-1.5">Active AI Provider</label>
+              <label className="text-slate-700 dark:text-slate-400 block text-[10px] uppercase font-bold mb-1.5">Active AI Provider</label>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                 {[
                   { id: 'DETERMINISTIC', label: 'Deterministic Local Analyst', desc: '100% offline, zero keys required' },
@@ -148,14 +148,14 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                     key={p.id}
                     type="button"
                     onClick={() => setFormData({ ...formData, ai: { ...formData.ai, provider: p.id as any } })}
-                    className={`p-3 rounded border text-left transition-colors ${
+                    className={`p-3 rounded border text-left transition-colors shadow-sm ${
                       formData.ai.provider === p.id
-                        ? 'bg-surface-secondary border-accent-cyan text-white font-bold'
-                        : 'bg-surface-secondary border-border text-slate-400 hover:text-white hover:border-slate-600'
+                        ? 'bg-surface-secondary border-cyan-500 text-slate-900 dark:text-white font-bold ring-1 ring-cyan-500/30'
+                        : 'bg-white dark:bg-surface-secondary border-border text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-slate-400'
                     }`}
                   >
                     <div className="text-xs font-bold font-mono">{p.label}</div>
-                    <div className="text-[10px] text-slate-500 mt-1">{p.desc}</div>
+                    <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">{p.desc}</div>
                   </button>
                 ))}
               </div>
@@ -165,23 +165,23 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
             {formData.ai.provider === 'OPENROUTER' && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
                 <div>
-                  <label className="text-slate-400 block text-[10px] uppercase font-semibold mb-1">OpenRouter API Key</label>
+                  <label className="text-slate-700 dark:text-slate-400 block text-[10px] uppercase font-bold mb-1">OpenRouter API Key</label>
                   <input
                     type="password"
                     value={formData.ai.openRouterApiKey || ''}
                     onChange={(e) => setFormData({ ...formData, ai: { ...formData.ai, openRouterApiKey: e.target.value } })}
                     placeholder="sk-or-v1-..."
-                    className="w-full p-2 rounded bg-surface-secondary border border-border text-white focus:outline-none focus:border-accent-cyan font-mono text-xs"
+                    className="w-full p-2 rounded bg-white dark:bg-surface-secondary border border-border text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 font-mono text-xs shadow-sm font-medium"
                   />
                 </div>
                 <div>
-                  <label className="text-slate-400 block text-[10px] uppercase font-semibold mb-1">Model Slug</label>
+                  <label className="text-slate-700 dark:text-slate-400 block text-[10px] uppercase font-bold mb-1">Model Slug</label>
                   <input
                     type="text"
                     value={formData.ai.openRouterModel || 'anthropic/claude-3.5-sonnet'}
                     onChange={(e) => setFormData({ ...formData, ai: { ...formData.ai, openRouterModel: e.target.value } })}
                     placeholder="anthropic/claude-3.5-sonnet"
-                    className="w-full p-2 rounded bg-surface-secondary border border-border text-white focus:outline-none focus:border-accent-cyan font-mono text-xs"
+                    className="w-full p-2 rounded bg-white dark:bg-surface-secondary border border-border text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 font-mono text-xs shadow-sm font-medium"
                   />
                 </div>
               </div>
@@ -191,21 +191,21 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
             {formData.ai.provider === 'OLLAMA' && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
                 <div>
-                  <label className="text-slate-400 block text-[10px] uppercase font-semibold mb-1">Ollama Base URL</label>
+                  <label className="text-slate-700 dark:text-slate-400 block text-[10px] uppercase font-bold mb-1">Ollama Base URL</label>
                   <input
                     type="text"
                     value={formData.ai.ollamaBaseUrl || 'http://localhost:11434'}
                     onChange={(e) => setFormData({ ...formData, ai: { ...formData.ai, ollamaBaseUrl: e.target.value } })}
-                    className="w-full p-2 rounded bg-surface-secondary border border-border text-white focus:outline-none focus:border-accent-cyan font-mono text-xs"
+                    className="w-full p-2 rounded bg-white dark:bg-surface-secondary border border-border text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 font-mono text-xs shadow-sm font-medium"
                   />
                 </div>
                 <div>
-                  <label className="text-slate-400 block text-[10px] uppercase font-semibold mb-1">Model Name</label>
+                  <label className="text-slate-700 dark:text-slate-400 block text-[10px] uppercase font-bold mb-1">Model Name</label>
                   <input
                     type="text"
                     value={formData.ai.ollamaModel || 'llama3:8b'}
                     onChange={(e) => setFormData({ ...formData, ai: { ...formData.ai, ollamaModel: e.target.value } })}
-                    className="w-full p-2 rounded bg-surface-secondary border border-border text-white focus:outline-none focus:border-accent-cyan font-mono text-xs"
+                    className="w-full p-2 rounded bg-white dark:bg-surface-secondary border border-border text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 font-mono text-xs shadow-sm font-medium"
                   />
                 </div>
               </div>
@@ -217,25 +217,25 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
         <div className="flex items-center justify-between">
           <button
             type="submit"
-            className="flex items-center gap-2 px-5 py-2 rounded bg-surface-elevated hover:bg-surface text-accent-cyan border border-border hover:border-accent-cyan/40 text-xs font-mono font-bold transition-colors"
+            className="flex items-center gap-2 px-6 py-2.5 rounded bg-gradient-to-r from-cyan-600 via-sky-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 force-white text-xs font-mono font-bold transition-all shadow-md"
           >
-            {savedSuccess ? <Check className="w-3.5 h-3.5 text-market-bullish" /> : <Save className="w-3.5 h-3.5" />}
-            <span>{savedSuccess ? 'Settings Saved!' : 'Save System Settings'}</span>
+            {savedSuccess ? <Check className="w-4 h-4 force-white" /> : <Save className="w-4 h-4 force-white" />}
+            <span className="force-white">{savedSuccess ? 'Settings Saved!' : 'Save System Settings'}</span>
           </button>
         </div>
       </form>
 
       {/* Local Data Management */}
       <div className="terminal-panel p-4 space-y-3">
-        <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300">
+        <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-slate-300">
           Local Data Ownership & Backup Management
         </h3>
-        <p className="text-xs text-slate-400 font-mono">
+        <p className="text-xs text-slate-600 dark:text-slate-400 font-mono">
           All prediction logs, watchlists, backtests, and analysis reports are kept 100% locally in IndexedDB.
         </p>
 
         {importMessage && (
-          <div className="p-2.5 rounded bg-surface-secondary border border-border text-xs font-mono text-accent-cyan">
+          <div className="p-2.5 rounded bg-surface-secondary border border-cyan-500/30 text-xs font-mono text-cyan-700 dark:text-accent-cyan font-semibold">
             {importMessage}
           </div>
         )}
@@ -243,21 +243,21 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
         <div className="flex flex-wrap items-center gap-2.5 pt-1 text-xs font-mono">
           <button
             onClick={handleExportData}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-surface-secondary hover:bg-surface text-slate-200 border border-border transition-colors"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded bg-white dark:bg-surface-secondary hover:bg-surface-elevated text-slate-800 dark:text-slate-200 border border-border transition-colors shadow-sm font-semibold"
           >
-            <Download className="w-3.5 h-3.5 text-accent-cyan" />
+            <Download className="w-3.5 h-3.5 text-cyan-600 dark:text-accent-cyan" />
             <span>Export Complete JSON Backup</span>
           </button>
 
-          <label className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-surface-secondary hover:bg-surface text-slate-200 border border-border cursor-pointer transition-colors">
-            <Upload className="w-3.5 h-3.5 text-market-bullish" />
+          <label className="flex items-center gap-1.5 px-3.5 py-2 rounded bg-white dark:bg-surface-secondary hover:bg-surface-elevated text-slate-800 dark:text-slate-200 border border-border cursor-pointer transition-colors shadow-sm font-semibold">
+            <Upload className="w-3.5 h-3.5 text-emerald-600 dark:text-market-bullish" />
             <span>Restore Backup JSON</span>
             <input type="file" accept=".json" onChange={handleImportData} className="hidden" />
           </label>
 
           <button
             onClick={handleClearCache}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-market-bearish/10 hover:bg-market-bearish/20 text-market-bearish border border-market-bearish/25 transition-colors ml-auto"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded bg-rose-500/10 hover:bg-rose-500/20 text-rose-700 dark:text-market-bearish border border-rose-500/25 transition-colors ml-auto font-bold shadow-sm"
           >
             <Trash2 className="w-3.5 h-3.5" />
             <span>Clear Market Cache</span>
@@ -266,11 +266,11 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
       </div>
 
       {/* Privacy Notice Banner */}
-      <div className="p-3.5 rounded terminal-panel flex items-start gap-3 border-l-2 border-l-market-bullish">
-        <ShieldCheck className="w-4 h-4 text-market-bullish flex-shrink-0 mt-0.5" />
+      <div className="p-4 rounded terminal-panel flex items-start gap-3 border-l-4 border-l-emerald-500 shadow-sm">
+        <ShieldCheck className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
         <div className="text-xs">
-          <h4 className="font-mono font-bold text-white uppercase tracking-wider">Privacy & Offline Guarantee</h4>
-          <p className="text-slate-400 mt-0.5 leading-relaxed font-mono text-[11px]">
+          <h4 className="font-mono font-bold text-slate-900 dark:text-white uppercase tracking-wider">Privacy & Offline Guarantee</h4>
+          <p className="text-slate-600 dark:text-slate-400 mt-0.5 leading-relaxed font-mono text-[11px]">
             TradePredict AI operates on a local-first paradigm. No mandatory cloud accounts, no third-party tracking databases. Your forecasts and watchlists remain entirely under your personal device control.
           </p>
         </div>

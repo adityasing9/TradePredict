@@ -130,32 +130,40 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
   return (
     <div className="space-y-4 animate-in fade-in duration-100">
       {/* 1. ASSET HEADER BAR */}
-      <div className="terminal-panel p-3 sm:p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div className="terminal-panel p-3.5 sm:p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-xs">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-black text-white font-mono tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-mono tracking-tight">
               {asset.symbol}
             </h1>
-            <span className="text-[11px] font-mono px-1.5 py-0.2 rounded bg-surface-secondary border border-border text-accent-cyan font-semibold">
+            <span className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded border ${
+              asset.market === 'NEPSE'
+                ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/25'
+                : asset.market === 'NSE'
+                ? 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/25'
+                : asset.market === 'NASDAQ'
+                ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/25'
+                : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/25'
+            }`}>
               {asset.market}
             </span>
-            <span className="text-xs text-slate-400 font-sans hidden sm:inline">
+            <span className="text-xs text-slate-600 dark:text-slate-400 font-sans hidden sm:inline font-medium">
               • {asset.name}
             </span>
             <button
               onClick={onToggleWatchlist}
-              className="p-1 rounded text-slate-400 hover:text-amber-400 transition-colors"
+              className="p-1 rounded text-slate-400 hover:text-amber-500 transition-colors"
               title={isWatched ? 'Remove from Watchlist' : 'Add to Watchlist'}
             >
               <Star
-                className={`w-3.5 h-3.5 ${
-                  isWatched ? 'fill-amber-400 text-amber-400' : ''
+                className={`w-4 h-4 ${
+                  isWatched ? 'fill-amber-500 text-amber-500' : ''
                 }`}
               />
             </button>
           </div>
-          <div className="flex items-center gap-2 text-xs text-slate-400 mt-0.5 font-mono">
-            <span>{asset.exchange}</span>
+          <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-1 font-mono">
+            <span className="font-semibold">{asset.exchange}</span>
             <span>•</span>
             <span>{asset.sector}</span>
             <span>•</span>
@@ -172,15 +180,15 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
 
           {quote && (
             <div className="text-right font-mono">
-              <div className="text-xl sm:text-2xl font-black text-white tracking-tight tabular-nums">
+              <div className="text-xl sm:text-2xl font-black text-slate-950 dark:text-white tracking-tight tabular-nums">
                 {asset.currency} {quote.price.toLocaleString()}
               </div>
               <div
-                className={`text-[11px] font-bold flex items-center justify-end gap-1 mt-0.2 ${
-                  isUp ? 'text-market-bullish' : 'text-market-bearish'
+                className={`text-[11px] font-black flex items-center justify-end gap-1 mt-0.5 ${
+                  isUp ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-700 dark:text-rose-400'
                 }`}
               >
-                {isUp ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                {isUp ? <TrendingUp className="w-3.5 h-3.5" /> : <TrendingDown className="w-3.5 h-3.5" />}
                 <span>
                   {isUp ? '+' : ''}{quote.changePercent}% ({quote.change > 0 ? '+' : ''}{quote.change})
                 </span>
@@ -191,52 +199,52 @@ export const AnalysisPage: React.FC<AnalysisPageProps> = ({
       </div>
 
       {/* 2. ANALYSIS SUMMARY DATA STRIP */}
-      <div className="terminal-panel p-2.5 bg-surface-secondary border border-border">
+      <div className="terminal-panel p-2.5 bg-surface-secondary border border-border shadow-xs">
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-xs font-mono">
-          <div className="p-2 rounded bg-surface border border-border">
-            <span className="text-[10px] text-slate-500 uppercase block">Assessment</span>
+          <div className="p-2 rounded-md bg-surface border border-border shadow-2xs">
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black block">Assessment</span>
             <span
-              className={`font-bold block mt-0.5 ${
+              className={`font-black block mt-0.5 text-xs ${
                 overallBias === 'BULLISH'
-                  ? 'text-market-bullish'
+                  ? 'text-emerald-700 dark:text-emerald-400'
                   : overallBias === 'BEARISH'
-                  ? 'text-market-bearish'
-                  : 'text-market-warning'
+                  ? 'text-rose-700 dark:text-rose-400'
+                  : 'text-amber-700 dark:text-amber-400'
               }`}
             >
               {overallBias}
             </span>
           </div>
 
-          <div className="p-2 rounded bg-surface border border-border">
-            <span className="text-[10px] text-slate-500 uppercase block">Model Confidence</span>
-            <span className="font-bold text-white block mt-0.5">{confidence}%</span>
+          <div className="p-2 rounded-md bg-surface border border-border shadow-2xs">
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black block">Model Confidence</span>
+            <span className="font-black text-slate-900 dark:text-white block mt-0.5 text-xs">{confidence}%</span>
           </div>
 
-          <div className="p-2 rounded bg-surface border border-border">
-            <span className="text-[10px] text-slate-500 uppercase block">Technical Score</span>
-            <span className="font-bold text-slate-200 block mt-0.5">{techScore} / 100</span>
+          <div className="p-2 rounded-md bg-surface border border-border shadow-2xs">
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black block">Technical Score</span>
+            <span className="font-black text-slate-900 dark:text-white block mt-0.5 text-xs">{techScore} / 100</span>
           </div>
 
-          <div className="p-2 rounded bg-surface border border-border">
-            <span className="text-[10px] text-slate-500 uppercase block">Fundamental Score</span>
-            <span className="font-bold text-slate-200 block mt-0.5">{fundScore} / 100</span>
+          <div className="p-2 rounded-md bg-surface border border-border shadow-2xs">
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black block">Fundamental Score</span>
+            <span className="font-black text-slate-900 dark:text-white block mt-0.5 text-xs">{fundScore} / 100</span>
           </div>
 
-          <div className="p-2 rounded bg-surface border border-border">
-            <span className="text-[10px] text-slate-500 uppercase block">Sentiment Score</span>
-            <span className="font-bold text-slate-200 block mt-0.5">{sentScore} / 100</span>
+          <div className="p-2 rounded-md bg-surface border border-border shadow-2xs">
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black block">Sentiment Score</span>
+            <span className="font-black text-slate-900 dark:text-white block mt-0.5 text-xs">{sentScore} / 100</span>
           </div>
 
-          <div className="p-2 rounded bg-surface border border-border">
-            <span className="text-[10px] text-slate-500 uppercase block">Risk Level</span>
+          <div className="p-2 rounded-md bg-surface border border-border shadow-2xs">
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black block">Risk Level</span>
             <span
-              className={`font-bold block mt-0.5 ${
+              className={`font-black block mt-0.5 text-xs ${
                 riskLevel === 'LOW'
-                  ? 'text-market-bullish'
+                  ? 'text-emerald-700 dark:text-emerald-400'
                   : riskLevel === 'HIGH' || riskLevel === 'CRITICAL'
-                  ? 'text-market-bearish'
-                  : 'text-market-warning'
+                  ? 'text-rose-700 dark:text-rose-400'
+                  : 'text-amber-700 dark:text-amber-400'
               }`}
             >
               {riskLevel}

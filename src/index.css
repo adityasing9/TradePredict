@@ -44,41 +44,41 @@
   .light {
     color-scheme: light;
 
-    --bg-primary-rgb: 248 250 252;
+    --bg-primary-rgb: 238 242 246;
     --bg-deep-rgb: 255 255 255;
     --bg-card-rgb: 255 255 255;
     --bg-secondary-rgb: 241 245 249;
-    --bg-elevated-rgb: 248 250 252;
-    --border-color-rgb: 226 232 240;
-    --border-subtle-rgb: 237 242 247;
+    --bg-elevated-rgb: 255 255 255;
+    --border-color-rgb: 203 213 225;
+    --border-subtle-rgb: 226 232 240;
     --accent-cyan-rgb: 8 145 178;
     --market-bullish-rgb: 22 163 74;
     --market-bearish-rgb: 220 38 38;
     --market-warning-rgb: 217 119 6;
     --market-neutral-rgb: 100 116 139;
 
-    --bg-primary: #f8fafc;
+    --bg-primary: #eef2f6;
     --bg-deep: #ffffff;
     --bg-card: #ffffff;
     --bg-secondary: #f1f5f9;
-    --bg-elevated: #f8fafc;
-    --border-color: #e2e8f0;
-    --border-subtle: #edf2f7;
+    --bg-elevated: #ffffff;
+    --border-color: #cbd5e1;
+    --border-subtle: #e2e8f0;
     --text-primary: #0f172a;
     --text-secondary: #334155;
     --text-muted: #64748b;
     --accent-cyan: #0891b2;
     --accent-cyan-hover: #0e7490;
-    --accent-cyan-subtle: rgba(8, 145, 178, 0.08);
-    --accent-cyan-border: rgba(8, 145, 178, 0.25);
+    --accent-cyan-subtle: rgba(8, 145, 178, 0.12);
+    --accent-cyan-border: rgba(8, 145, 178, 0.35);
     --market-bullish: #16a34a;
     --market-bearish: #dc2626;
     --market-warning: #d97706;
     --market-neutral: #64748b;
 
-    --shadow-panel: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
-    --shadow-elevated: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-    --shadow-modal: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
+    --shadow-panel: 0 1px 3px 0 rgba(15, 23, 42, 0.08), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
+    --shadow-elevated: 0 4px 6px -1px rgba(15, 23, 42, 0.1), 0 2px 4px -2px rgba(15, 23, 42, 0.06);
+    --shadow-modal: 0 20px 25px -5px rgba(15, 23, 42, 0.15), 0 8px 10px -6px rgba(15, 23, 42, 0.08);
   }
 
   body {
@@ -204,52 +204,56 @@
 }
 
 /* Light mode specific element adaptations */
-.light .text-white {
+.light h1, .light h2, .light h3, .light h4, .light h5, .light h6 {
   color: #0f172a;
 }
 
-.light .text-slate-100 {
-  color: #0f172a;
+.light .text-white:not([class*="force-white"]):not([class*="bg-gradient"]):not([class*="bg-cyan"]):not([class*="bg-blue"]):not([class*="bg-emerald"]):not([class*="bg-rose"]):not([class*="bg-amber"]):not([class*="bg-purple"]) {
+  color: #0f172a !important;
 }
 
-.light .text-slate-200 {
-  color: #1e293b;
+.light .text-slate-100:not([class*="force-white"]) {
+  color: #0f172a !important;
 }
 
-.light .text-slate-300 {
-  color: #334155;
+.light .text-slate-200:not([class*="force-white"]) {
+  color: #1e293b !important;
 }
 
-.light .text-slate-400 {
-  color: #475569;
+.light .text-slate-300:not([class*="force-white"]) {
+  color: #334155 !important;
 }
 
-.light .text-slate-500 {
-  color: #64748b;
+.light .text-slate-400:not([class*="force-white"]) {
+  color: #475569 !important;
 }
 
-.light .text-slate-600 {
-  color: #94a3b8;
+.light .text-slate-500:not([class*="force-white"]) {
+  color: #64748b !important;
+}
+
+.light .text-slate-600:not([class*="force-white"]) {
+  color: #475569 !important;
 }
 
 .light .hover\:text-white:hover {
-  color: #0f172a;
+  color: #0f172a !important;
 }
 
 .light .hover\:text-slate-200:hover {
-  color: #1e293b;
+  color: #1e293b !important;
 }
 
 .light .hover\:text-slate-300:hover {
-  color: #334155;
+  color: #334155 !important;
 }
 
 .light .group:hover .group-hover\:text-white {
-  color: #0f172a;
+  color: #0f172a !important;
 }
 
 .light .group:hover .group-hover\:text-slate-200 {
-  color: #1e293b;
+  color: #1e293b !important;
 }
 
 /* Form controls in light mode */
@@ -301,8 +305,19 @@
 /* Ensure solid action buttons preserve crisp text */
 .light [class*="bg-market-bullish"] .text-white,
 .light [class*="bg-market-bearish"] .text-white,
-.light [class*="bg-accent-cyan"] .text-white {
-  color: #ffffff;
+.light [class*="bg-accent-cyan"] .text-white,
+.light [class*="bg-gradient-"] .text-white,
+.light [class*="bg-gradient-"],
+.light [class*="bg-cyan-600"] .text-white,
+.light [class*="bg-blue-600"] .text-white,
+.light [class*="bg-emerald-600"] .text-white,
+.light [class*="bg-rose-600"] .text-white,
+.light [class*="bg-amber-500"] .text-white,
+.light [class*="bg-amber-600"] .text-white,
+.light [class*="bg-purple-600"] .text-white,
+.light button[class*="bg-gradient-"],
+.light .force-white {
+  color: #ffffff !important;
 }
 
 /* Ticker marquee animation */

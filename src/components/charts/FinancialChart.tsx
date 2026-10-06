@@ -455,7 +455,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
       <div className="flex flex-wrap items-center justify-between gap-2.5 pb-2 border-b border-border">
         <div className="flex items-center gap-2.5">
           <div className="flex items-baseline gap-1 font-mono text-xs">
-            <span className="font-extrabold text-white text-sm tracking-tight">{symbol}</span>
+            <span className="font-extrabold text-slate-900 dark:text-white text-sm tracking-tight">{symbol}</span>
             <span className="text-slate-500 text-[11px]">({currency})</span>
           </div>
 
@@ -467,8 +467,8 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
                 onClick={() => onSelectTimeframe(tf)}
                 className={`px-2 py-0.5 rounded text-[10px] transition-colors ${
                   currentTimeframe === tf
-                    ? 'bg-surface-elevated text-accent-cyan border border-border font-bold'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-surface-elevated text-cyan-600 dark:text-accent-cyan border border-border font-bold'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                 }`}
               >
                 {tf}
@@ -482,13 +482,13 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
           {/* Chart Type Toggle */}
           <button
             onClick={() => setChartType(chartType === 'CANDLE' ? 'LINE' : 'CANDLE')}
-            className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-surface-secondary border border-border text-slate-300 hover:text-white"
+            className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-surface-secondary border border-border text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
             title="Toggle Candlestick / Line"
           >
             {chartType === 'CANDLE' ? (
-              <BarChart3 className="w-3 h-3 text-accent-cyan" />
+              <BarChart3 className="w-3 h-3 text-cyan-600 dark:text-accent-cyan" />
             ) : (
-              <LineChartIcon className="w-3 h-3 text-accent-cyan" />
+              <LineChartIcon className="w-3 h-3 text-cyan-600 dark:text-accent-cyan" />
             )}
             <span className="text-[10px]">{chartType}</span>
           </button>
@@ -498,8 +498,8 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
             onClick={() => setShowEMA20(!showEMA20)}
             className={`px-1.5 py-0.5 rounded border text-[10px] transition-colors ${
               showEMA20
-                ? 'bg-amber-500/10 border-amber-500/30 text-amber-400 font-bold'
-                : 'bg-surface-secondary border-border text-slate-400'
+                ? 'bg-amber-500/10 border-amber-500/30 text-amber-600 dark:text-amber-400 font-bold'
+                : 'bg-surface-secondary border-border text-slate-500 dark:text-slate-400'
             }`}
           >
             EMA 20
@@ -510,8 +510,8 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
             onClick={() => setShowEMA50(!showEMA50)}
             className={`px-1.5 py-0.5 rounded border text-[10px] transition-colors ${
               showEMA50
-                ? 'bg-sky-500/10 border-sky-500/30 text-sky-400 font-bold'
-                : 'bg-surface-secondary border-border text-slate-400'
+                ? 'bg-sky-500/10 border-sky-500/30 text-sky-600 dark:text-sky-400 font-bold'
+                : 'bg-surface-secondary border-border text-slate-500 dark:text-slate-400'
             }`}
           >
             EMA 50
@@ -522,8 +522,8 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
             onClick={() => setShowEMA200(!showEMA200)}
             className={`px-1.5 py-0.5 rounded border text-[10px] transition-colors ${
               showEMA200
-                ? 'bg-indigo-500/10 border-indigo-500/30 text-indigo-400 font-bold'
-                : 'bg-surface-secondary border-border text-slate-400'
+                ? 'bg-indigo-500/10 border-indigo-500/30 text-indigo-600 dark:text-indigo-400 font-bold'
+                : 'bg-surface-secondary border-border text-slate-500 dark:text-slate-400'
             }`}
           >
             EMA 200
@@ -534,8 +534,8 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
             onClick={() => setShowBollinger(!showBollinger)}
             className={`px-1.5 py-0.5 rounded border text-[10px] transition-colors ${
               showBollinger
-                ? 'bg-cyan-500/10 border-cyan-500/30 text-accent-cyan font-bold'
-                : 'bg-surface-secondary border-border text-slate-400'
+                ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-600 dark:text-accent-cyan font-bold'
+                : 'bg-surface-secondary border-border text-slate-500 dark:text-slate-400'
             }`}
           >
             BB (20,2)
@@ -546,8 +546,8 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
             onClick={() => setShowVWAP(!showVWAP)}
             className={`px-1.5 py-0.5 rounded border text-[10px] transition-colors ${
               showVWAP
-                ? 'bg-pink-500/10 border-pink-500/30 text-pink-400 font-bold'
-                : 'bg-surface-secondary border-border text-slate-400'
+                ? 'bg-pink-500/10 border-pink-500/30 text-pink-600 dark:text-pink-400 font-bold'
+                : 'bg-surface-secondary border-border text-slate-500 dark:text-slate-400'
             }`}
           >
             VWAP
@@ -559,7 +559,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
             className={`px-1.5 py-0.5 rounded border text-[10px] transition-colors ${
               showLevels
                 ? 'bg-market-bullish/10 border-market-bullish/30 text-market-bullish font-bold'
-                : 'bg-surface-secondary border-border text-slate-400'
+                : 'bg-surface-secondary border-border text-slate-500 dark:text-slate-400'
             }`}
           >
             S/R
@@ -569,7 +569,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
             <button
               onClick={onRefresh}
               disabled={loading}
-              className="p-1 rounded bg-surface-secondary border border-border text-slate-400 hover:text-white disabled:opacity-50"
+              className="p-1 rounded bg-surface-secondary border border-border text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-50"
               title="Refresh Candles"
             >
               <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
@@ -580,29 +580,29 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({
 
       {/* Interactive OHLC Bar */}
       {activeBar && (
-        <div className="flex flex-wrap items-center gap-3 text-[10px] font-mono text-slate-400 bg-surface-secondary px-2.5 py-1 rounded border border-border">
+        <div className="flex flex-wrap items-center gap-3 text-[10px] font-mono text-slate-500 dark:text-slate-400 bg-surface-secondary px-2.5 py-1 rounded border border-border">
           <div>
             Time:{' '}
-            <span className="text-slate-200">
+            <span className="text-slate-900 dark:text-slate-200 font-semibold">
               {new Date(activeBar.time * 1000).toLocaleDateString()}{' '}
               {new Date(activeBar.time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </span>
           </div>
-          <div>O: <span className="text-slate-200">{activeBar.open}</span></div>
-          <div>H: <span className="text-market-bullish">{activeBar.high}</span></div>
-          <div>L: <span className="text-market-bearish">{activeBar.low}</span></div>
+          <div>O: <span className="text-slate-900 dark:text-slate-200 font-bold">{activeBar.open}</span></div>
+          <div>H: <span className="text-market-bullish font-bold">{activeBar.high}</span></div>
+          <div>L: <span className="text-market-bearish font-bold">{activeBar.low}</span></div>
           <div>
             C:{' '}
             <span className={activeBar.close >= activeBar.open ? 'text-market-bullish font-bold' : 'text-market-bearish font-bold'}>
               {activeBar.close}
             </span>
           </div>
-          <div>Vol: <span className="text-slate-300">{activeBar.volume.toLocaleString()}</span></div>
+          <div>Vol: <span className="text-slate-700 dark:text-slate-300 font-semibold">{activeBar.volume.toLocaleString()}</span></div>
         </div>
       )}
 
       {/* Canvas Area */}
-      <div ref={containerRef} className="relative w-full h-80 sm:h-96 rounded overflow-hidden border border-border bg-background-deep">
+      <div ref={containerRef} className="relative w-full h-80 sm:h-96 rounded overflow-hidden border border-border bg-white dark:bg-background-deep shadow-inner">
         <canvas
           ref={canvasRef}
           onMouseMove={handleMouseMove}

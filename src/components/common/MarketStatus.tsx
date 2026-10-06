@@ -22,34 +22,47 @@ export const MarketStatus: React.FC<MarketStatusProps> = ({ compact = false }) =
       <div className="relative">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-2 px-2 py-1 rounded bg-surface border border-border hover:border-slate-600 text-xs font-mono text-slate-300 transition-colors"
+          className="flex items-center gap-2 px-2 py-1 rounded-md bg-surface border border-border hover:border-accent-cyan text-xs font-mono text-slate-700 dark:text-slate-300 transition-colors shadow-xs"
           title="Exchange Operating Status & Timezones"
         >
           <div className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-market-bullish animate-pulse" />
-            <span className="text-[10px] text-slate-400 hidden sm:inline uppercase">Exchanges:</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 hidden sm:inline uppercase">Exchanges:</span>
           </div>
 
-          <div className="flex items-center gap-2 text-[10px]">
-            {statuses.map((s) => (
-              <span key={s.market} className="flex items-center gap-1">
-                <span className="text-slate-400">{s.market}</span>
+          <div className="flex items-center gap-1.5 text-[10px]">
+            {statuses.map((s) => {
+              const flag =
+                s.market === 'NEPSE'
+                  ? '🇳🇵'
+                  : s.market === 'NSE'
+                  ? '🇮🇳'
+                  : s.market === 'NASDAQ'
+                  ? '🇺🇸'
+                  : '₿';
+
+              const isLive = s.statusText === 'Live' || s.statusText === 'Open';
+
+              return (
                 <span
-                  className={`font-semibold ${
-                    s.statusText === 'Live' || s.statusText === 'Open'
-                      ? 'text-market-bullish'
+                  key={s.market}
+                  className={`flex items-center gap-1 px-1.5 py-0.2 rounded border font-mono ${
+                    isLive
+                      ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30'
                       : s.statusText === 'Pre-Market'
-                      ? 'text-market-warning'
-                      : 'text-slate-500'
+                      ? 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/30'
+                      : 'bg-slate-200/50 dark:bg-slate-800/60 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-700'
                   }`}
                 >
-                  {s.statusText}
+                  <span className="text-[9px]">{flag}</span>
+                  <span className="font-bold">{s.market}</span>
+                  <span className="font-semibold text-[9px]">{s.statusText}</span>
                 </span>
-              </span>
-            ))}
+              );
+            })}
           </div>
 
-          <ChevronDown className="w-3 h-3 text-slate-500 ml-0.5" />
+          <ChevronDown className="w-3.5 h-3.5 text-slate-500 ml-0.5" />
         </button>
 
         {/* Detailed Popover */}
