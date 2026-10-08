@@ -121,4 +121,43 @@ describe('Unified Analytical Pipeline Multi-Market Verification', () => {
     expect(filterAssets({ searchQuery: 'spcx' }).some((a: any) => a.id === 'NASDAQ:SPCX')).toBe(true);
     expect(filterAssets({ searchQuery: 'pypl' }).some((a: any) => a.id === 'NASDAQ:PYPL')).toBe(true);
   });
+
+  it('correctly resolves and executes all 13 requested Nepal NEPSE stocks', () => {
+    const nepseSymbols = [
+      'HBL',
+      'SABBL',
+      'SAIL',
+      'GMLI',
+      'GSY',
+      'HRL',
+      'NMBHF2',
+      'PCIL',
+      'SFF',
+      'SKHEL',
+      'YMHL',
+      'KAHL',
+      'SGHL'
+    ];
+
+    for (const sym of nepseSymbols) {
+      // 1. Symbol resolution test
+      const asset = getAssetById(sym);
+      expect(asset, `Symbol ${sym} must resolve via getAssetById`).toBeDefined();
+      expect(asset?.market).toBe('NEPSE');
+      expect(asset?.symbol).toBe(sym);
+
+      // 2. Search query test
+      const searchResults = filterAssets({ searchQuery: sym.toLowerCase() });
+      expect(searchResults.some((a: any) => a.symbol === sym), `Symbol ${sym} must be searchable`).toBe(true);
+
+      // 3. Execution pipeline test
+      const candles = generateMockCandles(asset?.basePrice || 350);
+      const { bundle, report } = executeAnalysisPipeline(asset!, candles, '1D');
+      expect(bundle.asset.symbol).toBe(sym);
+      expect(bundle.fundamental.nepse).toBeDefined();
+      expect(bundle.prediction.tradeRecommendation).toBeDefined();
+      expect(report.executiveSummary).toContain(sym);
+    }
+  });
 });
+
