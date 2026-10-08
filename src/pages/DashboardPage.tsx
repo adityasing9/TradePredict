@@ -16,6 +16,7 @@ import {
   Zap,
   Pin
 } from 'lucide-react';
+import { PinnedAssetsGrid } from '../components/dashboard/PinnedAssetsGrid';
 
 interface DashboardPageProps {
   onSelectAsset: (asset: Asset) => void;
@@ -56,9 +57,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 }) => {
   const [recentPredictions, setRecentPredictions] = useState<TrackedPrediction[]>([]);
   const [benchmarkList, setBenchmarkList] = useState<BenchmarkItem[]>(BENCHMARKS);
-  const [activeListTab, setActiveListTab] = useState<'PINNED' | 'WATCHLIST'>(() =>
-    pinnedItems.length > 0 ? 'PINNED' : 'WATCHLIST'
-  );
+  const [activeListTab, setActiveListTab] = useState<'PINNED' | 'WATCHLIST'>('WATCHLIST');
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -155,7 +154,15 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
         </div>
       </div>
 
-      {/* 2. MARKET PULSE (Horizontal Data Strip) */}
+      {/* 2. PINNED ASSETS RADAR (Top Front Page Grid with Full Telemetry) */}
+      <PinnedAssetsGrid
+        pinnedIds={pinnedItems}
+        onSelectAsset={onSelectAsset}
+        onNavigate={onNavigate}
+        onTogglePin={onTogglePin}
+      />
+
+      {/* 3. MARKET PULSE (Horizontal Data Strip) */}
       <div className="terminal-panel p-3.5 space-y-2.5">
         <div className="flex items-center justify-between pb-2 border-b border-border">
           <div className="flex items-center gap-2">
@@ -224,7 +231,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
         </div>
       </div>
 
-      {/* 3. MARKET ENVIRONMENT */}
+      {/* 4. MARKET ENVIRONMENT */}
       <div className="terminal-panel p-3.5 space-y-2.5">
         <div className="flex items-center justify-between pb-2 border-b border-border">
           <div className="flex items-center gap-2">
@@ -272,7 +279,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
         </div>
       </div>
 
-      {/* 4. WATCHLIST & RECENT PREDICTIONS (Two Columns) */}
+      {/* 5. WATCHLIST & RECENT PREDICTIONS (Two Columns) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Pinned & Monitored Assets */}
         <div className="terminal-panel p-3.5 space-y-2.5">
@@ -506,7 +513,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
         </div>
       </div>
 
-      {/* 5. MACRO TELEMETRY & IMPORTANT EVENTS */}
+      {/* 6. MACRO TELEMETRY & IMPORTANT EVENTS */}
       <div className="terminal-panel p-3.5 space-y-2.5">
         <div className="flex items-center justify-between pb-2 border-b border-border">
           <div className="flex items-center gap-2">

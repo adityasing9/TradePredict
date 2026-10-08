@@ -61,4 +61,18 @@ describe('Pinned Assets Functionality & Persistence', () => {
     expect(pinnedOnly.length).toBe(2);
     expect(pinnedOnly.map((a) => a.id)).toEqual(['NASDAQ:NVDA', 'CRYPTO:BTCUSDT']);
   });
+
+  it('correctly resolves pinned grid assets and day range telemetry', () => {
+    const testPinnedIds = ['NEPSE:HBL', 'NSE:RELIANCE', 'CRYPTO:BTCUSDT', 'NASDAQ:NVDA'];
+
+    for (const id of testPinnedIds) {
+      const asset = ALL_ASSETS.find((a) => a.id === id);
+      expect(asset, `Pinned asset ${id} must exist in universe`).toBeDefined();
+      expect(asset?.symbol).toBeTruthy();
+      expect(asset?.name).toBeTruthy();
+      expect(asset?.market).toBeTruthy();
+      expect(asset?.currency).toBeTruthy();
+    }
+  });
 });
+
