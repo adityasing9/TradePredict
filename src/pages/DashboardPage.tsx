@@ -40,12 +40,12 @@ interface BenchmarkItem {
 }
 
 const BENCHMARKS: BenchmarkItem[] = [
-  { id: 'NEPSE:NEPSE', symbol: 'NEPSE', name: 'Nepal Stock Exchange Index', market: 'NEPSE', flag: '🇳🇵', price: '2,684.20', change: '+22.30', changePercent: 0.84, isUp: true, accentBorder: 'border-t-rose-500' },
-  { id: 'NSE:NIFTY50', symbol: 'NIFTY 50', name: 'NIFTY 50 Index', market: 'NSE', flag: '🇮🇳', price: '24,980.50', change: '-52.40', changePercent: -0.21, isUp: false, accentBorder: 'border-t-orange-500' },
-  { id: 'NASDAQ:SPY', symbol: 'S&P 500', name: 'S&P 500 ETF Trust', market: 'NASDAQ', flag: '🇺🇸', price: '5,751.10', change: '+24.60', changePercent: 0.43, isUp: true, accentBorder: 'border-t-blue-500' },
-  { id: 'NASDAQ:QQQ', symbol: 'NASDAQ', name: 'Invesco QQQ Trust', market: 'NASDAQ', flag: '🇺🇸', price: '489.20', change: '+3.01', changePercent: 0.62, isUp: true, accentBorder: 'border-t-sky-500' },
-  { id: 'CRYPTO:BTCUSDT', symbol: 'BTC / USDT', name: 'Bitcoin / Tether', market: 'CRYPTO', flag: '₿', price: '$64,250.00', change: '+$1,510.00', changePercent: 2.41, isUp: true, accentBorder: 'border-t-amber-500' },
-  { id: 'CRYPTO:ETHUSDT', symbol: 'ETH / USDT', name: 'Ethereum / Tether', market: 'CRYPTO', flag: '⟠', price: '$3,480.00', change: '+$62.10', changePercent: 1.82, isUp: true, accentBorder: 'border-t-purple-500' },
+  { id: 'NEPSE:NEPSE',    symbol: 'NEPSE',      name: 'Nepal Stock Exchange Index', market: 'NEPSE',   flag: '🇳🇵', price: '2,572.34',   change: '-6.38',    changePercent: -0.25, isUp: false, accentBorder: 'border-t-rose-500'   },
+  { id: 'NSE:NIFTY50',    symbol: 'NIFTY 50',   name: 'NIFTY 50 Index',             market: 'NSE',     flag: '🇮🇳', price: '22,285.70',  change: '-359.30',  changePercent: -1.59, isUp: false, accentBorder: 'border-t-orange-500' },
+  { id: 'NASDAQ:SPY',     symbol: 'S&P 500',    name: 'S&P 500 ETF Trust',          market: 'NASDAQ',  flag: '🇺🇸', price: '$777.22',    change: '-$1.87',   changePercent: -0.24, isUp: false, accentBorder: 'border-t-blue-500'   },
+  { id: 'NASDAQ:QQQ',     symbol: 'NASDAQ',     name: 'Invesco QQQ Trust',           market: 'NASDAQ',  flag: '🇺🇸', price: '$757.73',    change: '-$1.93',   changePercent: -0.25, isUp: false, accentBorder: 'border-t-sky-500'    },
+  { id: 'CRYPTO:BTCUSDT', symbol: 'BTC / USDT', name: 'Bitcoin / Tether',           market: 'CRYPTO',  flag: '₿',   price: '$82,976.81', change: '-$980.00', changePercent: -1.17, isUp: false, accentBorder: 'border-t-amber-500'  },
+  { id: 'CRYPTO:ETHUSDT', symbol: 'ETH / USDT', name: 'Ethereum / Tether',          market: 'CRYPTO',  flag: '⟠',   price: '$2,562.40',  change: '-$48.20',  changePercent: -1.85, isUp: false, accentBorder: 'border-t-purple-500' },
 ];
 
 export const DashboardPage: React.FC<DashboardPageProps> = ({

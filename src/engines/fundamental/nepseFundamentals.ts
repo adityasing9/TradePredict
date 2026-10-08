@@ -5,10 +5,10 @@ export const NEPSE_FUNDAMENTALS_DATABASE: Record<string, NepseFundamentals> = {
     symbol: 'NABIL',
     epsNpr: 28.45,
     bookValuePerShare: 218.4,
-    peRatio: 18.2,
+    peRatio: 18.7,          // 532.90 / 28.45 = 18.7
     dividendYield: 2.1,
-    paidUpCapitalNpr: 27056900000, // 27.05 Arba NPR
-    marketCapNpr: 141200000000,
+    paidUpCapitalNpr: 27056900000,
+    marketCapNpr: 144290000000, // 532.90 × 270.57M shares
     nonPerformingLoanPercent: 2.98,
     capitalAdequacyRatio: 12.85,
     quarterlyProfitYoY: 8.4,
@@ -21,10 +21,10 @@ export const NEPSE_FUNDAMENTALS_DATABASE: Record<string, NepseFundamentals> = {
     symbol: 'NICA',
     epsNpr: 19.8,
     bookValuePerShare: 184.2,
-    peRatio: 21.6,
+    peRatio: 15.6,          // 309.00 / 19.8 = 15.6
     dividendYield: 0.0,
     paidUpCapitalNpr: 14917000000,
-    marketCapNpr: 63800000000,
+    marketCapNpr: 46100000000, // 309 × 149.17M shares
     nonPerformingLoanPercent: 3.42,
     capitalAdequacyRatio: 11.6,
     quarterlyProfitYoY: -12.4,
@@ -95,10 +95,10 @@ export const NEPSE_FUNDAMENTALS_DATABASE: Record<string, NepseFundamentals> = {
     symbol: 'HBL',
     epsNpr: 14.5,
     bookValuePerShare: 172.5,
-    peRatio: 13.6,
+    peRatio: 13.3,          // 193.30 / 14.5 = 13.3
     dividendYield: 1.8,
     paidUpCapitalNpr: 21650000000,
-    marketCapNpr: 42800000000,
+    marketCapNpr: 41830000000,  // 193.30 × 216.5M shares
     nonPerformingLoanPercent: 4.85,
     capitalAdequacyRatio: 12.1,
     quarterlyProfitYoY: 6.4,
